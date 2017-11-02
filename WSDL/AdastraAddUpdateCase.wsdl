@@ -1,0 +1,330 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BCEAE6BB-CC78-4C66-9BF1-079133FD8EB6}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Adastra.WebServices</RootNamespace>
+    <AssemblyName>Adastra</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+    <UseIISExpress>false</UseIISExpress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="blowery.Web.HttpCompress, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Extensions.Design" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Adastra.asmx" />
+    <Content Include="Ambulance.asmx" />
+    <Content Include="Aremote.asmx" />
+    <Content Include="BluePrism.asmx" />
+    <Content Include="Callstera.asmx" />
+    <Content Include="customer\cardiff.asmx" />
+    <Content Include="CorHapSys.asmx" />
+    <Content Include="customer\stourcare.asmx" />
+    <Content Include="Dental.asmx" />
+    <Content Include="Docobo.asmx" />
+    <Content Include="Generic.asmx" />
+    <Content Include="Global.asax" />
+    <Content Include="Hospital.asmx" />
+    <Content Include="Interlinkage.asmx" />
+    <None Include="lib\blowery.Web.HttpCompress.dll" />
+    <EmbeddedResource Include="schemas\stourcare_case_v1.0.xsd">
+      <SubType>
+      </SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="schemas\case_v2.0.xsd">
+      <SubType>
+      </SubType>
+    </EmbeddedResource>
+    <Content Include="INurseIntegration.asmx" />
+    <Content Include="PatientArrival.asmx" />
+    <Content Include="MentalHealth.asmx" />
+    <Content Include="Pathways.asmx" />
+    <Content Include="PatientLocationLookup.asmx" />
+    <Content Include="PlainSoftware.asmx" />
+    <Content Include="PrintPickup.asmx" />
+    <Content Include="Psiam.asmx" />
+    <Content Include="ServiceContinuityTracker.asmx" />
+    <Content Include="Tunstall.asmx" />
+    <Content Include="Upgrade.asmx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="appSettings.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="schemas\stourcare_case_v1.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="Settings.StyleCop" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Adastra.asmx.cs">
+      <DependentUpon>Adastra.asmx</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Ambulance.asmx.cs">
+      <DependentUpon>Ambulance.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Aremote.asmx.cs">
+      <DependentUpon>Aremote.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="BluePrism.asmx.cs">
+      <DependentUpon>BluePrism.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Callstera.asmx.cs">
+      <DependentUpon>Callstera.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="customer\cardiff.asmx.cs">
+      <DependentUpon>cardiff.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="CorHapSys.asmx.cs">
+      <DependentUpon>CorHapSys.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="customer\stourcare.asmx.cs">
+      <DependentUpon>stourcare.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Dental.asmx.cs">
+      <DependentUpon>Dental.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Docobo.asmx.cs">
+      <DependentUpon>Docobo.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Generic.asmx.cs">
+      <DependentUpon>Generic.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Hospital.asmx.cs">
+      <DependentUpon>Hospital.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Interlinkage.asmx.cs">
+      <DependentUpon>Interlinkage.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="INurseIntegration.asmx.cs">
+      <DependentUpon>INurseIntegration.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PatientArrival.asmx.cs">
+      <DependentUpon>PatientArrival.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="MentalHealth.asmx.cs">
+      <DependentUpon>MentalHealth.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Pathways.asmx.cs">
+      <DependentUpon>Pathways.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="PatientLocationLookup.asmx.cs">
+      <DependentUpon>PatientLocationLookup.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="PlainSoftware.asmx.cs">
+      <DependentUpon>PlainSoftware.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="PrintPickup.asmx.cs">
+      <DependentUpon>PrintPickup.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Psiam.asmx.cs">
+      <DependentUpon>Psiam.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ServiceContinuityTracker.asmx.cs">
+      <DependentUpon>ServiceContinuityTracker.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ServiceContinuityTrackerConfig.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Tunstall.asmx.cs">
+      <DependentUpon>Tunstall.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Upgrade.asmx.cs">
+      <DependentUpon>Upgrade.asmx</DependentUpon>
+      <SubType>Component</SubType>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="apiResult.xsd">
+      <SubType>
+      </SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="schemas\case_v1.0.xsd">
+      <SubType>
+      </SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="caseResultSuccess.xsd">
+      <SubType>
+      </SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="schemas\result.xsd">
+      <SubType>
+      </SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\BusinessProcess\BusinessProcess.csproj">
+      <Project>{C1A8B2D6-17AD-4689-BDF0-F96E9D3129BB}</Project>
+      <Name>BusinessProcess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\BusinessObjects\BusinessObjects.csproj">
+      <Project>{5CF915EE-02E8-46BD-A0DF-BCAE40F4EAAC}</Project>
+      <Name>BusinessObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\General\General.csproj">
+      <Project>{82AEF99A-4E55-4533-ABD9-F9F287E853B2}</Project>
+      <Name>General</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\IServerInterface\IServerInterface.csproj">
+      <Project>{20243CD7-27DC-4F2C-B7DD-A2789DB2FDAD}</Project>
+      <Name>IServerInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\WebGeneral\WebGeneral.csproj">
+      <Project>{EB134011-C6A3-4025-A235-3048AF92CA00}</Project>
+      <Name>WebGeneral</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\API\API.csproj">
+      <Project>{1F80D04D-4A3D-48BD-843C-2D15DC990A18}</Project>
+      <Name>API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Aremote\Aremote.csproj">
+      <Project>{99A33988-D3E7-4DB3-8387-D362D06AB25D}</Project>
+      <Name>Aremote</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CorHapSys\CorHapSys.csproj">
+      <Project>{5ACAC743-A637-4DC8-A9F9-6A16787E3F54}</Project>
+      <Name>CorHapSys</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Interlinkage\Interlinkage.csproj">
+      <Project>{640F5641-5F80-468D-B3A2-D1B02EC1737D}</Project>
+      <Name>Interlinkage</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <StyleCopTargetsPath Condition="'$(StyleCopTargetsPath)'==''">$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\CodePlex\StyleCop','TargetsDir', null, RegistryView.Registry32))</StyleCopTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(StyleCopTargetsPath)" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>4825</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost/Adastra</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
