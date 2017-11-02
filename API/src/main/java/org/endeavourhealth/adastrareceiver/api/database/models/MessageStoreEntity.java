@@ -4,7 +4,11 @@ import org.endeavourhealth.adastrareceiver.api.database.PersistenceManager;
 import org.endeavourhealth.adastrareceiver.api.json.JsonConcept;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "message_store", schema = "adastra_receiver")
@@ -106,15 +110,69 @@ public class MessageStoreEntity {
         return result;
     }
 
-
     public static void storeMessage(MessageStoreEntity message) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
-        ConceptEntity conceptEntity = new ConceptEntity();
         entityManager.getTransaction().begin();
-        entityManager.persist(conceptEntity);
+        entityManager.persist(message);
         entityManager.getTransaction().commit();
 
         entityManager.close();
     }
+
+    public static List<MessageStoreEntity> getMessagesLimitByNumber(Integer limit) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MessageStoreEntity> cq = cb.createQuery(MessageStoreEntity.class);
+        Root<MessageStoreEntity> rootEntry = cq.from(MessageStoreEntity.class);
+        CriteriaQuery<MessageStoreEntity> all = cq.select(rootEntry);
+        cq.orderBy(cb.desc(rootEntry.get("id")));
+        TypedQuery<MessageStoreEntity> allQuery = entityManager.createQuery(all);
+        allQuery.setFirstResult(0);
+        allQuery.setMaxResults(limit);
+        List<MessageStoreEntity> ret = allQuery.getResultList();
+
+        entityManager.close();
+
+        return ret;
+    }
+
+    public static String resendMessages(Integer messageId) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        entityManager.getTransaction().begin();
+        Query query = entityManager.createQuery(
+                "UPDATE MessageStoreEntity m " +
+                        "set m.status = :received " +
+                        "where m.id <= :message");
+        query.setParameter("received", 0);
+        query.setParameter("message", messageId);
+
+        int updateCount = query.executeUpdate();
+
+        entityManager.getTransaction().commit();
+
+        System.out.println(updateCount + " updated");
+
+        entityManager.close();
+
+        return updateCount + " updated";
+    }
+
+    public static int runSQLScript(String script) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+       entityManager.getTransaction().begin();
+       try {
+           Query q = entityManager.createNativeQuery(script);
+
+           return q.executeUpdate();
+       }
+       finally {
+           entityManager.getTransaction().commit();
+           entityManager.close();
+       }
+    }
+
 }

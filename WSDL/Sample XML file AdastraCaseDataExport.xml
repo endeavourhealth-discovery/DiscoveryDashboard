@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<adastraCaseDataExport xsi:schemaLocation="http://www.adastra.com/dataExport AdastraCaseDataExport.xsd" xmlns="http://www.adastra.com/dataExport" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<adastraCaseReference>66c3bd5d-7a00-45d1-9db0-b5b9fd9dc740</adastraCaseReference>
+	<adastraCaseNumber>10475</adastraCaseNumber>
+	<patient>
+		<firstName>Matt</firstName>
+		<lastName>Stibbs</lastName>
+		<dateOfBirth dataOfBirthType="Exact">
+			<dobValue>2011-05-23</dobValue>
+		</dateOfBirth>
+		<gender>Male</gender>
+		<nationalNumber nationalNumberStatus="Confirmed">
+			<number>1111111111</number>
+		</nationalNumber>
+		<address addressType="Home">
+			<line1>Bolberry Down</line1>
+			<line2>4 Crossway</line2>
+			<locality>Kennington</locality>
+			<town>Ashford</town>
+			<county>Kent</county>
+			<postcode>TN248SB</postcode>
+		</address>
+		<address addressType="CurrentLocation">
+			<line1/>
+			<line2>5 Clover Rise</line2>
+			<locality>Stanford</locality>
+			<town>Canterbury</town>
+			<county>Kent</county>
+			<postcode>CT53AD</postcode>
+		</address>
+		<phone numberType="Home">
+			<number>01234 567890</number>
+			<extension>132323</extension>
+		</phone>
+		<phone numberType="Mobile">
+			<number>07777 789987</number>
+			<extension/>
+		</phone>
+		<gpRegistration>
+			<registrationStatus>Registered</registrationStatus>
+			<gpNationalCode>G1234567</gpNationalCode>
+			<surgeryNationalCode> V8199</surgeryNationalCode>
+			<surgeryPostcode>CT56JH</surgeryPostcode>
+		</gpRegistration>
+	</patient>
+	<presentingCondition>
+		<symptoms>Patient has a severe earache.</symptoms>
+		<comments>Patient seems to be quite distressed.</comments>
+	</presentingCondition>
+	<priority codeScheme="String">
+		<code>4</code>
+		<description>Routine</description>
+	</priority>
+	<caseType codeScheme="String">
+		<code>A</code>
+		<description>Advice</description>
+	</caseType>
+	<caseStatus>COMPLETE</caseStatus>
+	<activeDate>2012-05-30T09:30:10Z</activeDate>
+	<completedDate>2012-05-30T10:15:10Z</completedDate>
+	<returnPhone>
+		<number>01234555555</number>
+		<extension>444444</extension>
+	</returnPhone>
+	<callerPhone>
+		<number>01234666666</number>
+		<extension>333333</extension>
+	</callerPhone>
+	<latestAppointment>
+		<appointmentTime>2012-05-30T09:45:00Z</appointmentTime>
+		<location>Walk-In Centre</location>
+		<status>Arrived</status>
+	</latestAppointment>
+	<questions>A block of free text will be displayed here listing questions and answers asked during the case. Line breaks will be included.</questions>
+	<consultation>
+		<startTime>2012-05-30T09:46:32Z</startTime>
+		<endTime>2012-05-30T09:56:23Z</endTime>
+		<consultationBy providerType="Doctor">
+			<name>Dr John Smith</name>
+		</consultationBy>
+		<location>Walk-In Centre</location>
+		<summary>A free text block of text detailing all information captured during the consultation.</summary>
+		<medicalHistory>A block of text summarising all medical history information known at the time of the consultaiton.</medicalHistory>
+		<eventOutcome codeScheme="String">
+			<code>ABC</code>
+			<description>Description of ABC code</description>
+		</eventOutcome>
+		<eventOutcome codeScheme="String">
+			<code>DEF</code>
+			<description>Description of DEF code</description>
+		</eventOutcome>
+		<clinicalCode codeScheme="String">
+			<code>1348.</code>
+			<description>Description of 1348. clinical code</description>
+		</clinicalCode>
+		<clinicalCode codeScheme="String">
+			<code>137B.</code>
+			<description>Description of 137B. clinical code</description>
+		</clinicalCode>
+	</consultation>
+	<consultation>
+		<startTime>2012-05-30T09:46:32Z</startTime>
+		<endTime>2012-05-30T09:56:23Z</endTime>
+		<consultationBy providerType="Doctor">
+			<name>Dr John Smith</name>
+		</consultationBy>
+		<location>Walk-In Centre</location>
+		<summary>A free text block of text detailing all information captured during the consultation.</summary>
+		<medicalHistory>A block of text summarising all medical history information known at the time of the consultaiton.</medicalHistory>
+		<eventOutcome codeScheme="String">
+			<code>ABC</code>
+			<description>Description of ABC code</description>
+		</eventOutcome>
+		<eventOutcome codeScheme="String">
+			<code>DEF</code>
+			<description>Description of DEF code</description>
+		</eventOutcome>
+		<clinicalCode codeScheme="String">
+			<code>1348.</code>
+			<description>Description of 1348. clinical code</description>
+		</clinicalCode>
+		<clinicalCode codeScheme="String">
+			<code>137B.</code>
+			<description>Description of 137B. clinical code</description>
+		</clinicalCode>
+	</consultation>
+	<specialNote>
+		<reviewDate>2012-06-01</reviewDate>
+		<text>This patient has a very nasty dog.</text>
+	</specialNote>
+	<specialNote>
+		<reviewDate>2012-06-02</reviewDate>
+		<text>This patient has an incredibly pleasant dog too.</text>
+	</specialNote>
+	<outcome codeScheme="String">
+		<code>OUTCOME1</code>
+		<description>Description of OUTCOME1 code</description>
+	</outcome>
+	<outcome codeScheme="String">
+		<code>OUTCOME2</code>
+		<description>Description of OUTCOME2 code</description>
+	</outcome>
+</adastraCaseDataExport>

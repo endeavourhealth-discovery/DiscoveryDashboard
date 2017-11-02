@@ -8,13 +8,13 @@ values ('adastra-receiver','keycloak',
   "ssl-required": "external",
   "resource": "eds-ui",
   "public-client": true
-}';
+}');
 
 insert into config (app_id, config_id, config_data)
 values ('adastra-receiver','adastra_receiverDB',
       '{
    "url" : "jdbc:mysql://localhost:3306/adastra_receiver",
    "username" : "root",
-   "password" : "admin"
+   "password" : "YOUR_PASSWORD"
 }');
 
