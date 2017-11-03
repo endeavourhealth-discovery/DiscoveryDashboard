@@ -1,0 +1,32 @@
+.module {
+  padding-top: 51px;
+  padding-left: 60px;
+  padding-right: 0px;
+}
+
+.module-heading {
+  position: fixed;
+  padding: 8px 70px 8px 20px;
+  border-bottom: 1px solid #eee;
+  color: #fff;
+  background-color: #337ab7;
+  width: 100%;
+  font-size: 16px;
+  height: 45px;
+  line-height: 28px;
+  z-index: 100;
+}
+
+.module-body {
+  padding-top: 65px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.module-footer {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 80px;
+}

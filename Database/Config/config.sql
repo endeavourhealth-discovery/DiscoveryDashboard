@@ -18,3 +18,7 @@ values ('adastra-receiver','adastra_receiverDB',
    "password" : "YOUR_PASSWORD"
 }');
 
+insert into config (app_id, config_id, config_data)
+values ('adastra-receiver','application',
+      '{ "appUrl" : "http://localhost:8080" }'
+      );

@@ -6,6 +6,7 @@ import org.endeavourhealth.adastrareceiver.api.json.JsonConcept;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.sql.Timestamp;
 import java.util.List;
@@ -158,6 +159,21 @@ public class MessageStoreEntity {
         entityManager.close();
 
         return updateCount + " updated";
+    }
+
+    public static Long getTotalNumberOfMessages() throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<MessageStoreEntity> rootEntry = cq.from(MessageStoreEntity.class);
+        cq.select((cb.countDistinct(rootEntry)));
+
+        Long ret = entityManager.createQuery(cq).getSingleResult();
+
+        entityManager.close();
+
+        return ret;
     }
 
     public static int runSQLScript(String script) throws Exception {

@@ -49,18 +49,20 @@ public class AdastraReceiverEndpoint implements AdastraWebServiceSoap {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name="adastraReceiver.ConceptEndpoint.Get")
-    @Path("/")
-    @ApiOperation(value = "Returns a list of all concepts")
-    public Response get(@Context SecurityContext sc,
-                        @ApiParam(value = "Optional Concept Id") @QueryParam("conceptId") Integer conceptId,
-                        @ApiParam(value = "Optional Name of concept") @QueryParam("conceptName") String conceptName,
-                        @ApiParam(value = "Optional Array of concept Ids") @QueryParam("conceptIdList") List<Integer> conceptIdList
-    ) throws Exception {
-        System.out.println("Get Called");
+    @Timed(absolute = true, name="adastraReceiver.adastra.getTotalMessageCount")
+    @Path("/totalMessageCount")
+    @ApiOperation(value = "returns the total number of messages received")
+    public Response get(@Context SecurityContext sc) throws Exception {
+        System.out.println("Total Count");
 
+        return getTotalMessageCount();
+    }
+
+    private Response getTotalMessageCount() throws Exception {
+
+        Long messageCount = MessageStoreEntity.getTotalNumberOfMessages();
         return Response
-                .ok("hello")
+                .ok(messageCount)
                 .build();
     }
 
