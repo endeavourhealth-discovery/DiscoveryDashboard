@@ -128,6 +128,23 @@ public class AdastraReceiverEndpoint implements AdastraWebServiceSoap {
                 .build();
     }
 
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.adastra.clearConfigCache")
+    @Path("/clearConfigCache")
+    @ApiOperation(value = "Clears the config cache after changing the config")
+    public Response clearConfigCache(@Context SecurityContext sc) throws Exception {
+        System.out.println("clearing Cache");
+
+        MessageProcessor messageProcessor = new MessageProcessor();
+        messageProcessor.clearConfigCache();
+
+        return Response
+                .ok()
+                .build();
+    }
+
     private Response getMessageCount(byte status) throws Exception {
 
         Long messageCount = MessageStoreEntity.getTotalNumberOfMessages(status);

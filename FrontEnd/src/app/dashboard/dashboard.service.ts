@@ -45,4 +45,10 @@ export class DashboardService {
       .map((response) => response.text());
   }
 
+  public clearCache() : Observable<string> {
+    let vm = this;
+    return vm.http.get("/api/adastra/clearConfigCache",{ withCredentials : true} )
+      .map((response) => response.text());
+  }
+
 }

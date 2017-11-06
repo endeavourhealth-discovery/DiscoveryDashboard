@@ -1,6 +1,7 @@
 package org.endeavourhealth.adastrareceiver.api.database.models;
 
 import org.endeavourhealth.adastrareceiver.api.database.PersistenceManager;
+import org.endeavourhealth.adastrareceiver.api.enums.MessageStatus;
 import org.endeavourhealth.adastrareceiver.api.json.JsonConcept;
 
 import javax.persistence.*;
@@ -145,9 +146,31 @@ public class MessageStoreEntity {
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery(
                 "UPDATE MessageStoreEntity m " +
-                        "set m.status = :received " +
+                        "set m.status = :processed " +
                         "where m.id <= :message");
-        query.setParameter("received", 0);
+        query.setParameter("processed", MessageStatus.PROCESSED.getMessageStatus());
+        query.setParameter("message", messageId);
+
+        int updateCount = query.executeUpdate();
+
+        entityManager.getTransaction().commit();
+
+        System.out.println(updateCount + " updated");
+
+        entityManager.close();
+
+        return updateCount + " updated";
+    }
+
+    public static String updateMessageStatus(long messageId, byte status) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        entityManager.getTransaction().begin();
+        Query query = entityManager.createQuery(
+                "UPDATE MessageStoreEntity m " +
+                        "set m.status = :newStatus " +
+                        "where m.id = :message");
+        query.setParameter("newStatus", status);
         query.setParameter("message", messageId);
 
         int updateCount = query.executeUpdate();

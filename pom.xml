@@ -19,6 +19,7 @@
         <eds-api.version>1.0-SNAPSHOT</eds-api.version>
         <eds-core.version>1.0-SNAPSHOT</eds-core.version>
         <eds-security.version>1.0-SNAPSHOT</eds-security.version>
+        <endeavour-edsclient.version>1.0-SNAPSHOT</endeavour-edsclient.version>
 
         <aspectj.version>1.8.9</aspectj.version>
         <aspectj-metrics.version>1.2.0</aspectj-metrics.version>

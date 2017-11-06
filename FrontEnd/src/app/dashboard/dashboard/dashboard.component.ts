@@ -131,4 +131,15 @@ export class DashboardComponent implements OnInit {
       );
   }
 
+  clearCache() {
+    const vm = this;
+    vm.dashboardService.clearCache()
+      .subscribe(
+        (result) => {
+          console.log(result);
+        },
+        (error) => console.log(error)
+      );
+  }
+
 }

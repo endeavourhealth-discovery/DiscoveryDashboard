@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
-
-    <persistence-unit name="`">
-        <class>org.endeavourhealth.adastrareceiver.api.database.models.ConceptEntity</class>
-        <class>org.endeavourhealth.adastrareceiver.api.database.models.ConceptRelationshipEntity</class>
-        <class>org.endeavourhealth.adastrareceiver.api.database.models.ExpressionEntity</class>
-        <class>org.endeavourhealth.adastrareceiver.api.database.models.RangeEntity</class>
-        <properties>
-            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/adastra_receiver"/>
-            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
-        </properties>
-    </persistence-unit>
     <persistence-unit name="adastra_receiver">
         <class>org.endeavourhealth.adastrareceiver.api.database.models.MessageStoreEntity</class>
+        <class>org.endeavourhealth.adastrareceiver.api.database.models.EdsEndpointEntity</class>
+        <class>org.endeavourhealth.adastrareceiver.api.database.models.MessageStatusEntity</class>
         <properties>
             <property name="toplink.jdbc.url" value="jdbc:mysql://localhost:3306/adastra_receiver"/>
             <property name="toplink.jdbc.driver" value="com.mysql.jdbc.Driver"/>

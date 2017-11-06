@@ -30,6 +30,12 @@
             <artifactId>security</artifactId>
             <version>${eds-security.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.endeavourhealth.common</groupId>
+            <artifactId>eds-client</artifactId>
+            <version>${endeavour-edsclient.version}</version>
+        </dependency>
         <!-- End Common -->
 
         <!-- Jersey -->

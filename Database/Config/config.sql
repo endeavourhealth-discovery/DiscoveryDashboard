@@ -19,6 +19,14 @@ values ('adastra-receiver','adastra_receiverDB',
 }');
 
 insert into config (app_id, config_id, config_data)
-values ('adastra-receiver','application',
+values ('adastra-receiver',
+		'application',
       '{ "appUrl" : "http://localhost:8080" }'
       );
+
+insert into config (app_id, config_id, config_data)
+values ('adastra-receiver','messagingAPI',
+      '{
+   "eds_url" : "http://localhost:8001",
+   "useKeycloak" : "true"
+}');

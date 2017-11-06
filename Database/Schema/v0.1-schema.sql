@@ -21,3 +21,4 @@ create table adastra_receiver.message_store (
     index adastra_receiver_message_store_received_date_time_idx (received_date_time),
     foreign key adastra_receiver_message_store_status_fk (status) references adastra_receiver.message_status(id)
 );
+
