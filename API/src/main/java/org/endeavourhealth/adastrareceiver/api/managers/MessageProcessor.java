@@ -1,15 +1,12 @@
 package org.endeavourhealth.adastrareceiver.api.managers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.endeavourhealth.adastrareceiver.api.database.models.MessageStoreEntity;
 import org.endeavourhealth.adastrareceiver.api.enums.MessageStatus;
 import org.endeavourhealth.common.config.ConfigManager;
 import org.endeavourhealth.common.eds.EdsSender;
 import org.endeavourhealth.common.eds.EdsSenderHttpErrorResponseException;
 import org.endeavourhealth.common.eds.EdsSenderResponse;
-import sun.plugin2.message.Message;
-import sun.reflect.annotation.ExceptionProxy;
 
 import java.io.IOException;
 import java.time.Instant;
