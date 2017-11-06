@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.endeavourhealth.adastrareceiver.api.database.models.MessageStoreEntity;
+import org.endeavourhealth.adastrareceiver.api.managers.MessageProcessor;
 import org.endeavourhealth.common.utility.XmlHelper;
 
 import javax.ws.rs.*;
@@ -49,18 +50,87 @@ public class AdastraReceiverEndpoint implements AdastraWebServiceSoap {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name="adastraReceiver.adastra.getTotalMessageCount")
-    @Path("/totalMessageCount")
+    @Timed(absolute = true, name="adastraReceiver.adastra.messageCount")
+    @Path("/messageCount")
     @ApiOperation(value = "returns the total number of messages received")
-    public Response get(@Context SecurityContext sc) throws Exception {
-        System.out.println("Total Count");
+    public Response getMessageCount(@Context SecurityContext sc,
+                                    @ApiParam(value = "message Status") @QueryParam("status") byte status) throws Exception {
+        System.out.println("Count");
 
-        return getTotalMessageCount();
+        return getMessageCount(status);
     }
 
-    private Response getTotalMessageCount() throws Exception {
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.adastra.startProcessor")
+    @Path("/startProcessor")
+    @ApiOperation(value = "Starts the message Processor")
+    public Response startProcessor(@Context SecurityContext sc) throws Exception {
+        System.out.println("Starting Processor");
 
-        Long messageCount = MessageStoreEntity.getTotalNumberOfMessages();
+        MessageProcessor messageProcessor = new MessageProcessor();
+        messageProcessor.startProcessor();
+
+        return Response
+                .ok()
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.adastra.stopProcessor")
+    @Path("/stopProcessor")
+    @ApiOperation(value = "Stops the message Processor")
+    public Response stopProcessor(@Context SecurityContext sc) throws Exception {
+        System.out.println("Stopping Processor");
+
+        MessageProcessor messageProcessor = new MessageProcessor();
+        messageProcessor.stopProcessor();
+
+        return Response
+                .ok()
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.adastra.isRunning")
+    @Path("/isRunning")
+    @ApiOperation(value = "Checks if the processor is running")
+    public Response isRunning(@Context SecurityContext sc) throws Exception {
+        System.out.println("Checking Status");
+
+        MessageProcessor messageProcessor = new MessageProcessor();
+        boolean isRunning = messageProcessor.processorStatus();
+
+        return Response
+                .ok(isRunning)
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.adastra.isRunning")
+    @Path("/message")
+    @ApiOperation(value = "Checks if the processor is running")
+    public Response message(@Context SecurityContext sc) throws Exception {
+        System.out.println("getting messages");
+
+        List<MessageStoreEntity> messages = MessageStoreEntity.getEarliestUnsendMessages();
+        System.out.println(messages.size());
+
+        return Response
+                .ok()
+                .build();
+    }
+
+    private Response getMessageCount(byte status) throws Exception {
+
+        Long messageCount = MessageStoreEntity.getTotalNumberOfMessages(status);
         return Response
                 .ok(messageCount)
                 .build();

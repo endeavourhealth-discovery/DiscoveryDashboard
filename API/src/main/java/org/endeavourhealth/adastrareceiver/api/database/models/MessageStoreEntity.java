@@ -161,13 +161,41 @@ public class MessageStoreEntity {
         return updateCount + " updated";
     }
 
-    public static Long getTotalNumberOfMessages() throws Exception {
+    public static List<MessageStoreEntity> getEarliestUnsendMessages() throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        entityManager.getTransaction().begin();
+        Query query = entityManager.createQuery(
+                "select m from MessageStoreEntity m " +
+                        "where m.status = :unsentStatus " +
+                        "order by m.receivedDateTime asc " +
+                        "");
+        query.setParameter("unsentStatus", (byte)0);
+        query.setMaxResults(10);
+
+        List<MessageStoreEntity> mse = query.getResultList();
+
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+
+        return mse;
+    }
+
+    public static Long getTotalNumberOfMessages(byte status) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<MessageStoreEntity> rootEntry = cq.from(MessageStoreEntity.class);
+
+        Predicate predicate = cb.equal(rootEntry.get("status"), status);
+
         cq.select((cb.countDistinct(rootEntry)));
+
+        if (status != -1) { //All messages
+            cq.where(predicate);
+        }
 
         Long ret = entityManager.createQuery(cq).getSingleResult();
 

@@ -7,7 +7,26 @@
       <form>
         <div class="row">
           <div class="col-md-6">
-            Total Messages received : {{totalMessageCount}}
+            <p>Total messages received : {{totalMessageCount}}</p>
+            <p>Messages received but not sent to Discovery: {{receivedMessageCount}}</p>
+            <p>Messages sent to discovery : {{sentMessageCount}}</p>
+            <p>Messages received with an error: {{errorMessageCount}}</p>
+            <br>
+            <p>Message Processor Status : {{runningStatus}}</p>
+          </div>
+          <div class="col-md-6">
+            <button type="button" class="btn btn-sm btn-primary" (click)="startProcessor()">Start</button>
+            <button type="button" class="btn btn-sm btn-primary" (click)="stopProcessor()">Stop</button>
+            <button type="button" class="btn btn-sm btn-primary" (click)="getDashboardStatistics()">Refresh</button>
+            <button type="button" class="btn btn-sm btn-primary" (click)="message()">Message</button>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-12">
+            <p>Enter XML message to send</p>
+            <textarea [(ngModel)]="messageXML" name="messageXML"></textarea>
+            <button type="button" class="btn btn-sm btn-primary" (click)="sendXML()">Send</button>
           </div>
         </div>
       </form>
