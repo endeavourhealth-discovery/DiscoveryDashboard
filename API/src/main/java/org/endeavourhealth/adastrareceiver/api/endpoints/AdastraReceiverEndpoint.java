@@ -29,7 +29,7 @@ public class AdastraReceiverEndpoint implements AdastraWebServiceSoap {
 
     @Override
     public AddUpdateCaseResult addUpdateCase(String userName, String password, AddUpdateCase.Data data) {
-        System.out.println("boom!!");
+        System.out.println("boom yes!!");
         return null;
     }
 
