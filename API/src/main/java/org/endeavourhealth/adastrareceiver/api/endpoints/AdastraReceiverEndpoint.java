@@ -1,8 +1,6 @@
 package org.endeavourhealth.adastrareceiver.api.endpoints;
 import adastraSchema.AdastraCaseDataExport;
-import adastraWS.AdastraWebServiceSoap;
-import adastraWS.AddUpdateCase;
-import adastraWS.AddUpdateCaseResult;
+
 import com.codahale.metrics.annotation.Timed;
 import io.astefanutti.metrics.aspectj.Metrics;
 import io.swagger.annotations.Api;
@@ -25,13 +23,7 @@ import java.util.List;
 @Path("/adastra")
 @Metrics(registry = "adastraReceiverMetricRegistry")
 @Api(description = "Initial api for all calls relating to the Adastra Receiver")
-public class AdastraReceiverEndpoint implements AdastraWebServiceSoap {
-
-    @Override
-    public AddUpdateCaseResult addUpdateCase(String userName, String password, AddUpdateCase.Data data) {
-        System.out.println("boom yes!!");
-        return null;
-    }
+public class AdastraReceiverEndpoint  {
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)
