@@ -27,7 +27,7 @@
           <div class="col-md-3">
             <div class="input-group">
               <span class="input-group-addon" id="orderOrg">Column</span>
-              <select #selectedOrder class="form-control" [(ngModel)]="orderColumn" name="orderColumn" (change)="columnChange()">
+              <select #selectedOrder class="form-control" [(ngModel)]="orderColumn" name="orderColumn" (change)="getMessages()">
                 <option *ngFor="let o of orderList" [ngValue]="o.column">{{o.name}}</option>
               </select>
             </div>
@@ -35,7 +35,7 @@
           <div class="col-md-3">
             <div class="input-group">
               <span class="input-group-addon" id="asc">Order</span>
-              <select #selectedOrder class="form-control" [(ngModel)]="ascending" name="ascending" (change)="orderChange()">
+              <select #selectedOrder class="form-control" [(ngModel)]="ascending" name="ascending" (change)="getMessages()">
                 <option *ngFor="let a of ascendinglist" [ngValue]="a.ascending">{{a.name}}</option>
               </select>
             </div>
@@ -43,7 +43,7 @@
           <div class="col-md-3">
             <div class="input-group">
               <span class="input-group-addon" id="pageSize">Items Per Page</span>
-              <select #selectedPageSize class="form-control" [(ngModel)]="pageSize" name="pageSize" (change)="pageSizeChange()">
+              <select #selectedPageSize class="form-control" [(ngModel)]="pageSize" name="pageSize" (change)="getMessages()">
                 <option *ngFor="let ps of pageSizeList" [ngValue]="ps.value">{{ps.value}}</option>
               </select>
             </div>
@@ -52,7 +52,26 @@
 
         <div class="row">
           <div class="col-md-12">
-            <p>Messages</p>
+            <div class="form-group">
+              <label>Options:</label>
+              <div class="row">
+                <div class="col-md-4" *ngFor="let option of options">
+                  <label>
+                    <input type="checkbox"
+                           name="options"
+                           value="{{option.value}}"
+                           [(ngModel)]="option.checked"
+                            (change)="getMessages()"/>
+                    {{option.name}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
             <table class="table table-sm">
               <thead>
                 <th class="d-inline-block col-1">Id</th>
@@ -74,7 +93,7 @@
 
         <div class="row">
           <div class="col-md-12">
-            <ngb-pagination [collectionSize]="totalMessageCount" [(page)]="pageNumber" [maxSize]="100" [pageSize]="pageSize" [boundaryLinks]="true" (pageChange)="pageChanged($event)"></ngb-pagination>
+            <ngb-pagination [collectionSize]="messageCount" [(page)]="pageNumber" [maxSize]="100" [pageSize]="pageSize" [boundaryLinks]="true" (pageChange)="pageChanged($event)"></ngb-pagination>
           </div>
         </div>
 

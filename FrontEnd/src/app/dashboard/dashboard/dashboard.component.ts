@@ -20,6 +20,8 @@ export class DashboardComponent implements OnInit {
   pageSize : number = 10;
   orderColumn: string = 'id';
   ascending = false;
+  selectedOptions = [];
+  messageCount: number;
 
   orderList = [
     {id: 0, name: 'Id', column: 'id'},
@@ -38,7 +40,13 @@ export class DashboardComponent implements OnInit {
   ascendinglist = [
     {name: 'Descending', ascending: false},
     {name: 'Ascending', ascending: true}
-  ]
+  ];
+
+  options = [
+    {name:'Received', value:'0', checked:true},
+    {name:'Sent to Messaging API', value:'1', checked:true},
+    {name:'Error', value:'2', checked:true}
+  ];
 
   constructor(private dashboardService: DashboardService) { }
 
@@ -53,21 +61,6 @@ export class DashboardComponent implements OnInit {
     vm.getMessages();
   }
 
-  pageSizeChange(){
-    const vm = this;
-    vm.getMessages();
-  }
-
-  columnChange() {
-    const vm = this;
-    vm.getMessages();
-  }
-
-  orderChange() {
-    const vm = this;
-    vm.getMessages();
-  }
-
   setColour(status : number) {
     if (status == 0) {
       return 'table-success';
@@ -78,6 +71,12 @@ export class DashboardComponent implements OnInit {
     if (status == 2) {
       return 'table-danger';
     }
+  }
+
+  getSelectedOptions() {
+    return this.options
+      .filter(opt => opt.checked)
+      .map(opt => opt.value)
   }
 
   getDashboardStatistics() {
@@ -96,6 +95,20 @@ export class DashboardComponent implements OnInit {
       .subscribe(
         (result) => {
           vm.totalMessageCount = result;
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  getMessageCount() {
+    const vm = this;
+    vm.selectedOptions = vm.getSelectedOptions();
+
+    vm.dashboardService.getMessageCount(vm.selectedOptions)
+      .subscribe(
+        (result) => {
+          vm.messageCount = result;
+          console.log(vm.messageCount);
         },
         (error) => console.log(error)
       );
@@ -181,8 +194,10 @@ export class DashboardComponent implements OnInit {
 
   getMessages() {
     const vm = this;
-    console.log(vm.pageSize);
-    vm.dashboardService.getMessages(vm.pageNumber, vm.pageSize, vm.orderColumn, vm.ascending)
+    vm.selectedOptions = vm.getSelectedOptions();
+    vm.getMessageCount();
+
+    vm.dashboardService.getMessages(vm.pageNumber, vm.pageSize, vm.orderColumn, vm.ascending, vm.selectedOptions)
       .subscribe(
         (result) => {
           console.log(result);

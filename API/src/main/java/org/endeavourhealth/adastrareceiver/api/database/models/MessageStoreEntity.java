@@ -121,13 +121,21 @@ public class MessageStoreEntity {
         entityManager.close();
     }
 
-    public static List<MessageStoreEntity> getMessages(Integer pageNumber, Integer pageSize, String orderColumn, boolean ascending) throws Exception {
+    public static List<MessageStoreEntity> getMessages(Integer pageNumber, Integer pageSize,
+                                                       String orderColumn, boolean ascending,
+                                                       List<Integer> statusList) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<MessageStoreEntity> cq = cb.createQuery(MessageStoreEntity.class);
         Root<MessageStoreEntity> rootEntry = cq.from(MessageStoreEntity.class);
         CriteriaQuery<MessageStoreEntity> all = cq.select(rootEntry);
+
+        if (statusList != null && statusList.size() > 0) {
+            Predicate predicate = rootEntry.get("status").in(statusList);
+            cq.where(predicate);
+        }
+
         if (ascending)
             cq.orderBy(cb.asc(rootEntry.get(orderColumn)));
         else
@@ -222,6 +230,28 @@ public class MessageStoreEntity {
         if (status != -1) { //All messages
             cq.where(predicate);
         }
+
+        Long ret = entityManager.createQuery(cq).getSingleResult();
+
+        entityManager.close();
+
+        return ret;
+    }
+
+    public static Long getMessageCount(List<Integer> statusList) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<MessageStoreEntity> rootEntry = cq.from(MessageStoreEntity.class);
+
+
+        if (statusList != null && statusList.size() > 0) {
+            Predicate predicate = rootEntry.get("status").in(statusList);
+            cq.where(predicate);
+        }
+
+        cq.select((cb.countDistinct(rootEntry)));
 
         Long ret = entityManager.createQuery(cq).getSingleResult();
 

@@ -131,7 +131,8 @@ public class AdastraReceiverEndpoint  {
                                 @ApiParam(value = "Optional page number (defaults to 1 if not provided)") @QueryParam("pageNumber") Integer pageNumber,
                                 @ApiParam(value = "Optional page size (defaults to 20 if not provided)")@QueryParam("pageSize") Integer pageSize,
                                 @ApiParam(value = "Optional order column (defaults to name if not provided)")@QueryParam("orderColumn") String orderColumn,
-                                @ApiParam(value = "Optional ordering direction (defaults to descending if not provided)")@QueryParam("ascending") boolean ascending) throws Exception {
+                                @ApiParam(value = "Optional ordering direction (defaults to descending if not provided)")@QueryParam("ascending") boolean ascending,
+                                @ApiParam(value = "Optional array of message status' to return")@QueryParam("statusList") List<Integer> statusList) throws Exception {
         System.out.println("getting messages");
 
         if (pageNumber == null)
@@ -141,8 +142,25 @@ public class AdastraReceiverEndpoint  {
         if (orderColumn == null)
             orderColumn = "id";
 
-        List<MessageStoreEntity> messages = MessageStoreEntity.getMessages(pageNumber, pageSize, orderColumn, ascending);
+        List<MessageStoreEntity> messages = MessageStoreEntity.getMessages(pageNumber, pageSize, orderColumn, ascending, statusList);
         System.out.println(messages.size());
+
+        return Response
+                .ok()
+                .entity(messages)
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.adastra.getMessageCount")
+    @Path("/getMessageCount")
+    @ApiOperation(value = "Gets messages paginated on the server side")
+    public Response getMessageCount(@Context SecurityContext sc,
+                                @ApiParam(value = "Optional array of message status' to return")@QueryParam("statusList") List<Integer> statusList) throws Exception {
+
+        Long messages = MessageStoreEntity.getMessageCount(statusList);
 
         return Response
                 .ok()
