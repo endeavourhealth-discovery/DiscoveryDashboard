@@ -24,7 +24,8 @@ public class AdastraImplementation implements AdastraWebServiceSoap {
     private void saveMessage(AddUpdateCase.Data data) {
         try {
             MessageStoreEntity ms = new MessageStoreEntity();
-            ms.setMessagePayload(data.toString());
+            processMessageData(data);
+            ms.setMessagePayload("test");
             ms.setReceivedDateTime(Timestamp.from(ZonedDateTime.now(ZoneOffset.UTC).toInstant()));
             ms.setSource(1);
             ms.setStatus((byte) 0);
@@ -33,5 +34,10 @@ public class AdastraImplementation implements AdastraWebServiceSoap {
         } catch ( Exception e ) {
 
         }
+    }
+
+    private void processMessageData(AddUpdateCase.Data data) throws Exception {
+
+
     }
 }

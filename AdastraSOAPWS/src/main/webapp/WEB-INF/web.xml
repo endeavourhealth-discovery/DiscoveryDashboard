@@ -17,4 +17,15 @@
         <servlet-name>WSServlet</servlet-name>
         <url-pattern>/webservices/*</url-pattern>
     </servlet-mapping>
+
+    <!-- startup class, initializes config manager -->
+    <context-param>
+        <param-name>app_id</param-name>
+        <param-value>adastra-receiver</param-value>
+    </context-param>
+    <listener>
+        <listener-class>
+            org.endeavourhealth.coreui.framework.StartupConfig
+        </listener-class>
+    </listener>
 </web-app>

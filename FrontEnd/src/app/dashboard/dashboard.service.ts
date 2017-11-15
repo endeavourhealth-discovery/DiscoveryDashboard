@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {URLSearchParams, Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
+import {MessageStore} from "./models/MessageStore";
 
 @Injectable()
 export class DashboardService {
@@ -39,10 +40,10 @@ export class DashboardService {
       .map((response) => response.json());
   }
 
-  public message() : Observable<string> {
+  public getUnsentMessages() : Observable<MessageStore[]> {
     let vm = this;
-    return vm.http.get("/api/adastra/message",{ withCredentials : true} )
-      .map((response) => response.text());
+    return vm.http.get("/api/adastra/unsentMessages",{ withCredentials : true} )
+      .map((response) => response.json());
   }
 
   public clearCache() : Observable<string> {

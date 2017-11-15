@@ -2,7 +2,6 @@ package org.endeavourhealth.adastrareceiver.api.database.models;
 
 import org.endeavourhealth.adastrareceiver.api.database.PersistenceManager;
 import org.endeavourhealth.adastrareceiver.api.enums.MessageStatus;
-import org.endeavourhealth.adastrareceiver.api.json.JsonConcept;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -184,7 +183,7 @@ public class MessageStoreEntity {
         return updateCount + " updated";
     }
 
-    public static List<MessageStoreEntity> getEarliestUnsendMessages() throws Exception {
+    public static List<MessageStoreEntity> getEarliestUnsentMessages() throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         entityManager.getTransaction().begin();
@@ -193,7 +192,7 @@ public class MessageStoreEntity {
                         "where m.status = :unsentStatus " +
                         "order by m.receivedDateTime asc " +
                         "");
-        query.setParameter("unsentStatus", (byte)0);
+        query.setParameter("unsentStatus", MessageStatus.RECEIVED.getMessageStatus());
         query.setMaxResults(10);
 
         List<MessageStoreEntity> mse = query.getResultList();

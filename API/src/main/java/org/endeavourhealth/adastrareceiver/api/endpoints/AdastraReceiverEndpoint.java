@@ -104,19 +104,20 @@ public class AdastraReceiverEndpoint  {
     }
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name="adastraReceiver.adastra.isRunning")
-    @Path("/message")
-    @ApiOperation(value = "Checks if the processor is running")
+    @Timed(absolute = true, name="adastraReceiver.adastra.unsentMessages")
+    @Path("/unsentMessages")
+    @ApiOperation(value = "Gets the 10 earliest unsent messages")
     public Response message(@Context SecurityContext sc) throws Exception {
         System.out.println("getting messages");
 
-        List<MessageStoreEntity> messages = MessageStoreEntity.getEarliestUnsendMessages();
+        List<MessageStoreEntity> messages = MessageStoreEntity.getEarliestUnsentMessages();
         System.out.println(messages.size());
 
         return Response
                 .ok()
+                .entity(messages)
                 .build();
     }
 

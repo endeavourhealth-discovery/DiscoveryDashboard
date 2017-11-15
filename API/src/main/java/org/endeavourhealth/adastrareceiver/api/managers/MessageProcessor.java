@@ -54,11 +54,11 @@ public class MessageProcessor {
 
 
     public static boolean checkForNewMessages() throws Exception {
-        List<MessageStoreEntity> messages = MessageStoreEntity.getEarliestUnsendMessages();
+        List<MessageStoreEntity> messages = MessageStoreEntity.getEarliestUnsentMessages();
 
         for (MessageStoreEntity message: messages) {
             System.out.println(message.getId());
-            sendMessageToAPI(message);
+            //sendMessageToAPI(message);
         }
         return true;
     }

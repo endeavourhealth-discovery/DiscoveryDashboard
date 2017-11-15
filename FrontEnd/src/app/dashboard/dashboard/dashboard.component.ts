@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {DashboardService} from "../dashboard.service";
+import {MessageStore} from "../models/MessageStore";
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +14,7 @@ export class DashboardComponent implements OnInit {
   errorMessageCount: number = 0;
   messageXML: string = "";
   runningStatus: string = "";
+  messages: MessageStore[];
 
 
   constructor(private dashboardService: DashboardService) { }
@@ -29,6 +31,7 @@ export class DashboardComponent implements OnInit {
     vm.getSentMessageCount();
     vm.getErrorMessageCount();
     vm.checkProcessorIsRunning();
+    vm.getUnsentMessages();
   }
 
   getTotalMessageCount() {
@@ -120,12 +123,13 @@ export class DashboardComponent implements OnInit {
       );
   }
 
-  message() {
+  getUnsentMessages() {
     const vm = this;
-    vm.dashboardService.message()
+    vm.dashboardService.getUnsentMessages()
       .subscribe(
         (result) => {
           console.log(result);
+          vm.messages = result;
         },
         (error) => console.log(error)
       );
