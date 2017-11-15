@@ -5,12 +5,14 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DashboardService} from "./dashboard.service";
 import { LoggerService } from 'eds-angular4';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    NgxPaginationModule
   ],
   declarations: [DashboardComponent],
   providers: [

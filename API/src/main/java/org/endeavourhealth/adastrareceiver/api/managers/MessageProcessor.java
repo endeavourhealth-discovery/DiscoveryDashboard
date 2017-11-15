@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class MessageProcessor {
     private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(0);
     private static Instant lastSend = Instant.now();
-    private Future<?> future = scheduler.scheduleAtFixedRate(messageChecker, 0L, 5L, TimeUnit.SECONDS);
+    private Future<?> future = scheduler.scheduleAtFixedRate(messageChecker, 0L, 5L, TimeUnit.MINUTES);
     private static JsonNode jsonConfig = null;
 
     public void startProcessor() {

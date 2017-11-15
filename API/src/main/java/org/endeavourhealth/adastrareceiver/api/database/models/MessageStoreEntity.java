@@ -121,17 +121,21 @@ public class MessageStoreEntity {
         entityManager.close();
     }
 
-    public static List<MessageStoreEntity> getMessagesLimitByNumber(Integer limit) throws Exception {
+    public static List<MessageStoreEntity> getMessages(Integer pageNumber, Integer pageSize, String orderColumn, boolean ascending) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<MessageStoreEntity> cq = cb.createQuery(MessageStoreEntity.class);
         Root<MessageStoreEntity> rootEntry = cq.from(MessageStoreEntity.class);
         CriteriaQuery<MessageStoreEntity> all = cq.select(rootEntry);
-        cq.orderBy(cb.desc(rootEntry.get("id")));
+        if (ascending)
+            cq.orderBy(cb.asc(rootEntry.get(orderColumn)));
+        else
+            cq.orderBy(cb.desc(rootEntry.get(orderColumn)));
+
         TypedQuery<MessageStoreEntity> allQuery = entityManager.createQuery(all);
-        allQuery.setFirstResult(0);
-        allQuery.setMaxResults(limit);
+        allQuery.setFirstResult((pageNumber.intValue() - 1) * pageSize.intValue());
+        allQuery.setMaxResults(pageSize.intValue());
         List<MessageStoreEntity> ret = allQuery.getResultList();
 
         entityManager.close();

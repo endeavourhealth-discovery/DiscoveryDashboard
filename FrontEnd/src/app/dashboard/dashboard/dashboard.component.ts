@@ -16,12 +16,56 @@ export class DashboardComponent implements OnInit {
   runningStatus: string = "";
   messages: MessageStore[];
 
+  pageNumber : number = 1;
+  pageSize : number = 10;
+  orderColumn: string = 'id';
+  ascending = false;
+
+  orderList = [
+    {id: 0, name: 'Id', column: 'id'},
+    {id: 1, name: 'Source', column: 'source'},
+    {id: 2, name: 'Received', column: 'receivedDateTime'},
+    {id: 3, name: 'Status', column: 'status'},
+    {id: 4, name: 'Sent', column: 'sentDateTime'}
+  ];
+
+  pageSizeList = [
+    {value: 10},
+    {value: 50},
+    {value: 100},
+  ];
+
+  ascendinglist = [
+    {name: 'Descending', ascending: false},
+    {name: 'Ascending', ascending: true}
+  ]
 
   constructor(private dashboardService: DashboardService) { }
 
   ngOnInit() {
     var vm = this;
     vm.getDashboardStatistics();
+  }
+
+  pageChanged($event) {
+    const vm = this;
+    vm.pageNumber = $event;
+    vm.getMessages();
+  }
+
+  pageSizeChange(){
+    const vm = this;
+    vm.getMessages();
+  }
+
+  columnChange() {
+    const vm = this;
+    vm.getMessages();
+  }
+
+  orderChange() {
+    const vm = this;
+    vm.getMessages();
   }
 
   getDashboardStatistics() {
@@ -31,7 +75,7 @@ export class DashboardComponent implements OnInit {
     vm.getSentMessageCount();
     vm.getErrorMessageCount();
     vm.checkProcessorIsRunning();
-    vm.getUnsentMessages();
+    vm.getMessages();
   }
 
   getTotalMessageCount() {
@@ -123,9 +167,10 @@ export class DashboardComponent implements OnInit {
       );
   }
 
-  getUnsentMessages() {
+  getMessages() {
     const vm = this;
-    vm.dashboardService.getUnsentMessages()
+    console.log(vm.pageSize);
+    vm.dashboardService.getMessages(vm.pageNumber, vm.pageSize, vm.orderColumn, vm.ascending)
       .subscribe(
         (result) => {
           console.log(result);

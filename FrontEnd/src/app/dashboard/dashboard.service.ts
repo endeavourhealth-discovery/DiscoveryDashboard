@@ -40,9 +40,16 @@ export class DashboardService {
       .map((response) => response.json());
   }
 
-  public getUnsentMessages() : Observable<MessageStore[]> {
+  public getMessages(pageNumber: number = 1, pageSize: number = 20,
+                     orderColumn: string = 'name', ascending: boolean = false) : Observable<MessageStore[]> {
     let vm = this;
-    return vm.http.get("/api/adastra/unsentMessages",{ withCredentials : true} )
+    const params = new URLSearchParams();
+    console.log(pageSize);
+    params.set('pageNumber', pageNumber.toString());
+    params.set('pageSize', pageSize.toString());
+    params.set('orderColumn', orderColumn.toString());
+    params.set('ascending', ascending.toString());
+    return vm.http.get("/api/adastra/getMessages",{ search : params,  withCredentials : true} )
       .map((response) => response.json());
   }
 
