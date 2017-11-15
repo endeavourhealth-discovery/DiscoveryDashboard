@@ -68,6 +68,18 @@ export class DashboardComponent implements OnInit {
     vm.getMessages();
   }
 
+  setColour(status : number) {
+    if (status == 0) {
+      return 'table-success';
+    }
+    if (status == 1) {
+      return 'table-warning';
+    }
+    if (status == 2) {
+      return 'table-danger';
+    }
+  }
+
   getDashboardStatistics() {
     var vm = this;
     vm.getTotalMessageCount();
