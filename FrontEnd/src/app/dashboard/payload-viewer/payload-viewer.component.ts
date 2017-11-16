@@ -32,6 +32,11 @@ export class PayloadViewerComponent implements OnInit {
     console.log('OK Pressed');
   }
 
+  cancel() {
+    this.activeModal.dismiss('cancel');
+    console.log('Cancel Pressed');
+  }
+
   setBgColour(status : number) {
     if (status == 0) {
       return 'bg-success';
