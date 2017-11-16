@@ -7,19 +7,67 @@
       <form>
         <div class="row">
           <div class="col-md-6">
-            <p>Total messages received : {{totalMessageCount}}</p>
-            <p>Messages received but not sent to Discovery: {{receivedMessageCount}}</p>
-            <p>Messages sent to discovery : {{sentMessageCount}}</p>
-            <p>Messages received with an error: {{errorMessageCount}}</p>
-            <br>
-            <p>Message Processor Status : {{runningStatus}}</p>
+            <div class="card">
+              <div class="card-header">Message Statistics</div>
+              <div class="card-block">
+                <p>Total messages received : <span class="badge badge-pill badge-primary">{{totalMessageCount}}</span></p>
+                <p>Messages received but not sent to discovery: <span class="badge badge-pill badge-warning">{{receivedMessageCount}}</span></p>
+                <p>Messages sent to discovery : <span class="badge badge-pill badge-success">{{sentMessageCount}}</span></p>
+                <p>Messages with an error: <span class="badge badge-pill badge-danger">{{errorMessageCount}}</span></p>
+                <br>
+                <p>Message Processor Status : {{runningStatus}}</p>
+              </div>
+            </div>
           </div>
           <div class="col-md-6">
-            <button type="button" class="btn btn-sm btn-primary" (click)="startProcessor()">Start</button>
-            <button type="button" class="btn btn-sm btn-primary" (click)="stopProcessor()">Stop</button>
-            <button type="button" class="btn btn-sm btn-primary" (click)="getDashboardStatistics()">Refresh</button>
-            <button type="button" class="btn btn-sm btn-primary" (click)="getMessages()">Message</button>
-            <button type="button" class="btn btn-sm btn-primary" (click)="clearCache()">Clear Cache</button>
+            <div class="card">
+              <div class="card-header">Message Actions</div>
+              <div class="card-block">
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <span>Resend all messages in error </span>
+                  </div>
+                  <div class="form-group col-md-2 offset-4">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="resendErrorMessages()">Resend</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <span>Resend all messages before</span>
+                  </div>
+                  <div class="form-group col-md-4">
+                      <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="beforeResend" name="beforeResend">
+                  </div>
+                  <div class="form-group col-md-2">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="resendMessagesBefore()">Resend</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <span>Resend all messages after </span>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="afterResend" name="afterResend">
+                  </div>
+                  <div class="form-group col-md-2">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="resendMessagesAfter()">Resend</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <span>Resend all messages! (Warning!) </span>
+                  </div>
+                  <div class="form-group col-md-2 offset-4">
+                    <button type="button" class="btn btn-sm btn-danger" (click)="resendAllMessages()">Resend</button>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-primary" (click)="startProcessor()">Start</button>
+                <button type="button" class="btn btn-sm btn-primary" (click)="stopProcessor()">Stop</button>
+                <button type="button" class="btn btn-sm btn-primary" (click)="getDashboardStatistics()">Refresh</button>
+                <button type="button" class="btn btn-sm btn-primary" (click)="getMessages()">Message</button>
+                <button type="button" class="btn btn-sm btn-primary" (click)="clearCache()">Clear Cache</button>
+              </div>
+            </div>
           </div>
         </div>
         <br>
@@ -28,7 +76,7 @@
             <div class="form-group">
               <label class="font-weight-bold">Filter messages based on status:</label>
               <div class="row">
-                <div class="col-md-4" *ngFor="let option of options"  [ngClass]="setBgColour(option.value)">
+                <div class="col-md-4" *ngFor="let option of options" [ngClass]="setBgColour(option.value)">
                   <label>
                     <input type="checkbox"
                            name="options"
@@ -36,7 +84,7 @@
                            [(ngModel)]="option.checked"
                            (change)="getMessages()"
                            [ngClass]="setBgColour(option.value)"/>
-                    {{option.name}}
+                    <span>{{option.name}}</span>
                   </label>
                 </div>
               </div>

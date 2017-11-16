@@ -152,15 +152,95 @@ public class MessageStoreEntity {
         return ret;
     }
 
-    public static String resendMessages(Integer messageId) throws Exception {
+    public static String resendSingleMessage(Long messageId) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery(
                 "UPDATE MessageStoreEntity m " +
                         "set m.status = :processed " +
-                        "where m.id <= :message");
-        query.setParameter("processed", MessageStatus.PROCESSED.getMessageStatus());
+                        "where m.id = :message");
+        query.setParameter("processed", MessageStatus.RECEIVED.getMessageStatus());
+        query.setParameter("message", messageId);
+
+        int updateCount = query.executeUpdate();
+
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+
+        return updateCount + " updated";
+    }
+
+    public static String resendErrorMessages() throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        entityManager.getTransaction().begin();
+        Query query = entityManager.createQuery(
+                "UPDATE MessageStoreEntity m " +
+                        "set m.status = :processed " +
+                        "where m.status = :error");
+        query.setParameter("processed", MessageStatus.RECEIVED.getMessageStatus());
+        query.setParameter("error", MessageStatus.ERROR.getMessageStatus());
+
+        int updateCount = query.executeUpdate();
+
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+
+        return updateCount + " updated";
+    }
+
+    public static String resendMessagesBefore(Long messageId) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        entityManager.getTransaction().begin();
+        Query query = entityManager.createQuery(
+                "UPDATE MessageStoreEntity m " +
+                        "set m.status = :processed " +
+                        "where m.id < :messageId");
+        query.setParameter("processed", MessageStatus.RECEIVED.getMessageStatus());
+        query.setParameter("messageId", messageId);
+
+        int updateCount = query.executeUpdate();
+
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+
+        return updateCount + " updated";
+    }
+
+    public static String resendMessagesAfter(Long messageId) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        entityManager.getTransaction().begin();
+        Query query = entityManager.createQuery(
+                "UPDATE MessageStoreEntity m " +
+                        "set m.status = :processed " +
+                        "where m.id > :messageId");
+        query.setParameter("processed", MessageStatus.RECEIVED.getMessageStatus());
+        query.setParameter("messageId", messageId);
+
+        int updateCount = query.executeUpdate();
+
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+
+        return updateCount + " updated";
+    }
+
+    public static String updateMessageStatus(Long messageId, byte status) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        entityManager.getTransaction().begin();
+        Query query = entityManager.createQuery(
+                "UPDATE MessageStoreEntity m " +
+                        "set m.status = :newStatus " +
+                        "where m.id = :message");
+        query.setParameter("newStatus", status);
         query.setParameter("message", messageId);
 
         int updateCount = query.executeUpdate();
@@ -174,16 +254,14 @@ public class MessageStoreEntity {
         return updateCount + " updated";
     }
 
-    public static String updateMessageStatus(long messageId, byte status) throws Exception {
+    public static String resendAllMessages() throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery(
                 "UPDATE MessageStoreEntity m " +
-                        "set m.status = :newStatus " +
-                        "where m.id = :message");
-        query.setParameter("newStatus", status);
-        query.setParameter("message", messageId);
+                        "set m.status = :received ");
+        query.setParameter("received", MessageStatus.RECEIVED.getMessageStatus());
 
         int updateCount = query.executeUpdate();
 

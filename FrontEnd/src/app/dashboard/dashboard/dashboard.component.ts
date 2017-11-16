@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {DashboardService} from "../dashboard.service";
 import {MessageStore} from "../models/MessageStore";
 import {PayloadViewerComponent} from "../payload-viewer/payload-viewer.component";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {LoggerService, MessageBoxDialog} from "eds-angular4";
+import {ToastsManager} from 'ng2-toastr';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +19,8 @@ export class DashboardComponent implements OnInit {
   messageXML: string = "";
   runningStatus: string = "";
   messages: MessageStore[];
+  beforeResend: number;
+  afterResend: number;
 
   pageNumber : number = 1;
   pageSize : number = 10;
@@ -55,7 +59,12 @@ export class DashboardComponent implements OnInit {
   dateNowMilliseconds = this.dateNow.getTime();
 
   constructor(private dashboardService: DashboardService,
-              private $modal: NgbModal) { }
+              private $modal: NgbModal,
+              public toastr: ToastsManager,
+              vcr: ViewContainerRef,
+              private log: LoggerService,) {
+    this.toastr.setRootViewContainerRef(vcr);
+  }
 
   ngOnInit() {
     var vm = this;
@@ -70,10 +79,10 @@ export class DashboardComponent implements OnInit {
 
   setColour(status : number) {
     if (status == 0) {
-      return 'table-success';
+      return 'table-warning';
     }
     if (status == 1) {
-      return 'table-warning';
+      return 'table-success';
     }
     if (status == 2) {
       return 'table-danger';
@@ -82,10 +91,10 @@ export class DashboardComponent implements OnInit {
 
   setBgColour(status : number) {
     if (status == 0) {
-      return 'bg-success';
+      return 'bg-warning';
     }
     if (status == 1) {
-      return 'bg-warning';
+      return 'bg-success';
     }
     if (status == 2) {
       return 'bg-danger';
@@ -241,6 +250,70 @@ export class DashboardComponent implements OnInit {
         },
         (error) => console.log(error)
       );
+  }
+
+  resendMessages(messageId: number, mode: string) {
+    const vm = this;
+    vm.dashboardService.resendMessages(messageId, mode)
+      .subscribe(
+        (result) => {
+          vm.log.success(result);
+        },
+        (error) => vm.log.error(error)
+      );
+  }
+
+  resendErrorMessages() {
+    const vm = this;
+    MessageBoxDialog.open(vm.$modal, 'Resend Messages',
+      'Are you sure you want to resend all messages in Error? \r\n' +
+      'This will resend ' + vm.errorMessageCount + ' messages.', 'Yes', 'No')
+      .result.then(
+      () => vm.resendMessages(0, "error"),
+      () => vm.log.info('Resend cancelled', null, 'Cancel')
+    );
+
+  }
+
+  resendSingleMessage(messageId: number) {
+    const vm = this;
+    MessageBoxDialog.open(vm.$modal, 'Resend Messages',
+      'Are you sure you want to resend message ' + messageId + '?\n ', 'Yes', 'No')
+      .result.then(
+      () => vm.resendMessages(messageId, "single"),
+      () => vm.log.info('Resend cancelled', null, 'Cancel')
+    );
+  }
+
+  resendMessagesBefore() {
+    const vm = this;
+    MessageBoxDialog.open(vm.$modal, 'Resend Messages',
+      'Are you sure you want to resend all messages before ' + vm.beforeResend + '?\n ', 'Yes', 'No')
+      .result.then(
+      () => vm.resendMessages(vm.beforeResend, "before"),
+      () => vm.log.info('Resend cancelled', null, 'Cancel')
+    );
+  }
+
+  resendMessagesAfter() {
+    const vm = this;
+    MessageBoxDialog.open(vm.$modal, 'Resend Messages',
+      'Are you sure you want to resend all messages after ' + vm.afterResend + '?\n ', 'Yes', 'No')
+      .result.then(
+      () => vm.resendMessages(vm.afterResend, "after"),
+      () => vm.log.info('Resend cancelled', null, 'Cancel')
+    );
+  }
+
+  resendAllMessages() {
+    const vm = this;
+    MessageBoxDialog.open(vm.$modal, 'Resend All Messages',
+      'Are you sure you want to resend all messages?\n ' +
+      'This will resend ' + vm.totalMessageCount + ' messages.', 'Yes', 'No')
+      .result.then(
+      () => vm.resendMessages(0, "all"),
+      () => vm.log.info('Resend cancelled', null, 'Cancel')
+    );
   }
 
 }

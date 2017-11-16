@@ -39,10 +39,10 @@ export class PayloadViewerComponent implements OnInit {
 
   setBgColour(status : number) {
     if (status == 0) {
-      return 'bg-success';
+      return 'bg-warning';
     }
     if (status == 1) {
-      return 'bg-warning';
+      return 'bg-success';
     }
     if (status == 2) {
       return 'bg-danger';

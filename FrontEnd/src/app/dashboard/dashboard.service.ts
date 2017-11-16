@@ -45,7 +45,6 @@ export class DashboardService {
                      statusList: number[] = []) : Observable<MessageStore[]> {
     let vm = this;
     const params = new URLSearchParams();
-    console.log(statusList.toString());
     params.set('pageNumber', pageNumber.toString());
     params.set('pageSize', pageSize.toString());
     params.set('orderColumn', orderColumn.toString());
@@ -72,6 +71,15 @@ export class DashboardService {
   public clearCache() : Observable<string> {
     let vm = this;
     return vm.http.get("/api/adastra/clearConfigCache",{ withCredentials : true} )
+      .map((response) => response.text());
+  }
+
+  public resendMessages(messageId: number, mode: string) : Observable<string> {
+    let vm = this;
+    const params = new URLSearchParams();
+    params.set('messageId', messageId.toString());
+    params.set('mode', mode);
+    return vm.http.get("/api/adastra/resendMessages",{ search : params, withCredentials : true} )
       .map((response) => response.text());
   }
 

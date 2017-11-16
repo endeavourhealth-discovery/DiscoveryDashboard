@@ -12,6 +12,7 @@ import {ToastModule} from 'ng2-toastr/ng2-toastr';
 import {AppMenuService} from "./app-menu.service";
 import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import {DashboardModule} from "./dashboard/dashboard.module";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 export class DummyComponent {}
 
@@ -23,6 +24,7 @@ const appRoutes: Routes = [
   declarations: [],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpModule,
     LayoutModule,
     DashboardModule,

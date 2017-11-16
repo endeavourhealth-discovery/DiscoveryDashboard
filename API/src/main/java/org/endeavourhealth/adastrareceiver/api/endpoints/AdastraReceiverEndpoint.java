@@ -171,6 +171,47 @@ public class AdastraReceiverEndpoint  {
                 .build();
     }
 
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.adastra.resendMessages")
+    @Path("/resendMessages")
+    @ApiOperation(value = "Resend specific messages")
+    public Response resendMessages(@Context SecurityContext sc,
+                                   @ApiParam(value = "Message Id to resend") @QueryParam("messageId") Long messageId,
+                                   @ApiParam(value = "string to determine whether to delete messages before or after specified") @QueryParam("mode") String mode) throws Exception {
+        String result = "Nothing changed";
+
+        if (messageId != null && mode != null) {
+            switch (mode) {
+                case "single":
+                    result = MessageStoreEntity.resendSingleMessage(messageId);
+                    break;
+                case "error":
+                    if (messageId.equals(0))  //extra failsafe check
+                        result = MessageStoreEntity.resendErrorMessages();
+                    break;
+                case "before":
+                    result = MessageStoreEntity.resendMessagesBefore(messageId);
+                    break;
+                case "after":
+                    result = MessageStoreEntity.resendMessagesAfter(messageId);
+                    break;
+                case "all":
+                    if (messageId.equals(0))  //extra failsafe check
+                        result = MessageStoreEntity.resendAllMessages();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return Response
+                .ok()
+                .entity(result)
+                .build();
+    }
+
     private Response getMessageCount(byte status) throws Exception {
 
         Long messageCount = MessageStoreEntity.getTotalNumberOfMessages(status);
