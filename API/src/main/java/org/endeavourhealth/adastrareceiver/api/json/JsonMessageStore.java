@@ -13,6 +13,7 @@ public class JsonMessageStore {
     private byte status = 0;
     private String sentDateTime = null;
     private String messagePayload = null;
+    private String error_message = null;
 
     public Integer getId() {
         return id;
@@ -60,5 +61,13 @@ public class JsonMessageStore {
 
     public void setMessagePayload(String messagePayload) {
         this.messagePayload = messagePayload;
+    }
+
+    public String getError_message() {
+        return error_message;
+    }
+
+    public void setError_message(String error_message) {
+        this.error_message = error_message;
     }
 }

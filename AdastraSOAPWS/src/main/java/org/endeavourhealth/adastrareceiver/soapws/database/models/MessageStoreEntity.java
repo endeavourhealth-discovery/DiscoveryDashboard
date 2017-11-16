@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "message_store", schema = "adastra_receiver", catalog = "")
+@Table(name = "message_store", schema = "adastra_receiver")
 public class MessageStoreEntity {
     private long id;
     private long source;
@@ -14,16 +14,7 @@ public class MessageStoreEntity {
     private String sentDateTime;
     private String messagePayload;
     private byte status;
-
-    public static void storeMessage(MessageStoreEntity message) throws Exception {
-        EntityManager entityManager = PersistenceManager.getEntityManager();
-
-        entityManager.getTransaction().begin();
-        entityManager.persist(message);
-        entityManager.getTransaction().commit();
-
-        entityManager.close();
-    }
+    private String errorMessage;
 
     @Id
     @Column(name = "id")
@@ -111,5 +102,25 @@ public class MessageStoreEntity {
 
     public void setStatus(byte status) {
         this.status = status;
+    }
+
+    @Basic
+    @Column(name = "error_message")
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public static void storeMessage(MessageStoreEntity message) throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        entityManager.getTransaction().begin();
+        entityManager.persist(message);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
     }
 }

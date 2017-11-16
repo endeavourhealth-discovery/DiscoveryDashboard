@@ -5,4 +5,5 @@ export class MessageStore {
   status: number;
   sentDateTime: string;
   messagePayload: string;
+  errorMessage: string;
 }

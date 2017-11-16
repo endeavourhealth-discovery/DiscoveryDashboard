@@ -20,6 +20,7 @@ public class MessageStoreEntity {
     private byte status;
     private String sentDateTime;
     private String messagePayload;
+    private String errorMessage;
 
     @Id
     @Column(name = "id")
@@ -109,6 +110,16 @@ public class MessageStoreEntity {
         result = 31 * result + (sentDateTime != null ? sentDateTime.hashCode() : 0);
         result = 31 * result + (messagePayload != null ? messagePayload.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "error_message")
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public static List<MessageStoreEntity> getMessages(Integer pageNumber, Integer pageSize,
@@ -264,5 +275,4 @@ public class MessageStoreEntity {
            entityManager.close();
        }
     }
-
 }

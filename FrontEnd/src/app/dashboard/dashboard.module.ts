@@ -6,6 +6,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DashboardService} from "./dashboard.service";
 import { LoggerService } from 'eds-angular4';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { PayloadViewerComponent } from './payload-viewer/payload-viewer.component';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import {NgxPaginationModule} from 'ngx-pagination';
     NgbModule,
     NgxPaginationModule
   ],
-  declarations: [DashboardComponent],
+  declarations: [DashboardComponent, PayloadViewerComponent],
+  entryComponents: [PayloadViewerComponent],
   providers: [
   DashboardService,
   LoggerService]

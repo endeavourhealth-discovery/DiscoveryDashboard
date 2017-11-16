@@ -1,0 +1,58 @@
+<div class="modal-header" [ngClass]="setBgColour(message.status)">
+  <h4 class="modal-title">Message Payload</h4>
+  <button type="button" class="close" (click)="cancel()" aria-hidden="true">&times;</button>
+</div>
+<div class="modal-body">
+  <form endUserRole="form" clas="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <label class="control-label font-weight-bold">Message Details</label>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-6">
+        <label class="control-label font-weight-bold"><b>Id : </b></label> {{message.id}}
+      </div>
+      <div class="col-md-6">
+        <label class="control-label font-weight-bold">Source : </label> {{message.source}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <label class="control-label font-weight-bold">Date Received : </label> {{message.receivedDateTime | date: 'dd/MM/yy hh:mm:ss'}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <label class="control-label font-weight-bold">Date Sent to Messaging Api : </label> {{message.sentDateTime | date: 'dd/MM/yy hh:mm:ss'}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <label class="control-label font-weight-bold">Status : </label> {{message.status}} - {{statusMap[message.status].name}}
+      </div>
+    </div>
+    <br>
+    <div *ngIf="message.errorMessage" class="row">
+      <div class="col-md-12">
+        <label class="control-label font-weight-bold">Error : </label> {{message.errorMessage}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <label class="control-label font-weight-bold">Payload : </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{message.messagePayload}}
+      </div>
+    </div>
+
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary"
+          (click)="ok();">OK</button>
+</div>

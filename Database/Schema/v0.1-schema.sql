@@ -16,6 +16,7 @@ create table adastra_receiver.message_store (
     status tinyint not null comment 'Status of message (received, sent etc)',
     sent_date_time varchar(3) null comment 'When the message was sent to the messaging API',
     message_payload mediumtext not null comment 'The payload of the message',
+    error_message varchar(1000) null comment 'Error messages',
     
     constraint adastra_receiver_message_store_pk primary key (id),
     index adastra_receiver_message_store_received_date_time_idx (received_date_time),

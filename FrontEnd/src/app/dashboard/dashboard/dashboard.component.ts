@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {DashboardService} from "../dashboard.service";
 import {MessageStore} from "../models/MessageStore";
+import {PayloadViewerComponent} from "../payload-viewer/payload-viewer.component";
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-dashboard',
@@ -52,7 +54,8 @@ export class DashboardComponent implements OnInit {
   dateNowISO = this.dateNow.toISOString();
   dateNowMilliseconds = this.dateNow.getTime();
 
-  constructor(private dashboardService: DashboardService) { }
+  constructor(private dashboardService: DashboardService,
+              private $modal: NgbModal) { }
 
   ngOnInit() {
     var vm = this;
@@ -74,6 +77,18 @@ export class DashboardComponent implements OnInit {
     }
     if (status == 2) {
       return 'table-danger';
+    }
+  }
+
+  setBgColour(status : number) {
+    if (status == 0) {
+      return 'bg-success';
+    }
+    if (status == 1) {
+      return 'bg-warning';
+    }
+    if (status == 2) {
+      return 'bg-danger';
     }
   }
 
@@ -209,6 +224,12 @@ export class DashboardComponent implements OnInit {
         },
         (error) => console.log(error)
       );
+  }
+
+  viewDetails(message: MessageStore) {
+    const vm = this;
+    PayloadViewerComponent.open(vm.$modal, message)
+      .result.then();
   }
 
   clearCache() {
