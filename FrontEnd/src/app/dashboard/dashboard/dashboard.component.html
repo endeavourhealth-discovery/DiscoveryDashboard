@@ -83,9 +83,9 @@
               <tr *ngFor="let message of messages" [ngClass]="setColour(message.status)">
                 <td class="d-inline-block col-1">{{message.id}}</td>
                 <td class="d-inline-block col-1">{{message.source}}</td>
-                <td class="d-inline-block col-2">{{message.receivedDateTime}}</td>
+                <td class="d-inline-block col-2">{{message.receivedDateTime | date: 'dd/MM/yy hh:mm:ss'}}</td>
                 <td class="d-inline-block col-1">{{message.status}}</td>
-                <td class="d-inline-block col-2">{{message.sentDateTime}}</td>
+                <td class="d-inline-block col-2">{{message.sentDateTime | date: 'dd/MM/yy hh:mm:ss'}}</td>
               </tr>
             </table>
           </div>
@@ -97,13 +97,6 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-12">
-            <p>Enter XML message to send</p>
-            <textarea [(ngModel)]="messageXML" name="messageXML"></textarea>
-            <button type="button" class="btn btn-sm btn-primary" (click)="sendXML()">Send</button>
-          </div>
-        </div>
       </form>
     </div>
   </div>

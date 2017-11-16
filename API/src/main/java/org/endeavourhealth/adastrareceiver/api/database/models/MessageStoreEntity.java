@@ -111,16 +111,6 @@ public class MessageStoreEntity {
         return result;
     }
 
-    public static void storeMessage(MessageStoreEntity message) throws Exception {
-        EntityManager entityManager = PersistenceManager.getEntityManager();
-
-        entityManager.getTransaction().begin();
-        entityManager.persist(message);
-        entityManager.getTransaction().commit();
-
-        entityManager.close();
-    }
-
     public static List<MessageStoreEntity> getMessages(Integer pageNumber, Integer pageSize,
                                                        String orderColumn, boolean ascending,
                                                        List<Integer> statusList) throws Exception {

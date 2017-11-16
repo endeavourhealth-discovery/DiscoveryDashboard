@@ -48,6 +48,10 @@ export class DashboardComponent implements OnInit {
     {name:'Error', value:'2', checked:true}
   ];
 
+  dateNow : Date = new Date();
+  dateNowISO = this.dateNow.toISOString();
+  dateNowMilliseconds = this.dateNow.getTime();
+
   constructor(private dashboardService: DashboardService) { }
 
   ngOnInit() {

@@ -11,7 +11,7 @@ public class JsonMessageStore {
     private Integer source = null;
     private LocalDateTime receivedDateTime = null;
     private byte status = 0;
-    private LocalDateTime sentDateTime = null;
+    private String sentDateTime = null;
     private String messagePayload = null;
 
     public Integer getId() {
@@ -46,11 +46,11 @@ public class JsonMessageStore {
         this.status = status;
     }
 
-    public LocalDateTime getSentDateTime() {
+    public String getSentDateTime() {
         return sentDateTime;
     }
 
-    public void setSentDateTime(LocalDateTime sentDateTime) {
+    public void setSentDateTime(String sentDateTime) {
         this.sentDateTime = sentDateTime;
     }
 

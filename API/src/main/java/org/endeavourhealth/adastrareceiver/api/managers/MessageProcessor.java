@@ -1,5 +1,6 @@
 package org.endeavourhealth.adastrareceiver.api.managers;
 
+import adastraSchema.AdastraCaseDataExport;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.endeavourhealth.adastrareceiver.api.database.models.MessageStoreEntity;
 import org.endeavourhealth.adastrareceiver.api.enums.MessageStatus;
@@ -7,6 +8,7 @@ import org.endeavourhealth.common.config.ConfigManager;
 import org.endeavourhealth.common.eds.EdsSender;
 import org.endeavourhealth.common.eds.EdsSenderHttpErrorResponseException;
 import org.endeavourhealth.common.eds.EdsSenderResponse;
+import org.endeavourhealth.common.utility.XmlHelper;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -52,7 +54,6 @@ public class MessageProcessor {
         }
     };
 
-
     public static boolean checkForNewMessages() throws Exception {
         List<MessageStoreEntity> messages = MessageStoreEntity.getEarliestUnsentMessages();
 
@@ -94,5 +95,19 @@ public class MessageProcessor {
 
     public void clearConfigCache() {
         jsonConfig = null;
+    }
+
+
+
+    private AdastraCaseDataExport deserialisePayload(String message) throws Exception {
+
+        return XmlHelper.deserialize(message, AdastraCaseDataExport.class);
+    }
+
+    private String getSendingOrganisation(AdastraCaseDataExport caseData) throws Exception {
+
+        AdastraCaseDataExport.Patient patient = caseData.getPatient();
+
+        return patient.getGpRegistration().getSurgeryNationalCode();
     }
 }

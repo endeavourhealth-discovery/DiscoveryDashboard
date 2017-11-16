@@ -1,7 +1,7 @@
 export class MessageStore {
   id: number;
   source: number;
-  receivedDateTime: string;
+  receivedDateTime: Date;
   status: number;
   sentDateTime: string;
   messagePayload: string;
