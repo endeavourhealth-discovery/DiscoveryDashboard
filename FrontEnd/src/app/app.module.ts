@@ -10,15 +10,10 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LayoutModule, AbstractMenuProvider} from "eds-angular4";
 import {ToastModule} from 'ng2-toastr/ng2-toastr';
 import {AppMenuService} from "./app-menu.service";
-import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import {DashboardModule} from "./dashboard/dashboard.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 export class DummyComponent {}
-
-const appRoutes: Routes = [
-  { path: 'dashboard', component: DashboardComponent }
-];
 
 @NgModule({
   declarations: [],
@@ -28,7 +23,7 @@ const appRoutes: Routes = [
     HttpModule,
     LayoutModule,
     DashboardModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(AppMenuService.getRoutes()),
     ToastModule.forRoot(),
     NgbModule.forRoot()
   ],
