@@ -6,7 +6,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DashboardService} from "./dashboard.service";
 import { LoggerService, DialogsModule } from 'eds-angular4';
 import {NgxPaginationModule} from 'ngx-pagination';
-import { PayloadViewerComponent } from './payload-viewer/payload-viewer.component';
+import { PayloadViewerComponent } from '../message/payload-viewer/payload-viewer.component';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
 
 @NgModule({
@@ -16,7 +16,7 @@ import { ToastModule } from 'ng2-toastr/ng2-toastr';
     NgbModule,
     DialogsModule,
     NgxPaginationModule,
-    ToastModule.forRoot(),
+    ToastModule.forRoot()
   ],
   declarations: [
     DashboardComponent,

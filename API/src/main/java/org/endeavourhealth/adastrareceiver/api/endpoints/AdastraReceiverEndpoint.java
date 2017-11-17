@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.endeavourhealth.adastrareceiver.api.database.models.MessageStoreEntity;
 import org.endeavourhealth.adastrareceiver.api.managers.MessageProcessor;
+import org.endeavourhealth.adastrareceiver.api.managers.MessageSender;
 import org.endeavourhealth.common.utility.XmlHelper;
 
 import javax.ws.rs.*;
@@ -19,11 +20,17 @@ import java.sql.Timestamp;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Path("/adastra")
 @Metrics(registry = "adastraReceiverMetricRegistry")
 @Api(description = "Initial api for all calls relating to the Adastra Receiver")
 public class AdastraReceiverEndpoint  {
+    private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(0);
+    private static Future<?> future = scheduler.scheduleAtFixedRate(new MessageSender(), 0L, 10L, TimeUnit.SECONDS);;
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -45,13 +52,14 @@ public class AdastraReceiverEndpoint  {
     @Path("/startProcessor")
     @ApiOperation(value = "Starts the message Processor")
     public Response startProcessor(@Context SecurityContext sc) throws Exception {
-        System.out.println("Starting Processor");
 
-        MessageProcessor messageProcessor = new MessageProcessor();
-        messageProcessor.startProcessor();
+        if (future.isDone()) {
+            future = scheduler.scheduleAtFixedRate(new MessageSender(), 0L, 10L, TimeUnit.SECONDS);
+        }
 
         return Response
                 .ok()
+                .entity("Processor Started")
                 .build();
     }
 
@@ -64,11 +72,11 @@ public class AdastraReceiverEndpoint  {
     public Response stopProcessor(@Context SecurityContext sc) throws Exception {
         System.out.println("Stopping Processor");
 
-        MessageProcessor messageProcessor = new MessageProcessor();
-        messageProcessor.stopProcessor();
+        if (!future.isDone())
+            future.cancel(false);
 
         return Response
-                .ok()
+                .ok("Processor Stopped")
                 .build();
     }
 
@@ -79,10 +87,7 @@ public class AdastraReceiverEndpoint  {
     @Path("/isRunning")
     @ApiOperation(value = "Checks if the processor is running")
     public Response isRunning(@Context SecurityContext sc) throws Exception {
-        System.out.println("Checking Status");
-
-        MessageProcessor messageProcessor = new MessageProcessor();
-        boolean isRunning = messageProcessor.processorStatus();
+        boolean isRunning = !future.isDone();
 
         return Response
                 .ok(isRunning)
@@ -164,7 +169,7 @@ public class AdastraReceiverEndpoint  {
         System.out.println("clearing Cache");
 
         MessageProcessor messageProcessor = new MessageProcessor();
-        messageProcessor.clearConfigCache();
+        //messageProcessor.clearConfigCache();
 
         return Response
                 .ok()
@@ -188,7 +193,7 @@ public class AdastraReceiverEndpoint  {
                     result = MessageStoreEntity.resendSingleMessage(messageId);
                     break;
                 case "error":
-                    if (messageId.equals(0))  //extra failsafe check
+                    if (messageId.equals(0L))  //extra fail safe check
                         result = MessageStoreEntity.resendErrorMessages();
                     break;
                 case "before":
@@ -198,7 +203,7 @@ public class AdastraReceiverEndpoint  {
                     result = MessageStoreEntity.resendMessagesAfter(messageId);
                     break;
                 case "all":
-                    if (messageId.equals(0))  //extra failsafe check
+                    if (messageId.equals(0L))  //extra fail safe check
                         result = MessageStoreEntity.resendAllMessages();
                     break;
                 default:

@@ -20,13 +20,15 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class MessageProcessor {
+
+    /*
     private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(0);
     private static Instant lastSend = Instant.now();
-    private Future<?> future = scheduler.scheduleAtFixedRate(messageChecker, 0L, 5L, TimeUnit.MINUTES);
+    //private Future<?> future = scheduler.schedule(messageChecker, 0L, TimeUnit.SECONDS);
     private static JsonNode jsonConfig = null;
 
     public void startProcessor() {
-        future = scheduler.scheduleAtFixedRate(messageChecker, 0L, 5L, TimeUnit.SECONDS);
+        future = scheduler.schedule(messageChecker, 0L, TimeUnit.SECONDS);
     }
 
     public void stopProcessor() {
@@ -59,7 +61,7 @@ public class MessageProcessor {
 
         for (MessageStoreEntity message: messages) {
             System.out.println(message.getId());
-            //sendMessageToAPI(message);
+            sendMessageToAPI(message);
         }
         return true;
     }
@@ -78,9 +80,9 @@ public class MessageProcessor {
         String edsURL = config.get("eds_url").asText();
         Boolean useKeycloak = config.get("useKeycloak").asBoolean();
 
-        edsSenderResponse = EdsSender.notifyEds(edsURL, useKeycloak, outboundMessage);
+        //edsSenderResponse = EdsSender.notifyEds(edsURL, useKeycloak, outboundMessage);
 
-        MessageStoreEntity.updateMessageStatus(message.getId(), MessageStatus.PROCESSED.getMessageStatus());
+        //MessageStoreEntity.updateMessageStatus(message.getId(), MessageStatus.PROCESSED.getMessageStatus());
 
         return true;
     }
@@ -110,4 +112,6 @@ public class MessageProcessor {
 
         return patient.getGpRegistration().getSurgeryNationalCode();
     }
+
+    */
 }

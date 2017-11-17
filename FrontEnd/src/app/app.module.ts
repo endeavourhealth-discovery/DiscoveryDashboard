@@ -12,6 +12,7 @@ import {ToastModule} from 'ng2-toastr/ng2-toastr';
 import {AppMenuService} from "./app-menu.service";
 import {DashboardModule} from "./dashboard/dashboard.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MessageModule} from "./message/message.module";
 
 export class DummyComponent {}
 
@@ -23,6 +24,7 @@ export class DummyComponent {}
     HttpModule,
     LayoutModule,
     DashboardModule,
+    MessageModule,
     RouterModule.forRoot(AppMenuService.getRoutes()),
     ToastModule.forRoot(),
     NgbModule.forRoot()

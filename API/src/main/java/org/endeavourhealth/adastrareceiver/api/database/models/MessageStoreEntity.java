@@ -169,7 +169,7 @@ public class MessageStoreEntity {
 
         entityManager.close();
 
-        return updateCount + " updated";
+        return updateCount + " message updated";
     }
 
     public static String resendErrorMessages() throws Exception {
@@ -189,7 +189,7 @@ public class MessageStoreEntity {
 
         entityManager.close();
 
-        return updateCount + " updated";
+        return updateCount + " messages updated";
     }
 
     public static String resendMessagesBefore(Long messageId) throws Exception {
@@ -209,7 +209,7 @@ public class MessageStoreEntity {
 
         entityManager.close();
 
-        return updateCount + " updated";
+        return updateCount + " message updated";
     }
 
     public static String resendMessagesAfter(Long messageId) throws Exception {
@@ -229,7 +229,7 @@ public class MessageStoreEntity {
 
         entityManager.close();
 
-        return updateCount + " updated";
+        return updateCount + " message updated";
     }
 
     public static String updateMessageStatus(Long messageId, byte status) throws Exception {
@@ -251,7 +251,7 @@ public class MessageStoreEntity {
 
         entityManager.close();
 
-        return updateCount + " updated";
+        return updateCount + " message updated";
     }
 
     public static String resendAllMessages() throws Exception {
@@ -271,7 +271,7 @@ public class MessageStoreEntity {
 
         entityManager.close();
 
-        return updateCount + " updated";
+        return updateCount + " message updated";
     }
 
     public static List<MessageStoreEntity> getEarliestUnsentMessages() throws Exception {

@@ -28,7 +28,7 @@
                     <span>Resend all messages in error </span>
                   </div>
                   <div class="form-group col-md-2 offset-4">
-                    <button type="button" class="btn btn-sm btn-primary" (click)="resendErrorMessages()">Resend</button>
+                    <button [disabled]="errorMessageCount == 0" type="button" class="btn btn-sm btn-primary" (click)="resendErrorMessages()">Resend</button>
                   </div>
                 </div>
                 <div class="row">
@@ -39,7 +39,7 @@
                       <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="beforeResend" name="beforeResend">
                   </div>
                   <div class="form-group col-md-2">
-                    <button type="button" class="btn btn-sm btn-primary" (click)="resendMessagesBefore()">Resend</button>
+                    <button [disabled]="!beforeResend" type="button" class="btn btn-sm btn-primary" (click)="resendMessagesBefore()">Resend</button>
                   </div>
                 </div>
                 <div class="row">
@@ -50,7 +50,7 @@
                     <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="afterResend" name="afterResend">
                   </div>
                   <div class="form-group col-md-2">
-                    <button type="button" class="btn btn-sm btn-primary" (click)="resendMessagesAfter()">Resend</button>
+                    <button [disabled]="!afterResend" type="button" class="btn btn-sm btn-primary" (click)="resendMessagesAfter()">Resend</button>
                   </div>
                 </div>
                 <div class="row">
@@ -64,90 +64,11 @@
                 <button type="button" class="btn btn-sm btn-primary" (click)="startProcessor()">Start</button>
                 <button type="button" class="btn btn-sm btn-primary" (click)="stopProcessor()">Stop</button>
                 <button type="button" class="btn btn-sm btn-primary" (click)="getDashboardStatistics()">Refresh</button>
-                <button type="button" class="btn btn-sm btn-primary" (click)="getMessages()">Message</button>
                 <button type="button" class="btn btn-sm btn-primary" (click)="clearCache()">Clear Cache</button>
               </div>
             </div>
           </div>
         </div>
-        <br>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="font-weight-bold">Filter messages based on status:</label>
-              <div class="row">
-                <div class="col-md-4" *ngFor="let option of options" [ngClass]="setBgColour(option.value)">
-                  <label>
-                    <input type="checkbox"
-                           name="options"
-                           value="{{option.value}}"
-                           [(ngModel)]="option.checked"
-                           (change)="getMessages()"
-                           [ngClass]="setBgColour(option.value)"/>
-                    <span>{{option.name}}</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-3">
-            <div class="input-group">
-              <span class="input-group-addon" id="orderOrg">Column</span>
-              <select #selectedOrder class="form-control" [(ngModel)]="orderColumn" name="orderColumn" (change)="getMessages()">
-                <option *ngFor="let o of orderList" [ngValue]="o.column">{{o.name}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="input-group">
-              <span class="input-group-addon" id="asc">Order</span>
-              <select #selectedOrder class="form-control" [(ngModel)]="ascending" name="ascending" (change)="getMessages()">
-                <option *ngFor="let a of ascendinglist" [ngValue]="a.ascending">{{a.name}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="input-group">
-              <span class="input-group-addon" id="pageSize">Items Per Page</span>
-              <select #selectedPageSize class="form-control" [(ngModel)]="pageSize" name="pageSize" (change)="getMessages()">
-                <option *ngFor="let ps of pageSizeList" [ngValue]="ps.value">{{ps.value}}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <table class="table table-sm">
-              <thead>
-                <th class="d-inline-block col-1">Id</th>
-                <th class="d-inline-block col-1">Source</th>
-                <th class="d-inline-block col-2">Received</th>
-                <th class="d-inline-block col-1">Status</th>
-                <th class="d-inline-block col-2">Sent</th>
-                <th class="d-inline-block col-4">Error Message</th>
-                <th class="d-inline-block col-1">Details</th>
-              </thead>
-              <tr *ngFor="let message of messages" [ngClass]="setColour(message.status)">
-                <td class="d-inline-block col-1">{{message.id}}</td>
-                <td class="d-inline-block col-1">{{message.source}}</td>
-                <td class="d-inline-block col-2">{{message.receivedDateTime | date: 'dd/MM/yy hh:mm:ss'}}</td>
-                <td class="d-inline-block col-1">{{message.status}}</td>
-                <td class="d-inline-block col-2">{{message.sentDateTime | date: 'dd/MM/yy hh:mm:ss'}}</td>
-                <td class="d-inline-block col-4 clip-text">{{message.errorMessage}}</td>
-                <td class="d-inline-block col-1"><button type="button" class="btn btn-sm btn-primary" (click)="viewDetails(message)">Details</button></td>
-              </tr>
-            </table>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <ngb-pagination [collectionSize]="messageCount" [(page)]="pageNumber" [maxSize]="100" [pageSize]="pageSize" [boundaryLinks]="true" (pageChange)="pageChanged($event)"></ngb-pagination>
-          </div>
-        </div>
-
       </form>
     </div>
   </div>
