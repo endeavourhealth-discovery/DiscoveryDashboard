@@ -7,23 +7,21 @@
       <form>
         <div class="row">
           <div class="col-md-12">
-            <div class="form-group">
-              <label class="font-weight-bold">Filter messages based on status:</label>
-              <div class="row">
-                <div class="col-md-4" *ngFor="let option of options" [ngClass]="setBgColour(option.value)">
-                  <label>
-                    <input type="checkbox"
-                           name="options"
-                           value="{{option.value}}"
-                           [(ngModel)]="option.checked"
-                           (change)="getMessages()"
-                           [ngClass]="setBgColour(option.value)"/>
-                    <span>{{option.name}}</span>
-                  </label>
-                </div>
-              </div>
-            </div>
+            <label class="font-weight-bold">Filter messages based on status:</label>
           </div>
+        </div>
+        <div class="row" *ngFor="let option of options">
+        <div class="col-md-2" [ngClass]="setBgColour(option.value)">
+          <label>
+            <input type="checkbox"
+                   name="options"
+                   value="{{option.value}}"
+                   [(ngModel)]="option.checked"
+                   (change)="getMessages()"
+                   [ngClass]="setBgColour(option.value)"/>
+            <span>{{option.name}}</span>
+          </label>
+        </div>
         </div>
         <div class="row">
           <div class="col-md-3">
@@ -60,8 +58,9 @@
               <th class="d-inline-block col-2">Received</th>
               <th class="d-inline-block col-1">Status</th>
               <th class="d-inline-block col-2">Sent</th>
-              <th class="d-inline-block col-4">Error Message</th>
+              <th class="d-inline-block col-3">Error Message</th>
               <th class="d-inline-block col-1">Details</th>
+              <th class="d-inline-block col-1">Resend</th>
               </thead>
               <tr *ngFor="let message of messages" [ngClass]="setColour(message.status)">
                 <td class="d-inline-block col-1">{{message.id}}</td>
@@ -69,8 +68,9 @@
                 <td class="d-inline-block col-2">{{message.receivedDateTime | date: 'dd/MM/yy hh:mm:ss'}}</td>
                 <td class="d-inline-block col-1">{{message.status}}</td>
                 <td class="d-inline-block col-2">{{message.sentDateTime | date: 'dd/MM/yy hh:mm:ss'}}</td>
-                <td class="d-inline-block col-4 clip-text">{{message.errorMessage}}</td>
+                <td class="d-inline-block col-3 clip-text">{{message.errorMessage}}</td>
                 <td class="d-inline-block col-1"><button type="button" class="btn btn-sm btn-primary" (click)="viewDetails(message)">Details</button></td>
+                <td class="d-inline-block col-1"><button type="button" class="btn btn-sm btn-primary" (click)="resendMessage(message)">Resend</button></td>
               </tr>
             </table>
           </div>

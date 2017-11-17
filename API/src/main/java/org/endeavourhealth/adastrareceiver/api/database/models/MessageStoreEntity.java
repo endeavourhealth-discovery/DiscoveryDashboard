@@ -158,9 +158,11 @@ public class MessageStoreEntity {
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery(
                 "UPDATE MessageStoreEntity m " +
-                        "set m.status = :processed " +
+                        "set m.status = :processed, " +
+                        " m.errorMessage = :emptyError " +
                         "where m.id = :message");
         query.setParameter("processed", MessageStatus.RECEIVED.getMessageStatus());
+        query.setParameter("emptyError", "");
         query.setParameter("message", messageId);
 
         int updateCount = query.executeUpdate();
@@ -178,9 +180,11 @@ public class MessageStoreEntity {
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery(
                 "UPDATE MessageStoreEntity m " +
-                        "set m.status = :processed " +
+                        "set m.status = :received, " +
+                        " m.errorMessage = :emptyError " +
                         "where m.status = :error");
-        query.setParameter("processed", MessageStatus.RECEIVED.getMessageStatus());
+        query.setParameter("received", MessageStatus.RECEIVED.getMessageStatus());
+        query.setParameter("emptyError", "");
         query.setParameter("error", MessageStatus.ERROR.getMessageStatus());
 
         int updateCount = query.executeUpdate();
@@ -198,9 +202,11 @@ public class MessageStoreEntity {
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery(
                 "UPDATE MessageStoreEntity m " +
-                        "set m.status = :processed " +
+                        "set m.status = :received, " +
+                        " m.errorMessage = :emptyError " +
                         "where m.id < :messageId");
-        query.setParameter("processed", MessageStatus.RECEIVED.getMessageStatus());
+        query.setParameter("received", MessageStatus.RECEIVED.getMessageStatus());
+        query.setParameter("emptyError", "");
         query.setParameter("messageId", messageId);
 
         int updateCount = query.executeUpdate();
@@ -218,9 +224,11 @@ public class MessageStoreEntity {
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery(
                 "UPDATE MessageStoreEntity m " +
-                        "set m.status = :processed " +
+                        "set m.status = :received, " +
+                        " m.errorMessage = :emptyError " +
                         "where m.id > :messageId");
-        query.setParameter("processed", MessageStatus.RECEIVED.getMessageStatus());
+        query.setParameter("received", MessageStatus.RECEIVED.getMessageStatus());
+        query.setParameter("emptyError", "");
         query.setParameter("messageId", messageId);
 
         int updateCount = query.executeUpdate();

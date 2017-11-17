@@ -36,4 +36,13 @@ export class MessageService {
       .map((response) => response.json());
   }
 
+  public resendSingleMessages(messageId: number) : Observable<string> {
+    let vm = this;
+    const params = new URLSearchParams();
+    params.set('messageId', messageId.toString());
+    params.set('mode', 'single');
+    return vm.http.get("/api/dashboard/resendMessages",{ search : params, withCredentials : true} )
+      .map((response) => response.text());
+  }
+
 }

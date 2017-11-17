@@ -2,7 +2,7 @@ import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {MessageService} from "../message.service";
 import {MessageStore} from "../models/MessageStore";
 import {PayloadViewerComponent} from "../payload-viewer/payload-viewer.component";
-import {LoggerService} from "eds-angular4";
+import {LoggerService, MessageBoxDialog} from "eds-angular4";
 import {ToastsManager} from "ng2-toastr";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
@@ -128,5 +128,26 @@ export class MessageComponent implements OnInit {
     const vm = this;
     PayloadViewerComponent.open(vm.$modal, message)
       .result.then();
+  }
+
+  resendMessage(message: MessageStore) {
+    const vm = this;
+    MessageBoxDialog.open(vm.$modal, 'Resend Message',
+      'Are you sure you want to resend messages ' + message.id + '?', 'Yes', 'No')
+      .result.then(
+      () => vm.resendSingleMessage(message.id),
+      () => vm.log.info('Resend cancelled', null, 'Cancel')
+    );
+  }
+
+  resendSingleMessage(messageId: number) {
+    const vm = this;
+    vm.messageService.resendSingleMessages(messageId)
+      .subscribe(
+        (result) => {
+          vm.log.success(result);
+        },
+        (error) => vm.log.error(error)
+      );
   }
 }
