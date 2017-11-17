@@ -3,15 +3,10 @@ package webservice;
 import AdastraWS.AdastraWebServiceSoap;
 import AdastraWS.AddUpdateCase;
 import AdastraWS.AddUpdateCaseResult;
-import adastraSchema.AdastraCaseDataExport;
-import com.sun.xml.bind.v2.runtime.property.UnmarshallerChain;
 import org.endeavourhealth.adastrareceiver.soapws.database.models.MessageStoreEntity;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.soap.Node;
 import java.sql.Timestamp;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
