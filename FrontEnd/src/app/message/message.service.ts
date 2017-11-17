@@ -15,7 +15,7 @@ export class MessageService {
     for (var status of statusList) {
       params.append('statusList', status.toString());
     }
-    return vm.http.get("/api/adastra/getMessageCount",{ search : params,  withCredentials : true} )
+    return vm.http.get("/api/message/getMessageCount",{ search : params,  withCredentials : true} )
       .map((response) => response.json());
   }
 
@@ -32,7 +32,7 @@ export class MessageService {
     for (var status of statusList) {
       params.append('statusList', status.toString());
     }
-    return vm.http.get("/api/adastra/getMessages",{ search : params,  withCredentials : true} )
+    return vm.http.get("/api/message/getMessages",{ search : params,  withCredentials : true} )
       .map((response) => response.json());
   }
 

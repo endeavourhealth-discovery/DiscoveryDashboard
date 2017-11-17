@@ -7,6 +7,7 @@ import {FormsModule} from "@angular/forms";
 import {NgxPaginationModule} from "ngx-pagination";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ToastModule} from "ng2-toastr";
+import {PayloadViewerComponent} from "./payload-viewer/payload-viewer.component";
 
 @NgModule({
   imports: [
@@ -18,7 +19,11 @@ import {ToastModule} from "ng2-toastr";
     ToastModule.forRoot()
   ],
   declarations: [
-    MessageComponent
+    MessageComponent,
+    PayloadViewerComponent
+  ],
+  entryComponents: [
+    PayloadViewerComponent
   ],
   providers: [
     MessageService,

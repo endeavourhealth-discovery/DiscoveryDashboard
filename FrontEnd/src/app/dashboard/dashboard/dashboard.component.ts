@@ -3,6 +3,7 @@ import {DashboardService} from "../dashboard.service";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {LoggerService, MessageBoxDialog} from "eds-angular4";
 import {ToastsManager} from 'ng2-toastr';
+import {ProcessorService} from "../../processor/processor.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +21,7 @@ export class DashboardComponent implements OnInit {
   afterResend: number;
 
   constructor(private dashboardService: DashboardService,
+              private processorService: ProcessorService,
               private $modal: NgbModal,
               public toastr: ToastsManager,
               vcr: ViewContainerRef,
@@ -87,7 +89,7 @@ export class DashboardComponent implements OnInit {
 
   startProcessor() {
     const vm = this;
-    vm.dashboardService.startProcessor()
+    vm.processorService.startProcessor()
       .subscribe(
         (result) => {
           console.log(result);
@@ -98,7 +100,7 @@ export class DashboardComponent implements OnInit {
 
   stopProcessor() {
     const vm = this;
-    vm.dashboardService.stopProcessor()
+    vm.processorService.stopProcessor()
       .subscribe(
         (result) => {
           console.log(result);
@@ -109,7 +111,7 @@ export class DashboardComponent implements OnInit {
 
   checkProcessorIsRunning() {
     const vm = this;
-    vm.dashboardService.isRunning()
+    vm.processorService.isRunning()
       .subscribe(
         (result) => {
           console.log(result);
@@ -121,7 +123,7 @@ export class DashboardComponent implements OnInit {
 
   clearCache() {
     const vm = this;
-    vm.dashboardService.clearCache()
+    vm.processorService.clearCache()
       .subscribe(
         (result) => {
           console.log(result);
