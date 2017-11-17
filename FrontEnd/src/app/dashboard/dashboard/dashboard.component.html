@@ -14,8 +14,6 @@
                 <p>Messages received but not sent to discovery: <span class="badge badge-pill badge-warning">{{receivedMessageCount}}</span></p>
                 <p>Messages sent to discovery : <span class="badge badge-pill badge-success">{{sentMessageCount}}</span></p>
                 <p>Messages with an error: <span class="badge badge-pill badge-danger">{{errorMessageCount}}</span></p>
-                <br>
-                <p>Message Processor Status : {{runningStatus}}</p>
               </div>
             </div>
           </div>
@@ -61,10 +59,87 @@
                     <button type="button" class="btn btn-sm btn-danger" (click)="resendAllMessages()">Resend</button>
                   </div>
                 </div>
-                <button type="button" class="btn btn-sm btn-primary" (click)="startProcessor()">Start</button>
-                <button type="button" class="btn btn-sm btn-primary" (click)="stopProcessor()">Stop</button>
                 <button type="button" class="btn btn-sm btn-primary" (click)="getDashboardStatistics()">Refresh</button>
                 <button type="button" class="btn btn-sm btn-primary" (click)="clearCache()">Clear Cache</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">Processor Statistics</div>
+              <div class="card-block">
+                <div class="row">
+                  <div class="col-md-6">
+                    <span>Message Processor Running : </span>
+                  </div>
+                  <div class="col-md-6">
+                    {{runningStatus}}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <span>Processor Last run : </span>
+                  </div>
+                  <div class="col-md-6">
+                    {{lastRun}}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <span>Processor Next run : </span>
+                  </div>
+                  <div class="col-md-6">
+                    {{nextRun}} Seconds
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label>Processor Delay</label>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <input type="number" placeholder="Delay" class="form-control" [(ngModel)]="delay" name="delay">
+                  </div>
+                  <div class="form-group col-md-2 offset-1">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="setDelay()">Update</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">Processor Actions</div>
+              <div class="card-block">
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label>Start Processor</label>
+                  </div>
+                  <div class="form-group col-md-2 offset-4">
+                    <button [disabled]="!runningStatus" type="button" class="btn btn-sm btn-primary" (click)="startProcessor()">Start</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label>Stop Processor</label>
+                  </div>
+                  <div class="form-group col-md-2 offset-4">
+                    <button [disabled]="runningStatus" type="button" class="btn btn-sm btn-primary" (click)="stopProcessor()">Stop</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <span>Set dashboard refresh rate</span>
+                  </div>
+                  <div class="col-md-3">
+                    <input type="number" placeholder="refresh" class="form-control" [(ngModel)]="refreshRate" name="refreshRate">
+                  </div>
+                  <div class="col-md-2 offset-1">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="updateTimer()">Update</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

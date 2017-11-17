@@ -1,16 +1,18 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewContainerRef} from '@angular/core';
 import {DashboardService} from "../dashboard.service";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {LoggerService, MessageBoxDialog} from "eds-angular4";
 import {ToastsManager} from 'ng2-toastr';
 import {ProcessorService} from "../../processor/processor.service";
+import {Observable} from "rxjs/Observable";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   totalMessageCount: number = 0;
   receivedMessageCount: number = 0;
   sentMessageCount: number = 0;
@@ -19,6 +21,14 @@ export class DashboardComponent implements OnInit {
   runningStatus: string = "";
   beforeResend: number;
   afterResend: number;
+
+  lastRun: string;
+  delay: string;
+  nextRun: string;
+
+  refreshRate = 10;
+  private subscription: Subscription;
+
 
   constructor(private dashboardService: DashboardService,
               private processorService: ProcessorService,
@@ -30,8 +40,38 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    var vm = this;
+    const vm = this;
+    vm.setTimer();
+  }
+
+  setTimer() {
+    const vm = this;
+    let timer = Observable.timer(0, vm.refreshRate * 1000);
+    vm.subscription = timer.subscribe(t => {
+      vm.refreshScreen();
+    });
+  }
+
+  updateTimer() {
+    const vm = this;
+    vm.destroyTimer();
+    vm.setTimer();
+  }
+
+  destroyTimer() {
+    const vm = this;
+    vm.subscription.unsubscribe();
+  }
+
+  ngOnDestroy() {
+    const vm = this;
+    vm.subscription.unsubscribe();
+  }
+
+  refreshScreen() {
+    const vm = this;
     vm.getDashboardStatistics();
+    vm.getProcessorStatistics();
   }
 
   getDashboardStatistics() {
@@ -40,7 +80,6 @@ export class DashboardComponent implements OnInit {
     vm.getReceivedMessageCount();
     vm.getSentMessageCount();
     vm.getErrorMessageCount();
-    vm.checkProcessorIsRunning();
   }
 
   getTotalMessageCount() {
@@ -194,6 +233,60 @@ export class DashboardComponent implements OnInit {
       () => vm.resendMessages(0, "all"),
       () => vm.log.info('Resend cancelled', null, 'Cancel')
     );
+  }
+
+  getNextRun() {
+    const vm = this;
+    vm.processorService.getNextRun()
+      .subscribe(
+        (result) => {
+          vm.nextRun = result;
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  setDelay() {
+    const vm = this;
+    vm.processorService.setDelay(vm.delay)
+      .subscribe(
+        (result) => {
+          vm.log.success(result);
+          vm.log.success('Restart the processor for the change to take effect');
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  getDelay() {
+    const vm = this;
+    vm.processorService.getDelay()
+      .subscribe(
+        (result) => {
+          vm.delay = result;
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  getLastRun() {
+    const vm = this;
+    vm.processorService.getLastRun()
+      .subscribe(
+        (result) => {
+          vm.lastRun = result;
+          console.log(result);
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  getProcessorStatistics() {
+    const vm = this;
+    vm.getLastRun();
+    vm.getDelay();
+    vm.getNextRun();
+    vm.checkProcessorIsRunning();
   }
 
 }

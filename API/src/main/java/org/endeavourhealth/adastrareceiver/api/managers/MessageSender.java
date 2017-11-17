@@ -14,12 +14,18 @@ import java.util.UUID;
 
 public class MessageSender implements Runnable {
     private JsonNode jsonConfig = null;
-    private Instant lastSend = Instant.now();
+    private static Instant lastSend = Instant.now();
+
+    public static Instant getRunDate() {
+        System.out.println(lastSend);
+        return lastSend;
+    }
 
 
     @Override
     public void run() {
         boolean success = true;
+        lastSend = Instant.now();
         try {
             boolean messagesToProcess = checkForNewMessages();
         } catch (Exception e) {

@@ -30,4 +30,30 @@ export class ProcessorService {
     return vm.http.get("/api/processor/clearConfigCache",{ withCredentials : true} )
       .map((response) => response.text());
   }
+
+  public getNextRun() : Observable<string> {
+    let vm = this;
+    return vm.http.get("/api/processor/nextRun",{ withCredentials : true} )
+      .map((response) => response.text());
+  }
+
+  public setDelay(delay: string) : Observable<string> {
+    let vm = this;
+    const params = new URLSearchParams();
+    params.set('delayValue', delay);
+    return vm.http.get("/api/processor/setDelay",{ search : params, withCredentials : true} )
+      .map((response) => response.text());
+  }
+
+  public getDelay() : Observable<string> {
+    let vm = this;
+    return vm.http.get("/api/processor/getDelay",{ withCredentials : true} )
+      .map((response) => response.text());
+  }
+
+  public getLastRun() : Observable<string> {
+    let vm = this;
+    return vm.http.get("/api/processor/getLastRun",{ withCredentials : true} )
+      .map((response) => response.text());
+  }
 }
