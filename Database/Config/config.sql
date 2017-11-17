@@ -30,3 +30,11 @@ values ('adastra-receiver','messagingAPI',
    "eds_url" : "http://localhost:8001",
    "useKeycloak" : "true"
 }');
+
+insert into config (app_id, config_id, config_data)
+values ('adastra-receiver','generalSettings',
+      '{
+   "refreshRate" : "10",
+   "processorDelay" : "10",
+   "processBatchSize" : "10"
+}');

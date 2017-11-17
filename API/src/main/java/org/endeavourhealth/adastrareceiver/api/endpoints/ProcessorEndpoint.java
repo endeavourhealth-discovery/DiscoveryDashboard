@@ -1,19 +1,21 @@
 package org.endeavourhealth.adastrareceiver.api.endpoints;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.astefanutti.metrics.aspectj.Metrics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.endeavourhealth.adastrareceiver.api.database.models.MessageStoreEntity;
-import org.endeavourhealth.adastrareceiver.api.managers.MessageProcessor;
 import org.endeavourhealth.adastrareceiver.api.managers.MessageSender;
+import org.endeavourhealth.common.config.ConfigManager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -22,15 +24,37 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.*;
 
-import static org.endeavourhealth.adastrareceiver.api.managers.MessageSender.getRunDate;
-
 @Path("/processor")
 @Metrics(registry = "adastraReceiverMetricRegistry")
 @Api(description = "Initial api for all calls relating to the Adastra Receiver processor")
 public class ProcessorEndpoint {
     private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(0);
-    private static Long delay = 10L;
-    private static ScheduledFuture<?> future = scheduler.scheduleAtFixedRate(new MessageSender(), 0L, delay, TimeUnit.SECONDS);
+    private static Long delay;
+    private static Integer refresh;
+    private static Integer batchSize;
+    private static ScheduledFuture<?> future;
+    private static JsonNode jsonConfig = null;
+
+    public static void startProcessor() {
+        getConfigValues("generalSettings");
+        future = scheduler.scheduleAtFixedRate(new MessageSender(), 0L, delay, TimeUnit.SECONDS);
+    }
+
+    private static JsonNode getConfigValues(String configValue) {
+        if (jsonConfig == null) {
+
+            try {
+                jsonConfig = ConfigManager.getConfigurationAsJson(configValue);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonConfig;
+    }
+
+    private void saveConfig() {
+        //jsonConfig. = ConfigManager.getConfigurationAsJson(configValue);
+    }
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -106,7 +130,8 @@ public class ProcessorEndpoint {
     @Path("/clearConfigCache")
     @ApiOperation(value = "Clears the config cache after changing the config")
     public Response clearConfigCache(@Context SecurityContext sc) throws Exception {
-        System.out.println("clearing Cache");
+
+        jsonConfig = null;
 
         return Response
                 .ok()
@@ -138,6 +163,7 @@ public class ProcessorEndpoint {
                              @ApiParam(value = "delay value") @QueryParam("delayValue") Long delayValue) throws Exception {
 
         delay = delayValue;
+
         return Response
                 .ok()
                 .entity("Delay set to " + delayValue + " seconds")
@@ -152,9 +178,11 @@ public class ProcessorEndpoint {
     @ApiOperation(value = "Get the delay of the processor")
     public Response setDelay(@Context SecurityContext sc) throws Exception {
 
+        JsonNode config = getConfigValues("generalSettings");
+
         return Response
                 .ok()
-                .entity(delay)
+                .entity(config.get("processorDelay").asLong())
                 .build();
     }
 
@@ -169,6 +197,54 @@ public class ProcessorEndpoint {
         Instant lastSent = MessageSender.getRunDate();
 
         return formatDate(lastSent);
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.processor.getRefresh")
+    @Path("/getRefresh")
+    @ApiOperation(value = "Get the refresh rate of the dashboard")
+    public Response getRefresh(@Context SecurityContext sc) throws Exception {
+
+        JsonNode config = getConfigValues("generalSettings");
+
+        return Response
+                .ok()
+                .entity(config.get("refreshRate").asInt())
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.processor.getBatchSize")
+    @Path("/getBatchSize")
+    @ApiOperation(value = "Get the batch size of the processor")
+    public Response getBatchSize(@Context SecurityContext sc) throws Exception {
+
+        JsonNode config = getConfigValues("generalSettings");
+
+        return Response
+                .ok()
+                .entity(config.get("processBatchSize").asInt())
+                .build();
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.processor.setBatchSize")
+    @Path("/setBatchSize")
+    @ApiOperation(value = "Set the batch size of the processor")
+    public Response setBatchSize(@Context SecurityContext sc) throws Exception {
+
+        JsonNode config = getConfigValues("generalSettings");
+
+        return Response
+                .ok()
+                .entity(batchSize)
+                .build();
     }
 
     private Response formatDate(Instant lastRun) throws Exception {
