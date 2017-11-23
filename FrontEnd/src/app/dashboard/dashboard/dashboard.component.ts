@@ -6,6 +6,9 @@ import {ToastsManager} from 'ng2-toastr';
 import {ProcessorService} from "../../processor/processor.service";
 import {Observable} from "rxjs/Observable";
 import {Subscription} from "rxjs/Subscription";
+import {DashboardStatistics} from "../models/DashboardStatistics";
+import {ProcessorStatistics} from "../../processor/models/ProcessorStatistics";
+import {GeneralSettings} from "../../processor/models/GeneralSettings";
 
 @Component({
   selector: 'app-dashboard',
@@ -13,20 +16,12 @@ import {Subscription} from "rxjs/Subscription";
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  totalMessageCount: number = 0;
-  receivedMessageCount: number = 0;
-  sentMessageCount: number = 0;
-  errorMessageCount: number = 0;
-  messageXML: string = "";
-  runningStatus: string = "";
+  dashboardStatistics: DashboardStatistics = <DashboardStatistics>{};
+  processorStatistics: ProcessorStatistics = <ProcessorStatistics>{};
+  settings: GeneralSettings = <GeneralSettings>{};
   beforeResend: number;
   afterResend: number;
 
-  lastRun: string;
-  delay: string;
-  nextRun: string;
-
-  refreshRate = 10;
   private subscription: Subscription;
 
 
@@ -41,12 +36,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const vm = this;
-    vm.setTimer();
+    vm.refreshScreen();
+    vm.getGeneralSettings();
   }
 
   setTimer() {
     const vm = this;
-    let timer = Observable.timer(0, vm.refreshRate * 1000);
+    let timer = Observable.timer(0, vm.settings.refreshRate * 1000);
     vm.subscription = timer.subscribe(t => {
       vm.refreshScreen();
     });
@@ -75,52 +71,55 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getDashboardStatistics() {
-    var vm = this;
-    vm.getTotalMessageCount();
-    vm.getReceivedMessageCount();
-    vm.getSentMessageCount();
-    vm.getErrorMessageCount();
-  }
-
-  getTotalMessageCount() {
     const vm = this;
-    vm.dashboardService.getTotalMessageCount(-1)
+    vm.dashboardService.getDashboardStatistics()
       .subscribe(
         (result) => {
-          vm.totalMessageCount = result;
+          vm.dashboardStatistics = result;
         },
         (error) => console.log(error)
       );
   }
 
-  getReceivedMessageCount() {
+  getProcessorStatistics() {
     const vm = this;
-    vm.dashboardService.getTotalMessageCount(0)
+    vm.processorService.getProcessorStatistics()
       .subscribe(
         (result) => {
-          vm.receivedMessageCount = result;
+          vm.processorStatistics = result;
         },
         (error) => console.log(error)
       );
   }
 
-  getSentMessageCount() {
+  getGeneralSettings() {
     const vm = this;
-    vm.dashboardService.getTotalMessageCount(1)
+    vm.processorService.getSettings()
       .subscribe(
         (result) => {
-          vm.sentMessageCount = result;
+          vm.settings = result;
+          console.log(vm.settings);
         },
         (error) => console.log(error)
       );
   }
 
-  getErrorMessageCount() {
+  updateSettings() {
     const vm = this;
-    vm.dashboardService.getTotalMessageCount(2)
+    MessageBoxDialog.open(vm.$modal, 'Save configuration',
+      'Are you sure you want to save the current configuration settings? ', 'Yes', 'No')
+      .result.then(
+      () => vm.setGeneralSettings(),
+      () => vm.log.info('Cancelled', null, 'Cancel')
+    );
+  }
+
+  setGeneralSettings() {
+    const vm = this;
+    vm.processorService.postSettings(vm.settings)
       .subscribe(
         (result) => {
-          vm.errorMessageCount = result;
+          vm.log.success(result);
         },
         (error) => console.log(error)
       );
@@ -148,24 +147,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
       );
   }
 
-  checkProcessorIsRunning() {
+  reloadGeneralConfig() {
     const vm = this;
-    vm.processorService.isRunning()
-      .subscribe(
-        (result) => {
-          console.log(result);
-          vm.runningStatus = result;
-        },
-        (error) => console.log(error)
-      );
+    MessageBoxDialog.open(vm.$modal, 'Save configuration',
+      'Are you sure you want to reload the configuration settings from the database? ', 'Yes', 'No')
+      .result.then(
+      () => vm.reloadConfig(),
+      () => vm.log.info('Cancelled', null, 'Cancel')
+    );
   }
 
-  clearCache() {
+  reloadConfig() {
     const vm = this;
-    vm.processorService.clearCache()
+    vm.processorService.reloadConfig()
       .subscribe(
         (result) => {
-          console.log(result);
+          vm.log.success("Configuration successfully reloaded from Database");
+          vm.getGeneralSettings();
         },
         (error) => console.log(error)
       );
@@ -186,20 +184,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const vm = this;
     MessageBoxDialog.open(vm.$modal, 'Resend Messages',
       'Are you sure you want to resend all messages in Error? ' +
-      '\n\nThis will resend ' + vm.errorMessageCount + ' messages.', 'Yes', 'No')
+      '\n\nThis will resend ' + vm.dashboardStatistics.errorMessageCount + ' messages.', 'Yes', 'No')
       .result.then(
       () => vm.resendMessages(0, "error"),
-      () => vm.log.info('Resend cancelled', null, 'Cancel')
-    );
-
-  }
-
-  resendSingleMessage(messageId: number) {
-    const vm = this;
-    MessageBoxDialog.open(vm.$modal, 'Resend Messages',
-      'Are you sure you want to resend message ' + messageId + '?\n ', 'Yes', 'No')
-      .result.then(
-      () => vm.resendMessages(messageId, "single"),
       () => vm.log.info('Resend cancelled', null, 'Cancel')
     );
   }
@@ -228,65 +215,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const vm = this;
     MessageBoxDialog.open(vm.$modal, 'Resend All Messages',
       'Are you sure you want to resend all messages?\n ' +
-      'This will resend ' + vm.totalMessageCount + ' messages.', 'Yes', 'No')
+      'This will resend ' + vm.dashboardStatistics.totalMessageCount + ' messages.', 'Yes', 'No')
       .result.then(
       () => vm.resendMessages(0, "all"),
       () => vm.log.info('Resend cancelled', null, 'Cancel')
     );
-  }
-
-  getNextRun() {
-    const vm = this;
-    vm.processorService.getNextRun()
-      .subscribe(
-        (result) => {
-          vm.nextRun = result;
-        },
-        (error) => console.log(error)
-      );
-  }
-
-  setDelay() {
-    const vm = this;
-    vm.processorService.setDelay(vm.delay)
-      .subscribe(
-        (result) => {
-          vm.log.success(result);
-          vm.log.success('Restart the processor for the change to take effect');
-        },
-        (error) => console.log(error)
-      );
-  }
-
-  getDelay() {
-    const vm = this;
-    vm.processorService.getDelay()
-      .subscribe(
-        (result) => {
-          vm.delay = result;
-        },
-        (error) => console.log(error)
-      );
-  }
-
-  getLastRun() {
-    const vm = this;
-    vm.processorService.getLastRun()
-      .subscribe(
-        (result) => {
-          vm.lastRun = result;
-          console.log(result);
-        },
-        (error) => console.log(error)
-      );
-  }
-
-  getProcessorStatistics() {
-    const vm = this;
-    vm.getLastRun();
-    vm.getDelay();
-    vm.getNextRun();
-    vm.checkProcessorIsRunning();
   }
 
 }

@@ -13,14 +13,38 @@ import java.util.List;
 import java.util.UUID;
 
 public class MessageSender implements Runnable {
-    private JsonNode jsonConfig = null;
     private static Instant lastSend = Instant.now();
+    private static String messagingApiURL = null;
+    private static boolean useKeycloak;
+    private static Integer batchSize;
 
     public static Instant getRunDate() {
-        System.out.println(lastSend);
         return lastSend;
     }
 
+    public static String getMessagingApiURL() {
+        return messagingApiURL;
+    }
+
+    public static void setMessagingApiURL(String messagingApiURL) {
+        MessageSender.messagingApiURL = messagingApiURL;
+    }
+
+    public static boolean isUseKeycloak() {
+        return useKeycloak;
+    }
+
+    public static void setUseKeycloak(boolean useKeycloak) {
+        MessageSender.useKeycloak = useKeycloak;
+    }
+
+    public static Integer getBatchSize() {
+        return batchSize;
+    }
+
+    public static void setBatchSize(Integer batchSize) {
+        MessageSender.batchSize = batchSize;
+    }
 
     @Override
     public void run() {
@@ -35,7 +59,8 @@ public class MessageSender implements Runnable {
     }
 
     private boolean checkForNewMessages() throws Exception {
-        List<MessageStoreEntity> messages = MessageStoreEntity.getEarliestUnsentMessages();
+
+        List<MessageStoreEntity> messages = MessageStoreEntity.getEarliestUnsentMessages(batchSize);
 
         for (MessageStoreEntity message: messages) {
             System.out.println(message.getId());
@@ -54,22 +79,11 @@ public class MessageSender implements Runnable {
 
         outboundMessage = EdsSender.buildEnvelope(messageId, orgId.toString(), "Adastra", "1.0", message.getMessagePayload());
 
-        JsonNode config = getConfig();
-        String edsURL = config.get("eds_url").asText();
-        Boolean useKeycloak = config.get("useKeycloak").asBoolean();
 
-        //edsSenderResponse = EdsSender.notifyEds(edsURL, useKeycloak, outboundMessage);
+        //edsSenderResponse = EdsSender.notifyEds(messagingApiURL, useKeycloak, outboundMessage);
 
         //MessageStoreEntity.updateMessageStatus(message.getId(), MessageStatus.PROCESSED.getMessageStatus());
 
         return true;
-    }
-
-    private JsonNode getConfig() throws IOException {
-        if (jsonConfig == null) {
-            jsonConfig = ConfigManager.getConfigurationAsJson("messagingAPI");
-        }
-
-        return jsonConfig;
     }
 }

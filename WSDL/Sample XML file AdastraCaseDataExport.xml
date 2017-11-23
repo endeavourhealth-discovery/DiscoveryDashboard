@@ -73,14 +73,14 @@
 	</latestAppointment>
 	<questions>A block of free text will be displayed here listing questions and answers asked during the case. Line breaks will be included.</questions>
 	<consultation>
-		<startTime>2012-05-30T09:46:32Z</startTime>
-		<endTime>2012-05-30T09:56:23Z</endTime>
+		<startTime>2012-05-30T10:46:32Z</startTime>
+		<endTime>2012-05-30T10:56:23Z</endTime>
 		<consultationBy providerType="Doctor">
 			<name>Dr John Smith</name>
 		</consultationBy>
 		<location>Walk-In Centre</location>
-		<summary>A free text block of text detailing all information captured during the consultation.</summary>
-		<medicalHistory>A block of text summarising all medical history information known at the time of the consultaiton.</medicalHistory>
+		<summary>A free text block of text detailing all information captured during the first consultation.</summary>
+		<medicalHistory>A block of text summarising all medical history information known at the time of the first consultaiton.</medicalHistory>
 		<eventOutcome codeScheme="String">
 			<code>ABC</code>
 			<description>Description of ABC code</description>
@@ -105,22 +105,22 @@
 			<name>Dr John Smith</name>
 		</consultationBy>
 		<location>Walk-In Centre</location>
-		<summary>A free text block of text detailing all information captured during the consultation.</summary>
-		<medicalHistory>A block of text summarising all medical history information known at the time of the consultaiton.</medicalHistory>
+		<summary>A free text block of text detailing all information captured during the second consultation.</summary>
+		<medicalHistory>A block of text summarising all medical history information known at the time of the second consultaiton.</medicalHistory>
 		<eventOutcome codeScheme="String">
-			<code>ABC</code>
+			<code>CBA</code>
 			<description>Description of ABC code</description>
 		</eventOutcome>
 		<eventOutcome codeScheme="String">
-			<code>DEF</code>
+			<code>FED</code>
 			<description>Description of DEF code</description>
 		</eventOutcome>
 		<clinicalCode codeScheme="String">
-			<code>1348.</code>
+			<code>8431.</code>
 			<description>Description of 1348. clinical code</description>
 		</clinicalCode>
 		<clinicalCode codeScheme="String">
-			<code>137B.</code>
+			<code>731B.</code>
 			<description>Description of 137B. clinical code</description>
 		</clinicalCode>
 	</consultation>

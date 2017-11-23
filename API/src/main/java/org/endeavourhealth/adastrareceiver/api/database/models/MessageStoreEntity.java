@@ -282,7 +282,7 @@ public class MessageStoreEntity {
         return updateCount + " message updated";
     }
 
-    public static List<MessageStoreEntity> getEarliestUnsentMessages() throws Exception {
+    public static List<MessageStoreEntity> getEarliestUnsentMessages(Integer limit) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         entityManager.getTransaction().begin();
@@ -292,7 +292,7 @@ public class MessageStoreEntity {
                         "order by m.receivedDateTime asc " +
                         "");
         query.setParameter("unsentStatus", MessageStatus.RECEIVED.getMessageStatus());
-        query.setMaxResults(10);
+        query.setMaxResults(limit);
 
         List<MessageStoreEntity> mse = query.getResultList();
 

@@ -6,19 +6,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.endeavourhealth.adastrareceiver.api.database.models.MessageStoreEntity;
-import org.endeavourhealth.adastrareceiver.api.managers.MessageProcessor;
-import org.endeavourhealth.adastrareceiver.api.managers.MessageSender;
+import org.endeavourhealth.adastrareceiver.api.enums.MessageStatus;
+import org.endeavourhealth.adastrareceiver.api.json.JsonDashboardStatistics;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Path("/dashboard")
 @Metrics(registry = "adastraReceiverMetricRegistry")
@@ -26,16 +21,14 @@ import java.util.concurrent.TimeUnit;
 public class DashboardEndpoint {
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name="adastraReceiver.dashboard.messageCount")
-    @Path("/messageCount")
-    @ApiOperation(value = "returns the total number of messages received")
-    public Response getMessageCount(@Context SecurityContext sc,
-                                    @ApiParam(value = "message Status") @QueryParam("status") byte status) throws Exception {
-        System.out.println("Count");
+    @Timed(absolute = true, name="adastraReceiver.dashboard.getDashboardStatistics")
+    @Path("/getDashboardStatistics")
+    @ApiOperation(value = "Gets the dashboard Statistics")
+    public Response getMessageCount(@Context SecurityContext sc) throws Exception {
 
-        return getMessageCount(status);
+        return getDashboardStatistics();
     }
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -50,11 +43,16 @@ public class DashboardEndpoint {
         return resendMessage(messageId, mode);
     }
 
-    private Response getMessageCount(byte status) throws Exception {
+    private Response getDashboardStatistics() throws Exception {
 
-        Long messageCount = MessageStoreEntity.getTotalNumberOfMessages(status);
+        JsonDashboardStatistics statistics = new JsonDashboardStatistics();
+        statistics.setTotalMessageCount(MessageStoreEntity.getTotalNumberOfMessages(MessageStatus.ALL.getMessageStatus()));
+        statistics.setReceivedMessageCount(MessageStoreEntity.getTotalNumberOfMessages(MessageStatus.RECEIVED.getMessageStatus()));
+        statistics.setSentMessageCount(MessageStoreEntity.getTotalNumberOfMessages(MessageStatus.PROCESSED.getMessageStatus()));
+        statistics.setErrorMessageCount(MessageStoreEntity.getTotalNumberOfMessages(MessageStatus.ERROR.getMessageStatus()));
+
         return Response
-                .ok(messageCount)
+                .ok(statistics)
                 .build();
     }
 

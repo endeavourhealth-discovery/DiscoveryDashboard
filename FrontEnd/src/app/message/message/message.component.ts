@@ -133,7 +133,7 @@ export class MessageComponent implements OnInit {
   resendMessage(message: MessageStore) {
     const vm = this;
     MessageBoxDialog.open(vm.$modal, 'Resend Message',
-      'Are you sure you want to resend messages ' + message.id + '?', 'Yes', 'No')
+      'Are you sure you want to resend message ' + message.id + '?', 'Yes', 'No')
       .result.then(
       () => vm.resendSingleMessage(message.id),
       () => vm.log.info('Resend cancelled', null, 'Cancel')

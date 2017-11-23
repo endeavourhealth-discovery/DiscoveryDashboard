@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {URLSearchParams, Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
+import {DashboardStatistics} from "./models/DashboardStatistics";
 
 @Injectable()
 export class DashboardService {
@@ -15,14 +16,10 @@ export class DashboardService {
       .map((response) => response.json());
   }
 
-  public getMessageCount(statusList: number[] = []) : Observable<number> {
+  public getDashboardStatistics() : Observable<DashboardStatistics> {
     let vm = this;
-    const params = new URLSearchParams();
 
-    for (var status of statusList) {
-      params.append('statusList', status.toString());
-    }
-    return vm.http.get("/api/dashboard/getMessageCount",{ search : params,  withCredentials : true} )
+    return vm.http.get("/api/dashboard/getDashboardStatistics",{ withCredentials : true} )
       .map((response) => response.json());
   }
 

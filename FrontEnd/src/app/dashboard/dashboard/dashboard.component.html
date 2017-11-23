@@ -2,6 +2,9 @@
   <div class="container-fluid">
     <div class="module-heading">
       Adastra Receiver Dashboard
+      <div class="pull-right">
+        <button type="button" class="btn btn-sm btn-success" (click)="refreshScreen()">Refresh</button>
+      </div>
     </div>
     <div class="module-body">
       <form>
@@ -10,63 +13,14 @@
             <div class="card">
               <div class="card-header">Message Statistics</div>
               <div class="card-block">
-                <p>Total messages received : <span class="badge badge-pill badge-primary">{{totalMessageCount}}</span></p>
-                <p>Messages received but not sent to discovery: <span class="badge badge-pill badge-warning">{{receivedMessageCount}}</span></p>
-                <p>Messages sent to discovery : <span class="badge badge-pill badge-success">{{sentMessageCount}}</span></p>
-                <p>Messages with an error: <span class="badge badge-pill badge-danger">{{errorMessageCount}}</span></p>
+                <p>Total messages received : <span class="badge badge-pill badge-primary">{{dashboardStatistics.totalMessageCount}}</span></p>
+                <p>Messages received but not sent to discovery: <span class="badge badge-pill badge-warning">{{dashboardStatistics.receivedMessageCount}}</span></p>
+                <p>Messages sent to discovery : <span class="badge badge-pill badge-success">{{dashboardStatistics.sentMessageCount}}</span></p>
+                <p>Messages with an error: <span class="badge badge-pill badge-danger">{{dashboardStatistics.errorMessageCount}}</span></p>
+                <br>
               </div>
             </div>
           </div>
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header">Message Actions</div>
-              <div class="card-block">
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <span>Resend all messages in error </span>
-                  </div>
-                  <div class="form-group col-md-2 offset-4">
-                    <button [disabled]="errorMessageCount == 0" type="button" class="btn btn-sm btn-primary" (click)="resendErrorMessages()">Resend</button>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <span>Resend all messages before</span>
-                  </div>
-                  <div class="form-group col-md-4">
-                      <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="beforeResend" name="beforeResend">
-                  </div>
-                  <div class="form-group col-md-2">
-                    <button [disabled]="!beforeResend" type="button" class="btn btn-sm btn-primary" (click)="resendMessagesBefore()">Resend</button>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <span>Resend all messages after </span>
-                  </div>
-                  <div class="form-group col-md-4">
-                    <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="afterResend" name="afterResend">
-                  </div>
-                  <div class="form-group col-md-2">
-                    <button [disabled]="!afterResend" type="button" class="btn btn-sm btn-primary" (click)="resendMessagesAfter()">Resend</button>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <span>Resend all messages! (Warning!) </span>
-                  </div>
-                  <div class="form-group col-md-2 offset-4">
-                    <button type="button" class="btn btn-sm btn-danger" (click)="resendAllMessages()">Resend</button>
-                  </div>
-                </div>
-                <button type="button" class="btn btn-sm btn-primary" (click)="getDashboardStatistics()">Refresh</button>
-                <button type="button" class="btn btn-sm btn-primary" (click)="clearCache()">Clear Cache</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <br>
-        <div class="row">
           <div class="col-md-6">
             <div class="card">
               <div class="card-header">Processor Statistics</div>
@@ -76,7 +30,7 @@
                     <span>Message Processor Running : </span>
                   </div>
                   <div class="col-md-6">
-                    {{runningStatus}}
+                    {{processorStatistics.isRunning}}
                   </div>
                 </div>
                 <div class="row">
@@ -84,7 +38,7 @@
                     <span>Processor Last run : </span>
                   </div>
                   <div class="col-md-6">
-                    {{lastRun}}
+                    {{processorStatistics.lastRun}}
                   </div>
                 </div>
                 <div class="row">
@@ -92,27 +46,10 @@
                     <span>Processor Next run : </span>
                   </div>
                   <div class="col-md-6">
-                    {{nextRun}} Seconds
+                    {{processorStatistics.nextRun}} Seconds
                   </div>
                 </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label>Processor Delay</label>
-                  </div>
-                  <div class="form-group col-md-3">
-                    <input type="number" placeholder="Delay" class="form-control" [(ngModel)]="delay" name="delay">
-                  </div>
-                  <div class="form-group col-md-2 offset-1">
-                    <button type="button" class="btn btn-sm btn-primary" (click)="setDelay()">Update</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header">Processor Actions</div>
-              <div class="card-block">
+                <br>
                 <div class="row">
                   <div class="form-group col-md-6">
                     <label>Start Processor</label>
@@ -126,24 +63,119 @@
                     <label>Stop Processor</label>
                   </div>
                   <div class="form-group col-md-2 offset-4">
-                    <button [disabled]="runningStatus" type="button" class="btn btn-sm btn-primary" (click)="stopProcessor()">Stop</button>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <span>Set dashboard refresh rate</span>
-                  </div>
-                  <div class="col-md-3">
-                    <input type="number" placeholder="refresh" class="form-control" [(ngModel)]="refreshRate" name="refreshRate">
-                  </div>
-                  <div class="col-md-2 offset-1">
-                    <button type="button" class="btn btn-sm btn-primary" (click)="updateTimer()">Update</button>
+                    <button [disabled]="processorStatistics.isRunning" type="button" class="btn btn-sm btn-primary" (click)="stopProcessor()">Stop</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <br>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">Message Actions</div>
+              <div class="card-block">
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <p>Resend all messages in error </p>
+                  </div>
+                  <div class="form-group col-md-2 offset-4">
+                    <button [disabled]="dashboardStatistics.errorMessageCount == 0" type="button" class="btn btn-sm btn-primary" (click)="resendErrorMessages()">Resend</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <p>Resend all messages before</p>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="beforeResend" name="beforeResend">
+                  </div>
+                  <div class="form-group col-md-2">
+                    <button [disabled]="!beforeResend" type="button" class="btn btn-sm btn-primary" (click)="resendMessagesBefore()">Resend</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <p>Resend all messages after </p>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="afterResend" name="afterResend">
+                  </div>
+                  <div class="form-group col-md-2">
+                    <button [disabled]="!afterResend" type="button" class="btn btn-sm btn-primary" (click)="resendMessagesAfter()">Resend</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <p>Resend all messages! (Warning!) </p>
+                  </div>
+                  <div class="form-group col-md-2 offset-4">
+                    <button type="button" class="btn btn-sm btn-danger" (click)="resendAllMessages()">Resend</button>
+                  </div>
+                </div>
+                <br><br><br>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">General Settings</div>
+              <div class="card-block">
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>Dashboard refresh rate</p>
+                  </div>
+                  <div class="col-md-3 offset-3">
+                    <input type="number" placeholder="refresh" class="form-control" [(ngModel)]="settings.refreshRate" name="refreshRate">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <p>Messaging API URL</p>
+                  </div>
+                  <div class="col-md-8">
+                    <input type="text" placeholder="Messaging API Url" class="form-control" [(ngModel)]="settings.messagingApiUrl" name="messagingApiUrl">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>Use Keycloak</p>
+                  </div>
+                  <div class="col-md-1 offset-5">
+                    <input type="checkbox" name="useKeycloak" value="{{settings.useKeycloak}}" [(ngModel)]="settings.useKeycloak" (change)="setUseKeycloak()"/>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <p>Processor Delay</p>
+                  </div>
+                  <div class="form-group col-md-3 offset-3">
+                    <input type="number" placeholder="Delay" class="form-control" [(ngModel)]="settings.processorDelay" name="delay">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <p>Processor Batch Size</p>
+                  </div>
+                  <div class="form-group col-md-3 offset-3">
+                    <input type="number" placeholder="Batch Size" class="form-control" [(ngModel)]="settings.processBatchSize" name="processBatchSize">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-3">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="reloadGeneralConfig()">Reload Config</button>
+                  </div>
+                  <div class="form-group col-md-3 offset-6">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="updateSettings()">Save Settings</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <br>
       </form>
     </div>
   </div>
