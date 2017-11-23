@@ -55,7 +55,7 @@
                     <label>Start Processor</label>
                   </div>
                   <div class="form-group col-md-2 offset-4">
-                    <button [disabled]="!runningStatus" type="button" class="btn btn-sm btn-primary" (click)="startProcessor()">Start</button>
+                    <button [disabled]="!processorStatistics.isRunning" type="button" class="btn btn-sm btn-primary" (click)="startProcessor()">Start</button>
                   </div>
                 </div>
                 <div class="row">
@@ -143,7 +143,7 @@
                     <p>Use Keycloak</p>
                   </div>
                   <div class="col-md-1 offset-5">
-                    <input type="checkbox" name="useKeycloak" value="{{settings.useKeycloak}}" [(ngModel)]="settings.useKeycloak" (change)="setUseKeycloak()"/>
+                    <input type="checkbox" name="useKeycloak" value="{{settings.useKeycloak}}" [(ngModel)]="settings.useKeycloak"/>
                   </div>
                 </div>
                 <div class="row">
