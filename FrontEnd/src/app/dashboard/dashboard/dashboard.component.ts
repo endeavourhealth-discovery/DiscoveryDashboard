@@ -9,6 +9,7 @@ import {Subscription} from "rxjs/Subscription";
 import {DashboardStatistics} from "../models/DashboardStatistics";
 import {ProcessorStatistics} from "../../processor/models/ProcessorStatistics";
 import {GeneralSettings} from "../../processor/models/GeneralSettings";
+import {DatabaseConfig} from "../../processor/models/DatabaseConfig";
 
 @Component({
   selector: 'app-dashboard',
@@ -19,6 +20,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   dashboardStatistics: DashboardStatistics = <DashboardStatistics>{};
   processorStatistics: ProcessorStatistics = <ProcessorStatistics>{};
   settings: GeneralSettings = <GeneralSettings>{};
+  dbConfig: DatabaseConfig = <DatabaseConfig>{};
   beforeResend: number;
   afterResend: number;
 
@@ -38,6 +40,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const vm = this;
     vm.refreshScreen();
     vm.getGeneralSettings();
+    vm.getDBSettings();
   }
 
   setTimer() {
@@ -124,6 +127,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
       );
   }
 
+  getDBSettings() {
+    const vm = this;
+    vm.processorService.getDBSettings()
+      .subscribe(
+        (result) => {
+          vm.dbConfig = result;
+        },
+        (error) => console.log(error)
+      );
+  }
+
   saveSettings() {
     const vm = this;
     MessageBoxDialog.open(vm.$modal, 'Save configuration',
@@ -137,6 +151,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
   saveGeneralSettings() {
     const vm = this;
     vm.processorService.saveConfig()
+      .subscribe(
+        (result) => {
+          vm.log.success(result);
+        },
+        (error) => console.log(error)
+      );
+  }
+
+
+
+  saveDatabaseSettingsConfirm() {
+    const vm = this;
+    MessageBoxDialog.open(vm.$modal, 'Save database configuration',
+      'Are you sure you want to save the database configuration settings? ', 'Yes', 'No')
+      .result.then(
+      () => vm.saveDatabaseSettings(),
+      () => vm.log.info('Cancelled', null, 'Cancel')
+    );
+  }
+
+  saveDatabaseSettings() {
+    const vm = this;
+    vm.processorService.saveDBSettings(vm.dbConfig)
       .subscribe(
         (result) => {
           vm.log.success(result);

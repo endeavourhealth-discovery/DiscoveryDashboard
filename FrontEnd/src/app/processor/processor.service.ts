@@ -3,6 +3,7 @@ import {URLSearchParams, Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {GeneralSettings} from "./models/GeneralSettings";
 import {ProcessorStatistics} from "./models/ProcessorStatistics";
+import {DatabaseConfig} from "./models/DatabaseConfig";
 
 @Injectable()
 export class ProcessorService {
@@ -48,6 +49,18 @@ export class ProcessorService {
   public saveConfig() : Observable<string> {
     let vm = this;
     return vm.http.get("/api/processor/saveConfig",{ withCredentials : true} )
+      .map((response) => response.text());
+  }
+
+  public getDBSettings() : Observable<any> {
+    let vm = this;
+    return vm.http.get("/api/processor/getDatabaseConfig",{ withCredentials : true} )
+      .map((response) => response.json());
+  }
+
+  public saveDBSettings(config: DatabaseConfig) : Observable<string> {
+    let vm = this;
+    return vm.http.post("/api/processor/saveDatabaseConfig", config, { withCredentials : true} )
       .map((response) => response.text());
   }
 }

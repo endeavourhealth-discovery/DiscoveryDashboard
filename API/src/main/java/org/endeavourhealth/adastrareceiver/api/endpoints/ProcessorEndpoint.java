@@ -7,6 +7,7 @@ import io.astefanutti.metrics.aspectj.Metrics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.endeavourhealth.adastrareceiver.api.database.PersistenceManager;
 import org.endeavourhealth.adastrareceiver.api.json.JsonGeneralSettings;
 import org.endeavourhealth.adastrareceiver.api.json.JsonProcessorStatistics;
 import org.endeavourhealth.adastrareceiver.api.managers.MessageSender;
@@ -36,13 +37,13 @@ public class ProcessorEndpoint {
     private static JsonNode jsonConfig = null;
 
     public static void startProcessor() {
-        getConfigValues("generalSettings");
+        getGeneralSettingsConfigValues();
         future = scheduler.scheduleAtFixedRate(new MessageSender(), 0L, delay, TimeUnit.SECONDS);
     }
 
-    private static void getConfigValues(String configValue) {
+    private static void getGeneralSettingsConfigValues() {
         try {
-            jsonConfig = ConfigManager.getConfigurationAsJson(configValue);
+            jsonConfig = ConfigManager.getConfigurationAsJson("generalSettings");
             delay = jsonConfig.get("processorDelay").asLong();
             refresh = jsonConfig.get("refreshRate").asInt();
             MessageSender.setBatchSize(jsonConfig.get("processBatchSize").asInt());
@@ -51,6 +52,21 @@ public class ProcessorEndpoint {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static Response getDatabaseSettingsConfigValues() {
+        JsonNode dbConfig = null;
+        try {
+            dbConfig = ConfigManager.getConfigurationAsJson("adastra_receiverDB");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Response
+                .ok()
+                .entity(dbConfig)
+                .build();
     }
 
     private void saveConfig() throws Exception {
@@ -65,6 +81,13 @@ public class ProcessorEndpoint {
         ConfigManager.setConfiguration("generalSettings", config.toString());
 
         jsonConfig = config;
+    }
+
+
+
+    private void saveDatabaseConfig(JsonNode dbConfig) throws Exception {
+
+        ConfigManager.setConfiguration("adastra_receiverDB", dbConfig.toString());
     }
 
     @GET
@@ -122,7 +145,7 @@ public class ProcessorEndpoint {
     public Response reloadConfig(@Context SecurityContext sc) throws Exception {
 
         jsonConfig = null;
-        getConfigValues("generalSettings");
+        getGeneralSettingsConfigValues();
 
         return Response
                 .ok()
@@ -174,6 +197,35 @@ public class ProcessorEndpoint {
         return Response
                 .ok()
                 .entity("Settings saved")
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.processor.getDatabaseConfig")
+    @Path("/getDatabaseConfig")
+    @ApiOperation(value = "Get the database settings of the application")
+    public Response getDatabaseConfig(@Context SecurityContext sc) throws Exception {
+
+        return getDatabaseSettingsConfigValues();
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.processor.saveDatabaseConfig")
+    @Path("/saveDatabaseConfig")
+    @ApiOperation(value = "Save the database config settings to the DB")
+    public Response saveDatabaseConfig(@Context SecurityContext sc,
+                                       @ApiParam(value = "Json representation of the database settings") JsonNode dbConfig) throws Exception {
+
+        saveDatabaseConfig(dbConfig);
+        PersistenceManager.ClearEntityManager();
+
+        return Response
+                .ok()
+                .entity("Database Settings saved")
                 .build();
     }
 
