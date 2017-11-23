@@ -45,9 +45,9 @@ export class ProcessorService {
       .map((response) => response.json());
   }
 
-  public saveConfig() : Observable<number> {
+  public saveConfig() : Observable<string> {
     let vm = this;
     return vm.http.get("/api/processor/saveConfig",{ withCredentials : true} )
-      .map((response) => response.json());
+      .map((response) => response.text());
   }
 }

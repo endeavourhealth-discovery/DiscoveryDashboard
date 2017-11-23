@@ -54,6 +54,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     vm.setTimer();
   }
 
+  updateConfig(save: boolean) {
+    const vm = this;
+    vm.processorService.postSettings(vm.settings)
+      .subscribe(
+        (result) => {
+          vm.log.success(result);
+          vm.updateTimer();
+          vm.log.success("A restart of the message processor is required if Processor Delay has been changed");
+          if (save) {
+            console.log(save);
+            vm.saveGeneralSettings();
+          }
+        },
+        (error) => console.log(error)
+      );
+  }
+
   destroyTimer() {
     const vm = this;
     vm.subscription.unsubscribe();
@@ -61,7 +78,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     const vm = this;
-    vm.subscription.unsubscribe();
+    if (vm.subscription != null) {
+      vm.subscription.unsubscribe();
+    }
   }
 
   refreshScreen() {
@@ -87,6 +106,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(
         (result) => {
           vm.processorStatistics = result;
+          console.log(vm.processorStatistics);
         },
         (error) => console.log(error)
       );
@@ -98,25 +118,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(
         (result) => {
           vm.settings = result;
-          console.log(vm.settings);
+          vm.setTimer();
         },
         (error) => console.log(error)
       );
   }
 
-  updateSettings() {
+  saveSettings() {
     const vm = this;
     MessageBoxDialog.open(vm.$modal, 'Save configuration',
       'Are you sure you want to save the current configuration settings? ', 'Yes', 'No')
       .result.then(
-      () => vm.setGeneralSettings(),
+      () => vm.updateConfig(true),
       () => vm.log.info('Cancelled', null, 'Cancel')
     );
   }
 
-  setGeneralSettings() {
+  saveGeneralSettings() {
     const vm = this;
-    vm.processorService.postSettings(vm.settings)
+    vm.processorService.saveConfig()
       .subscribe(
         (result) => {
           vm.log.success(result);
@@ -130,7 +150,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     vm.processorService.startProcessor()
       .subscribe(
         (result) => {
-          console.log(result);
+          vm.log.success(result);
+          vm.refreshScreen();
         },
         (error) => console.log(error)
       );
@@ -141,7 +162,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     vm.processorService.stopProcessor()
       .subscribe(
         (result) => {
-          console.log(result);
+          vm.log.success(result);
+          vm.refreshScreen();
         },
         (error) => console.log(error)
       );
@@ -175,6 +197,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(
         (result) => {
           vm.log.success(result);
+          vm.refreshScreen();
         },
         (error) => vm.log.error(error)
       );

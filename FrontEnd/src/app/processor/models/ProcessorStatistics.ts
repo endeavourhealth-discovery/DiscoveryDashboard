@@ -1,5 +1,5 @@
 export class ProcessorStatistics {
-  isRunning: boolean;
+  running: boolean;
   lastRun: string;
   nextRun: number;
 }

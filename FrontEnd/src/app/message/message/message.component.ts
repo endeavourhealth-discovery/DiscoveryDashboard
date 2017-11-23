@@ -146,6 +146,7 @@ export class MessageComponent implements OnInit {
       .subscribe(
         (result) => {
           vm.log.success(result);
+          vm.getMessages();
         },
         (error) => vm.log.error(error)
       );

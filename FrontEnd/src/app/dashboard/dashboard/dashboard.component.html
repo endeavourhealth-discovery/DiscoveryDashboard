@@ -11,31 +11,59 @@
         <div class="row">
           <div class="col-md-6">
             <div class="card">
-              <div class="card-header">Message Statistics</div>
+              <div class="card-header font-weight-bold">Message Statistics</div>
               <div class="card-block">
-                <p>Total messages received : <span class="badge badge-pill badge-primary">{{dashboardStatistics.totalMessageCount}}</span></p>
-                <p>Messages received but not sent to discovery: <span class="badge badge-pill badge-warning">{{dashboardStatistics.receivedMessageCount}}</span></p>
-                <p>Messages sent to discovery : <span class="badge badge-pill badge-success">{{dashboardStatistics.sentMessageCount}}</span></p>
-                <p>Messages with an error: <span class="badge badge-pill badge-danger">{{dashboardStatistics.errorMessageCount}}</span></p>
+                <div class="row">
+                  <div class="col-md-9">
+                    <p class="font-weight-bold">Total messages received : </p>
+                  </div>
+                  <div class="col-md-3">
+                    <span class="badge badge-pill badge-primary">{{dashboardStatistics.totalMessageCount}}</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-9">
+                    <p class="font-weight-bold">Messages received but not sent to discovery: </p>
+                  </div>
+                  <div class="col-md-3">
+                    <span class="badge badge-pill badge-warning">{{dashboardStatistics.receivedMessageCount}}</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-9">
+                    <p class="font-weight-bold">Messages sent to discovery : </p>
+                  </div>
+                  <div class="col-md-3">
+                    <span class="badge badge-pill badge-success">{{dashboardStatistics.sentMessageCount}}</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-9">
+                    <p class="font-weight-bold">Messages with an error: </p>
+                  </div>
+                  <div class="col-md-3">
+                    <span class="badge badge-pill badge-danger">{{dashboardStatistics.errorMessageCount}}</span>
+                  </div>
+                </div>
                 <br>
               </div>
             </div>
           </div>
           <div class="col-md-6">
             <div class="card">
-              <div class="card-header">Processor Statistics</div>
+              <div class="card-header font-weight-bold">Processor Statistics</div>
               <div class="card-block">
                 <div class="row">
                   <div class="col-md-6">
-                    <span>Message Processor Running : </span>
+                    <p class="font-weight-bold">Message Processor Running : </p>
                   </div>
                   <div class="col-md-6">
-                    {{processorStatistics.isRunning}}
+                    {{processorStatistics.running}}
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-6">
-                    <span>Processor Last run : </span>
+                    <p class="font-weight-bold">Processor Last run : </p>
                   </div>
                   <div class="col-md-6">
                     {{processorStatistics.lastRun}}
@@ -43,27 +71,24 @@
                 </div>
                 <div class="row">
                   <div class="col-md-6">
-                    <span>Processor Next run : </span>
+                    <p class="font-weight-bold">Processor Next run : </p>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-6" *ngIf="processorStatistics.running">
                     {{processorStatistics.nextRun}} Seconds
                   </div>
-                </div>
-                <br>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label>Start Processor</label>
-                  </div>
-                  <div class="form-group col-md-2 offset-4">
-                    <button [disabled]="!processorStatistics.isRunning" type="button" class="btn btn-sm btn-primary" (click)="startProcessor()">Start</button>
+                  <div class="col-md-6" *ngIf="!processorStatistics.running">
+                    Processor not running
                   </div>
                 </div>
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label>Stop Processor</label>
+                    <p class="font-weight-bold">Control Processor</p>
                   </div>
-                  <div class="form-group col-md-2 offset-4">
-                    <button [disabled]="processorStatistics.isRunning" type="button" class="btn btn-sm btn-primary" (click)="stopProcessor()">Stop</button>
+                  <div class="form-group col-md-2">
+                    <button [disabled]="processorStatistics.running" type="button" class="btn btn-sm btn-primary" (click)="startProcessor()">Start</button>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <button [disabled]="!processorStatistics.running" type="button" class="btn btn-sm btn-primary" (click)="stopProcessor()">Stop</button>
                   </div>
                 </div>
               </div>
@@ -74,11 +99,11 @@
         <div class="row">
           <div class="col-md-6">
             <div class="card">
-              <div class="card-header">Message Actions</div>
+              <div class="card-header font-weight-bold">Message Actions</div>
               <div class="card-block">
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <p>Resend all messages in error </p>
+                    <p class="font-weight-bold">Resend all messages in error </p>
                   </div>
                   <div class="form-group col-md-2 offset-4">
                     <button [disabled]="dashboardStatistics.errorMessageCount == 0" type="button" class="btn btn-sm btn-primary" (click)="resendErrorMessages()">Resend</button>
@@ -86,7 +111,7 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <p>Resend all messages before</p>
+                    <p class="font-weight-bold">Resend all messages before</p>
                   </div>
                   <div class="form-group col-md-4">
                     <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="beforeResend" name="beforeResend">
@@ -97,7 +122,7 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <p>Resend all messages after </p>
+                    <p class="font-weight-bold">Resend all messages after </p>
                   </div>
                   <div class="form-group col-md-4">
                     <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="afterResend" name="afterResend">
@@ -108,7 +133,7 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <p>Resend all messages! (Warning!) </p>
+                    <p class="font-weight-bold">Resend all messages! (Warning!) </p>
                   </div>
                   <div class="form-group col-md-2 offset-4">
                     <button type="button" class="btn btn-sm btn-danger" (click)="resendAllMessages()">Resend</button>
@@ -120,11 +145,11 @@
           </div>
           <div class="col-md-6">
             <div class="card">
-              <div class="card-header">General Settings</div>
+              <div class="card-header font-weight-bold">General Settings</div>
               <div class="card-block">
                 <div class="row">
                   <div class="col-md-6">
-                    <p>Dashboard refresh rate</p>
+                    <p class="font-weight-bold">Dashboard refresh rate</p>
                   </div>
                   <div class="col-md-3 offset-3">
                     <input type="number" placeholder="refresh" class="form-control" [(ngModel)]="settings.refreshRate" name="refreshRate">
@@ -132,7 +157,7 @@
                 </div>
                 <div class="row">
                   <div class="col-md-4">
-                    <p>Messaging API URL</p>
+                    <p class="font-weight-bold">Messaging API URL</p>
                   </div>
                   <div class="col-md-8">
                     <input type="text" placeholder="Messaging API Url" class="form-control" [(ngModel)]="settings.messagingApiUrl" name="messagingApiUrl">
@@ -140,7 +165,7 @@
                 </div>
                 <div class="row">
                   <div class="col-md-6">
-                    <p>Use Keycloak</p>
+                    <p class="font-weight-bold">Use Keycloak</p>
                   </div>
                   <div class="col-md-1 offset-5">
                     <input type="checkbox" name="useKeycloak" value="{{settings.useKeycloak}}" [(ngModel)]="settings.useKeycloak"/>
@@ -148,7 +173,7 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <p>Processor Delay</p>
+                    <p class="font-weight-bold">Processor Delay</p>
                   </div>
                   <div class="form-group col-md-3 offset-3">
                     <input type="number" placeholder="Delay" class="form-control" [(ngModel)]="settings.processorDelay" name="delay">
@@ -156,7 +181,7 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <p>Processor Batch Size</p>
+                    <p class="font-weight-bold">Processor Batch Size</p>
                   </div>
                   <div class="form-group col-md-3 offset-3">
                     <input type="number" placeholder="Batch Size" class="form-control" [(ngModel)]="settings.processBatchSize" name="processBatchSize">
@@ -164,10 +189,13 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-md-3">
-                    <button type="button" class="btn btn-sm btn-primary" (click)="reloadGeneralConfig()">Reload Config</button>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="updateConfig(false)">Update Config</button>
                   </div>
-                  <div class="form-group col-md-3 offset-6">
-                    <button type="button" class="btn btn-sm btn-primary" (click)="updateSettings()">Save Settings</button>
+                  <div class="form-group col-md-3">
+                    <button type="button" class="btn btn-sm btn-warning" (click)="reloadGeneralConfig()">Reload Config</button>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <button type="button" class="btn btn-sm btn-success" (click)="saveSettings()">Save Settings</button>
                   </div>
                 </div>
               </div>

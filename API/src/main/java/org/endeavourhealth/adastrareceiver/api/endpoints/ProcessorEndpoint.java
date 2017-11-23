@@ -173,6 +173,7 @@ public class ProcessorEndpoint {
 
         return Response
                 .ok()
+                .entity("Settings saved")
                 .build();
     }
 
