@@ -4,4 +4,9 @@
     <endpoint name="Adastra"
               implementation="webservice.AdastraImplementation"
               url-pattern="/webservices/adastra"/>
+
+    <endpoint
+            name='Endeavour'
+            implementation='webservice.EndeavourImplementation'
+            url-pattern='/webservices/endeavour'/>
 </endpoints>

@@ -23,6 +23,10 @@ public class PersistenceManager {
         return entityManagerFactory.createEntityManager();
     }
 
+    public static void ClearEntityManager() throws Exception {
+        entityManagerFactory = null;
+    }
+
     private static synchronized void createEntityManager() throws Exception {
 
         if (entityManagerFactory != null
