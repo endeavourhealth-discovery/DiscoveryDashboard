@@ -25,7 +25,7 @@
     "@angular/router": "^4.2.6",
     "bootstrap": "4.0.0-alpha.6",
     "core-js": "^2.4.1",
-    "eds-angular4": "https://github.com/endeavourhealth-discovery/Angular4/raw/master/eds-angular4-1.0.23.tgz",
+    "eds-angular4": "https://github.com/endeavourhealth-discovery/Angular4/raw/master/eds-angular4-1.0.24.tgz",
     "font-awesome": "^4.7.0",
     "highcharts": "^5.0.9",
     "linqts": "1.6.1",
