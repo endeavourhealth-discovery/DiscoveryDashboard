@@ -4,6 +4,7 @@ import {MenuOption} from "eds-angular4/dist/layout/models/MenuOption";
 import {Routes} from '@angular/router';
 import {DashboardComponent} from './dashboard/dashboard/dashboard.component';
 import {MessageComponent} from "./message/message/message.component";
+import {GraphComponent} from "./graph/graph/graph.component";
 
 @Injectable()
 export class AppMenuService implements AbstractMenuProvider {
@@ -11,7 +12,8 @@ export class AppMenuService implements AbstractMenuProvider {
     return [
       { path: '', redirectTo : 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'messages', component: MessageComponent}
+      { path: 'messages', component: MessageComponent},
+      { path: 'graph', component: GraphComponent}
     ];
   }
 
@@ -24,8 +26,9 @@ export class AppMenuService implements AbstractMenuProvider {
   }
   getMenuOptions(): MenuOption[] {
     return [
-      {caption: 'Dashboard', state: 'dashboard', icon: 'fa fa-cogs'},
-      {caption: 'Messages', state: 'messages', icon: 'fa fa-table'}
+      {caption: 'Dashboard', state: 'dashboard', icon: 'fa fa-tachometer'},
+      {caption: 'Messages', state: 'messages', icon: 'fa fa-table'},
+      {caption: 'Graphs', state: 'graph', icon: 'fa fa-line-chart'}
     ];
   }
 }

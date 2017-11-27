@@ -13,6 +13,7 @@ import {AppMenuService} from "./app-menu.service";
 import {DashboardModule} from "./dashboard/dashboard.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MessageModule} from "./message/message.module";
+import {GraphModule} from "./graph/graph.module";
 
 export class DummyComponent {}
 
@@ -25,6 +26,7 @@ export class DummyComponent {}
     LayoutModule,
     DashboardModule,
     MessageModule,
+    GraphModule,
     RouterModule.forRoot(AppMenuService.getRoutes()),
     ToastModule.forRoot(),
     NgbModule.forRoot()

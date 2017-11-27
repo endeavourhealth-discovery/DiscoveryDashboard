@@ -347,6 +347,91 @@ public class MessageStoreEntity {
         return ret;
     }
 
+    public static List getGraphValues() throws Exception {
+        EntityManager entityManager = PersistenceManager.getEntityManager();
+
+        String sql = "select DATE_FORMAT(r.min_date, \"%d/%m/%Y\"), count(m.id) " +
+                " from adastra_receiver.graph_date_range r" +
+                " left outer join adastra_receiver.message_store m  " +
+                "   on m.received_date_time >= r.min_date and m.received_date_time <= r.max_date " +
+                " group by r.min_date ";
+
+        Query q = entityManager.createNativeQuery(sql);
+
+        List resultList =  q.getResultList();
+
+        entityManager.close();
+
+        return resultList;
+    }
+
+    /*private void initialiseReportResultTable() throws Exception {
+        List<String> initialiseScripts = new ArrayList<>();
+        String period = "DAYS";
+
+        initialiseScripts.add("delete from adastra_receiver.graph_date_range;");
+
+        Date currentDate = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(currentDate);
+
+        Date beginning;
+        Date end;
+
+        Integer number = 10;
+                //Integer number = Integer.parseInt(10);
+
+        String insert = "insert into adastra_receiver.graph_date_range (min_date, max_date)\n" +
+                "values ('%s', '%s')";
+
+        int precision = Calendar.DAY_OF_YEAR;
+        int substractionPrecision = Calendar.YEAR;
+
+        if (period.equals("MONTHS")) {
+            precision = Calendar.DAY_OF_MONTH;
+            substractionPrecision = Calendar.MONTH;
+        }
+
+        if (period.equals("DAYS")) {
+            precision = Calendar.DATE;
+            substractionPrecision = Calendar.DATE;
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (Integer i = 0; i < number; i++) {
+
+//            // get the last day of the month/year
+//            if (options.getDateType().equals("absolute"))
+//                c.set(precision, c.getActualMaximum(precision));
+            end = c.getTime();
+
+
+            // get the first day of the month/year
+            if (options.getDateType().equals("absolute")) {
+                c.set(precision, c.getActualMinimum(precision));
+                beginning = c.getTime();
+            } else {
+                Calendar b = Calendar.getInstance();
+                b.setTime(c.getTime());
+                b.add(substractionPrecision, -1);
+                //Make sure same date isnt counted twice
+                b.add(Calendar.DAY_OF_MONTH, 1);
+                beginning = b.getTime();
+            }
+
+            c.add(substractionPrecision, -1);
+            initialiseScripts.add(String.format(insert, dateFormat.format(beginning).toString(),dateFormat.format(end).toString()));
+
+
+        }
+
+        for (String script : initialiseScripts) {
+            runSQLScript(script);
+        }
+
+    }*/
+
     public static int runSQLScript(String script) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 

@@ -1,0 +1,15 @@
+<div class="module">
+  <div class="container-fluid">
+    <div class="module-heading">
+      Adastra Receiver Graphs
+      <div class="pull-right">
+        <button type="button" class="btn btn-sm btn-success" (click)="getData()">Refresh</button>
+      </div>
+    </div>
+    <div class="module-body">
+      <form>
+        <chart [data]="messageChart"></chart>
+      </form>
+    </div>
+  </div>
+</div>
