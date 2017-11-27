@@ -11,7 +11,7 @@ import {GraphService} from "../graph.service";
 })
 export class GraphComponent implements OnInit {
 
-  private messageChart: Chart;
+  messageChart: Chart;
   private height = 200;
   private legend = {align: 'right', layout: 'vertical', verticalAlign: 'middle', width: 100};
 
@@ -22,7 +22,7 @@ export class GraphComponent implements OnInit {
     vm.getData();
   }
 
-  private getData() {
+  getData() {
     const vm = this;
     vm.graphService.getGraphValues()
       .subscribe(
