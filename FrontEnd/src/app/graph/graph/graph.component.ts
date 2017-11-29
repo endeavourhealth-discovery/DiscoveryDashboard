@@ -3,6 +3,7 @@ import {Chart} from "eds-angular4/dist/charting/models/Chart";
 import {Series} from "eds-angular4/dist/charting/models/Series";
 import { List } from 'linqts';
 import {GraphService} from "../graph.service";
+import {GraphData} from "../models/GraphData";
 
 @Component({
   selector: 'app-graph',
@@ -28,70 +29,57 @@ export class GraphComponent implements OnInit {
       .subscribe(
         (result) => {
           console.log(result);
-          vm.messageChart = vm.getGroupedChartData('MessageCount', result, 'count');
+          vm.createChartFromResult(result);
         },
         (error) => console.log(error)
       );
   }
 
-  private getChartData() {
-    const categories = ['received', 'error'];
-    const error = new Series().setName('error').setData([20, 40, 30]);
-    const message = new Series().setName('Message').setData([50, 60, 70]);
-    const chartSeries: Series[] = [];
-    chartSeries.push(error);
-    chartSeries.push(message);
+  private createChartFromResult(results: GraphData[]) {
+    const vm = this;
+    let chartCreated = false;
 
-    this.messageChart = new Chart()
-      .setCategories(categories)
-      .setHeight(200)
-      .setLegend({align: 'right', layout: 'vertical', verticalAlign: 'middle', width: 100})
-      .setTitle('Messages')
-      .addYAxis('Count', false)
-      .setSeries(chartSeries);
+    for (let result of results) {
+      if (!chartCreated) {
+        vm.messageChart = vm.getTotalChartData(result.title, result.results);
+        chartCreated = true;
+      } else {
+        vm.addSeriesToExistingGraph(result.title, result.results);
+      }
+    }
+
   }
 
-  private getGroupedChartData(title : string, results : any, graphAs : string) {
-    let categories : string[] = new List(results)
-      .Select(row => row[0])
-      .Distinct()
-      .ToArray()
-      .sort();
+  private addSeriesToExistingGraph(title: string, results: any) {
+    const vm = this;
+    let categories : string[] = new List(results).Select(row => row[0]).ToArray();
+    let data = vm.getSeriesData(categories, results);
+    vm.messageChart.addSeries(new Series()
+      .setName(title)
+      .setType('spline')
+      .setData(data)
+    );
+  }
 
-    let groupedResults = new List(results)
-      .Where(r => r[2] != 'Count')
-      .GroupBy(r => r[2], r => r);
-
-    let chartSeries : Series[] = new List(Object.keys(groupedResults))
-      .Select(key => this.createSeriesChart(key, categories, groupedResults[key], graphAs))
-      .ToArray();
+  private getTotalChartData(title : string, results : any) {
+    let categories : string[] = new List(results).Select(row => row[0]).ToArray();
+    let data : number[] = this.getSeriesData(categories, results);
 
     return new Chart()
       .setCategories(categories)
       .setHeight(this.height)
       .setLegend(this.legend)
-      //.setTitle(title)
-      .addYAxis(title , false)
-      .setSeries(chartSeries);
+      .setTitle('Message Statistics')
+      .addYAxis('Count', false)
+      .setSeries([
+        new Series()
+          .setName(title)
+          .setType('spline')
+          .setData(data)
+      ]);
   }
 
-  private createSeriesChart(series : string, categories : string[], results : any, graphAs : string) : Series {
-    //let filter = this.breakdown.filters.find(f => f.id == series);
-
-    //let title = (filter == null) ? 'Unknown' : filter.name;
-    let title = 'Count';
-    let chartSeries : Series = new Series()
-      .setName(title)
-      .setType('spline');
-
-    let data : number[] = this.getSeriesData(categories, results, graphAs, series);
-
-    chartSeries.setData(data);
-
-    return chartSeries;
-  }
-
-  private getSeriesData(categories : string[], results : any, graphAs : string, series? : string) {
+  private getSeriesData(categories : string[], results : any) {
     let data : number[] = [];
 
     for (let category of categories) {

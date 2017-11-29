@@ -347,16 +347,30 @@ public class MessageStoreEntity {
         return ret;
     }
 
-    public static List getGraphValues() throws Exception {
+    public static List getGraphValues(byte messageStatus) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
-        String sql = "select DATE_FORMAT(r.min_date, \"%d/%m/%Y\"), count(m.id) " +
+        String column = "m.received_date_time";
+        String status = "";
+        if (messageStatus == MessageStatus.PROCESSED.getMessageStatus()) {
+            column = "m.sent_date_time";
+            status = String.format("and m.status = %d ", messageStatus);
+        }
+
+        if (messageStatus == MessageStatus.ERROR.getMessageStatus()) {
+            status = String.format("and m.status = %d ", messageStatus);
+        }
+
+        String sql = String.format("select DATE_FORMAT(r.min_date, \"%%d/%%m/%%Y\"), count(m.id) " +
                 " from adastra_receiver.graph_date_range r" +
                 " left outer join adastra_receiver.message_store m  " +
-                "   on m.received_date_time >= r.min_date and m.received_date_time <= r.max_date " +
-                " group by r.min_date ";
+                "   on IFNULL(%s, '9999-12-31') >= r.min_date " +
+                "   and IFNULL(%s, '9999-12-31') <= r.max_date " +
+                "   %s " +
+                " group by r.min_date ",column, column, status);
 
         Query q = entityManager.createNativeQuery(sql);
+        System.out.println(sql);
 
         List resultList =  q.getResultList();
 

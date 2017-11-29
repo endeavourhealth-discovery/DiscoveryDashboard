@@ -69,9 +69,9 @@
               <tr *ngFor="let message of messages" [ngClass]="setColour(message.status)">
                 <td class="d-inline-block col-1">{{message.id}}</td>
                 <td class="d-inline-block col-1">{{message.source}}</td>
-                <td class="d-inline-block col-2">{{message.receivedDateTime | date: 'dd/MM/yy hh:mm:ss'}}</td>
+                <td class="d-inline-block col-2">{{message.receivedDateTime | date: 'dd/MM/yy HH:mm:ss'}}</td>
                 <td class="d-inline-block col-1">{{message.status}}</td>
-                <td class="d-inline-block col-2">{{message.sentDateTime | date: 'dd/MM/yy hh:mm:ss'}}</td>
+                <td class="d-inline-block col-2">{{message.sentDateTime | date: 'dd/MM/yy HH:mm:ss'}}</td>
                 <td class="d-inline-block col-3 clip-text">{{message.errorMessage}}</td>
                 <td class="d-inline-block col-1"><button type="button" class="btn btn-sm btn-primary" (click)="viewDetails(message)">Details</button></td>
                 <td class="d-inline-block col-1"><button type="button" class="btn btn-sm btn-primary" (click)="resendMessage(message)">Resend</button></td>
