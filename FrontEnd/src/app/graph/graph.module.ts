@@ -4,10 +4,12 @@ import { GraphComponent } from './graph/graph.component';
 import { LoggerService } from 'eds-angular4';
 import { ChartModule } from 'eds-angular4/dist/charting';
 import { GraphService } from "./graph.service";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     ChartModule
   ],
   declarations: [

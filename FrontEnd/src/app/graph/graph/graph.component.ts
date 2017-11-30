@@ -4,6 +4,7 @@ import {Series} from "eds-angular4/dist/charting/models/Series";
 import { List } from 'linqts';
 import {GraphService} from "../graph.service";
 import {GraphData} from "../models/GraphData";
+import {GraphOptions} from "../models/GraphOptions";
 
 @Component({
   selector: 'app-graph',
@@ -16,16 +17,36 @@ export class GraphComponent implements OnInit {
   private height = 200;
   private legend = {align: 'right', layout: 'vertical', verticalAlign: 'middle', width: 100};
 
+  graphOptions: GraphOptions = <GraphOptions>{};
+
+  periodList = [
+    {value: 'HOUR'},
+    {value: 'DAY'},
+    {value: 'MONTH'},
+    {value: 'YEAR'},
+  ];
+
   constructor(private graphService: GraphService) { }
 
   ngOnInit() {
     const vm = this;
+    vm.initialiseOptions();
+  }
+
+  initialiseOptions() {
+    const vm = this;
+    var today = new Date();
+    var backDate = new Date();
+    vm.graphOptions.period = 'DAY';
+    vm.graphOptions.endTime = today;
+    vm.graphOptions.startTime = backDate;
+    vm.graphOptions.startTime.setDate(backDate.getDate() - 30);
     vm.getData();
   }
 
   getData() {
     const vm = this;
-    vm.graphService.getGraphValues()
+    vm.graphService.getGraphValues(vm.graphOptions)
       .subscribe(
         (result) => {
           console.log(result);

@@ -2,6 +2,7 @@ package org.endeavourhealth.adastrareceiver.api.database.models;
 
 import org.endeavourhealth.adastrareceiver.api.database.PersistenceManager;
 import org.endeavourhealth.adastrareceiver.api.enums.MessageStatus;
+import org.endeavourhealth.adastrareceiver.api.json.JsonGraphOptions;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -9,6 +10,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -347,27 +351,25 @@ public class MessageStoreEntity {
         return ret;
     }
 
-    public static List getGraphValues(byte messageStatus) throws Exception {
+    public static List getGraphValues(byte messageStatus, String period) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
-        String column = "m.received_date_time";
-        String status = "";
-        if (messageStatus == MessageStatus.PROCESSED.getMessageStatus()) {
-            column = "m.sent_date_time";
-            status = String.format("and m.status = %d ", messageStatus);
-        }
+        String sql = "";
 
-        if (messageStatus == MessageStatus.ERROR.getMessageStatus()) {
-            status = String.format("and m.status = %d ", messageStatus);
+        switch (period) {
+            case "YEAR":
+                sql = getYearSQLScript(messageStatus);
+                break;
+            case "MONTH":
+                sql = getMonthSQLScript(messageStatus);
+                break;
+            case "DAY":
+                sql = getDaySQLScript(messageStatus);
+                break;
+            case "HOUR":
+                sql = getHourSQLScript(messageStatus);
+                break;
         }
-
-        String sql = String.format("select DATE_FORMAT(r.min_date, \"%%d/%%m/%%Y\"), count(m.id) " +
-                " from adastra_receiver.graph_date_range r" +
-                " left outer join adastra_receiver.message_store m  " +
-                "   on IFNULL(%s, '9999-12-31') >= r.min_date " +
-                "   and IFNULL(%s, '9999-12-31') <= r.max_date " +
-                "   %s " +
-                " group by r.min_date ",column, column, status);
 
         Query q = entityManager.createNativeQuery(sql);
         System.out.println(sql);
@@ -379,72 +381,133 @@ public class MessageStoreEntity {
         return resultList;
     }
 
-    /*private void initialiseReportResultTable() throws Exception {
-        List<String> initialiseScripts = new ArrayList<>();
-        String period = "DAYS";
+    private static String getDaySQLScript(byte messageStatus) throws Exception {
+        String column = "m.received_date_time";
+        String status = "";
 
-        initialiseScripts.add("delete from adastra_receiver.graph_date_range;");
-
-        Date currentDate = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(currentDate);
-
-        Date beginning;
-        Date end;
-
-        Integer number = 10;
-                //Integer number = Integer.parseInt(10);
-
-        String insert = "insert into adastra_receiver.graph_date_range (min_date, max_date)\n" +
-                "values ('%s', '%s')";
-
-        int precision = Calendar.DAY_OF_YEAR;
-        int substractionPrecision = Calendar.YEAR;
-
-        if (period.equals("MONTHS")) {
-            precision = Calendar.DAY_OF_MONTH;
-            substractionPrecision = Calendar.MONTH;
+        if (messageStatus == MessageStatus.PROCESSED.getMessageStatus()) {
+            column = "m.sent_date_time";
+            status = String.format("and m.status = %d ", messageStatus);
         }
 
-        if (period.equals("DAYS")) {
-            precision = Calendar.DATE;
-            substractionPrecision = Calendar.DATE;
+        if (messageStatus == MessageStatus.ERROR.getMessageStatus()) {
+            status = String.format("and m.status = %d ", messageStatus);
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return String.format("select DATE_FORMAT(r.reference_date, \"%%d/%%m/%%Y\"), count(m.id)  \n" +
+                "from adastra_receiver.graph_date_range r \n" +
+                "left outer join adastra_receiver.message_store m    \n" +
+                "\ton IFNULL(DATE(%s), '9999-12-31') = DATE(r.reference_date)   \n" +
+                "   %s " +
+                " group by DATE(r.reference_date);", column, status );
+    }
 
-        for (Integer i = 0; i < number; i++) {
+    private static String getMonthSQLScript(byte messageStatus) throws Exception {
+        String column = "m.received_date_time";
+        String status = "";
 
-//            // get the last day of the month/year
-//            if (options.getDateType().equals("absolute"))
-//                c.set(precision, c.getActualMaximum(precision));
-            end = c.getTime();
-
-
-            // get the first day of the month/year
-            if (options.getDateType().equals("absolute")) {
-                c.set(precision, c.getActualMinimum(precision));
-                beginning = c.getTime();
-            } else {
-                Calendar b = Calendar.getInstance();
-                b.setTime(c.getTime());
-                b.add(substractionPrecision, -1);
-                //Make sure same date isnt counted twice
-                b.add(Calendar.DAY_OF_MONTH, 1);
-                beginning = b.getTime();
-            }
-
-            c.add(substractionPrecision, -1);
-            initialiseScripts.add(String.format(insert, dateFormat.format(beginning).toString(),dateFormat.format(end).toString()));
-
-
+        if (messageStatus == MessageStatus.PROCESSED.getMessageStatus()) {
+            column = "m.sent_date_time";
+            status = String.format("and m.status = %d ", messageStatus);
         }
 
-        for (String script : initialiseScripts) {
-            runSQLScript(script);
+        if (messageStatus == MessageStatus.ERROR.getMessageStatus()) {
+            status = String.format("and m.status = %d ", messageStatus);
         }
 
-    }*/
+        return String.format("select DATE_FORMAT(r.reference_date, \"01/%%m/%%Y\"), count(m.id)  \n" +
+                "from adastra_receiver.graph_date_range r \n" +
+                "left outer join adastra_receiver.message_store m    \n" +
+                "\ton IFNULL(MONTH(%s), '01') = MONTH(r.reference_date)   \n" +
+                " and IFNULL(YEAR(%s), '9999') = YEAR(r.reference_date)   \n" +
+                "   %s " +
+                " group by YEAR(r.reference_date), MONTH(r.reference_date);", column, column, status );
+    }
+
+    private static String getHourSQLScript(byte messageStatus) throws Exception {
+        String column = "m.received_date_time";
+        String status = "";
+
+        if (messageStatus == MessageStatus.PROCESSED.getMessageStatus()) {
+            column = "m.sent_date_time";
+            status = String.format("and m.status = %d ", messageStatus);
+        }
+
+        if (messageStatus == MessageStatus.ERROR.getMessageStatus()) {
+            status = String.format("and m.status = %d ", messageStatus);
+        }
+
+        return String.format("select DATE_FORMAT(r.reference_date, \"%%d/%%m/%%Y %%H\"), count(m.id)  \n" +
+                "from adastra_receiver .graph_date_range r \n" +
+                "left outer join adastra_receiver.message_store m    \n" +
+                "\ton IFNULL(HOUR(%s), '01') = HOUR(r.reference_date)   \n" +
+                " and IFNULL(DATE(%s), '9999-12-31') = DATE(r.reference_date)   \n" +
+                "   %s " +
+                " group by DATE(r.reference_date), HOUR(r.reference_date);", column, column, status );
+    }
+
+    private static String getYearSQLScript(byte messageStatus) throws Exception {
+        String column = "m.received_date_time";
+        String status = "";
+
+        if (messageStatus == MessageStatus.PROCESSED.getMessageStatus()) {
+            column = "m.sent_date_time";
+            status = String.format("and m.status = %d ", messageStatus);
+        }
+
+        if (messageStatus == MessageStatus.ERROR.getMessageStatus()) {
+            status = String.format("and m.status = %d ", messageStatus);
+        }
+
+        return String.format("select DATE_FORMAT(r.reference_date, \"01/01/%%Y\"), count(m.id)  \n" +
+                "from adastra_receiver.graph_date_range r \n" +
+                "left outer join adastra_receiver.message_store m    \n" +
+                " on IFNULL(YEAR(%s), '01') = YEAR(r.reference_date)   \n" +
+                "   %s " +
+                " group by YEAR(r.reference_date);", column, status );
+    }
+
+    public static void initialiseReportResultTable(JsonGraphOptions options) throws Exception {
+        String startDate = new SimpleDateFormat("yyyy-MM-dd").format(options.getStartTime());
+        String endDate = new SimpleDateFormat("yyyy-MM-dd").format(options.getEndTime());
+        String delete = "delete from adastra_receiver.graph_date_range;";
+
+        runSQLScript(delete);
+
+        String insert = String.format("insert into adastra_receiver.graph_date_range (reference_date)\n" +
+                "select a.Date\n" +
+                "from (\n" +
+                "    select '%s' - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) %s as Date\n" +
+                "    from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a\n" +
+                "    cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b\n" +
+                "    cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c\n" +
+                ") a\n" +
+                "where a.Date between '%s' and '%s' ;", endDate, options.getPeriod(), startDate, endDate);
+
+
+        runSQLScript(insert);
+
+    }
+
+    private static Date getEndOfDay(Date day,Calendar cal) {
+        if (day == null) day = new Date();
+        cal.setTime(day);
+        cal.set(Calendar.HOUR_OF_DAY, cal.getMaximum(Calendar.HOUR_OF_DAY));
+        cal.set(Calendar.MINUTE,      cal.getMaximum(Calendar.MINUTE));
+        cal.set(Calendar.SECOND,      cal.getMaximum(Calendar.SECOND));
+        cal.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
+        return cal.getTime();
+    }
+
+    private static Date getBeginningOfDay(Date day,Calendar cal) {
+        if (day == null) day = new Date();
+        cal.setTime(day);
+        cal.set(Calendar.HOUR_OF_DAY, cal.getMinimum(Calendar.HOUR_OF_DAY));
+        cal.set(Calendar.MINUTE,      cal.getMinimum(Calendar.MINUTE));
+        cal.set(Calendar.SECOND,      cal.getMinimum(Calendar.SECOND));
+        cal.set(Calendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
+        return cal.getTime();
+    }
 
     public static int runSQLScript(String script) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();

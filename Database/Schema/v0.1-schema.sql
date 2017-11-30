@@ -14,7 +14,7 @@ create table adastra_receiver.message_store (
     source bigint(20) not null comment 'Source sending organisation',
     received_date_time datetime not null comment 'When the message was received',
     status tinyint not null comment 'Status of message (received, sent etc)',
-    sent_date_time varchar(3) null comment 'When the message was sent to the messaging API',
+    sent_date_time datetime null comment 'When the message was sent to the messaging API',
     message_payload mediumtext not null comment 'The payload of the message',
     error_message varchar(1000) null comment 'Error messages',
     
@@ -23,9 +23,9 @@ create table adastra_receiver.message_store (
     foreign key adastra_receiver_message_store_status_fk (status) references adastra_receiver.message_status(id)
 );
 
+
 create table adastra_receiver.graph_date_range (
-	min_date date not null comment 'Minimum date',
-	max_date date not null comment 'Maximum date'
+	reference_date datetime not null comment 'Reference Date'
     
 );
 

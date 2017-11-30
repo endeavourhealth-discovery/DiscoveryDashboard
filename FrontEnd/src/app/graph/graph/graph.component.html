@@ -9,6 +9,28 @@
     <div class="module-body">
       <form>
         <chart [data]="messageChart"></chart>
+        <br>
+        <div *ngIf="graphOptions" class="row">
+          <div class="form-group col-md-4">
+            <label class="control-label">Start Date</label>
+            <input type="date" class="form-control" placeholder="Start Date" [ngModel]="graphOptions.startTime | date:'yyyy-MM-dd'" name="startTime" (ngModelChange)="graphOptions.startTime = $event">
+          </div>
+          <div class="form-group col-md-4">
+            <label class="control-label">End Date</label>
+            <input type="date" class="form-control" placeholder="End Date" [ngModel]="graphOptions.endTime | date:'yyyy-MM-dd'" name="endTime" (ngModelChange)="graphOptions.endTime = $event">
+          </div>
+          <div class="form-group col-md-4">
+            <label class="control-label">Period</label>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-th-large fa-lg fa-fw"></i></span>
+              <select class="form-control" [(ngModel)]="graphOptions.period" name="period">
+                <option *ngFor="let ps of periodList" [ngValue]="ps.value">{{ps.value}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <p>Start time : {{graphOptions.startTime}}</p>
+        <br>
       </form>
     </div>
   </div>

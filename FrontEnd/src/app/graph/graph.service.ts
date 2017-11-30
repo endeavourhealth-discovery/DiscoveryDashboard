@@ -2,16 +2,17 @@ import { Injectable } from '@angular/core';
 import {URLSearchParams, Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {GraphData} from "./models/GraphData";
+import {GraphOptions} from "./models/GraphOptions";
 
 @Injectable()
 export class GraphService {
 
   constructor(private http : Http) { }
 
-  public getGraphValues() : Observable<GraphData[]> {
+  public getGraphValues(options: GraphOptions) : Observable<GraphData[]> {
     let vm = this;
 
-    return vm.http.get("/api/graph/getGraphValues",{ withCredentials : true} )
+    return vm.http.post("/api/graph/getGraphValues", options, { withCredentials : true} )
       .map((response) => response.json());
   }
 

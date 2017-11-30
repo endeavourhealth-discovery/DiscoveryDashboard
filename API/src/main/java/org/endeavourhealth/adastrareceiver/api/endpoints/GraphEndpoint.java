@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.adastrareceiver.api.database.models.MessageStoreEntity;
 import org.endeavourhealth.adastrareceiver.api.enums.MessageStatus;
+import org.endeavourhealth.adastrareceiver.api.json.JsonGraphOptions;
 import org.endeavourhealth.adastrareceiver.api.json.JsonGraphResults;
 
 import javax.ws.rs.*;
@@ -21,25 +22,28 @@ import java.util.List;
 @Api(description = "Initial api for all calls relating to the graphs")
 public class GraphEndpoint {
 
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Timed(absolute = true, name="adastraReceiver.message.getGraphValues")
     @Path("/getGraphValues")
     @ApiOperation(value = "Gets messages paginated on the server side")
-    public Response getGraphValues(@Context SecurityContext sc) throws Exception {
+    public Response getGraphValues(@Context SecurityContext sc, JsonGraphOptions options) throws Exception {
         System.out.println("getting graph details");
 
-        return getGraphResults();
+        return getGraphResults(options);
 
     }
 
-    private Response getGraphResults() throws Exception {
+    private Response getGraphResults(JsonGraphOptions options) throws Exception {
         List<JsonGraphResults> results = new ArrayList<>();
 
-        results.add(createGraphResults("Received", MessageStatus.RECEIVED.getMessageStatus()));
-        results.add(createGraphResults("Sent", MessageStatus.PROCESSED.getMessageStatus()));
-        results.add(createGraphResults("Errors", MessageStatus.ERROR.getMessageStatus()));
+
+        MessageStoreEntity.initialiseReportResultTable(options);
+
+        results.add(createGraphResults("Received", MessageStatus.RECEIVED.getMessageStatus(), options.getPeriod()));
+        results.add(createGraphResults("Sent", MessageStatus.PROCESSED.getMessageStatus(), options.getPeriod()));
+        results.add(createGraphResults("Errors", MessageStatus.ERROR.getMessageStatus(), options.getPeriod()));
 
         return Response
                 .ok()
@@ -47,10 +51,10 @@ public class GraphEndpoint {
                 .build();
     }
 
-    private JsonGraphResults createGraphResults(String title, byte status) throws Exception {
+    private JsonGraphResults createGraphResults(String title, byte status, String period) throws Exception {
         JsonGraphResults graph = new JsonGraphResults();
         graph.setTitle(title);
-        graph.setResults(MessageStoreEntity.getGraphValues(status));
+        graph.setResults(MessageStoreEntity.getGraphValues(status, period));
 
         return graph;
     }
