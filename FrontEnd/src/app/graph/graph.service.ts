@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {URLSearchParams, Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
-import {GraphData} from "./models/GraphData";
-import {GraphOptions} from "./models/GraphOptions";
+import {GraphData} from "../dashboard/models/GraphData";
+import {GraphOptions} from "../dashboard/models/GraphOptions";
 
 @Injectable()
 export class GraphService {

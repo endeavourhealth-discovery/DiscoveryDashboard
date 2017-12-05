@@ -8,10 +8,10 @@ import {Subscription} from 'rxjs/Subscription';
 import {GeneralSettings} from '../../processor/models/GeneralSettings';
 import {ApplicationInformation} from '../models/ApplicationInformation';
 import {GraphService} from '../../graph/graph.service';
-import {GraphOptions} from '../../graph/models/GraphOptions';
+import {GraphOptions} from '../models/GraphOptions';
 import {List} from 'linqts/linq';
 import {Chart} from 'eds-angular4/dist/charting/models/Chart';
-import {GraphData} from '../../graph/models/GraphData';
+import {GraphData} from '../models/GraphData';
 import {Series} from 'eds-angular4/dist/charting/models/Series';
 
 @Component({

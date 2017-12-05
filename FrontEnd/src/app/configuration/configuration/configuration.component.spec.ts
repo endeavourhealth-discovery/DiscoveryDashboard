@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PayloadViewerComponent } from './payload-viewer.component';
+import { ConfigurationComponent } from './configuration.component';
 
-describe('PayloadViewerComponent', () => {
-  let component: PayloadViewerComponent;
-  let fixture: ComponentFixture<PayloadViewerComponent>;
+describe('ConfigurationComponent', () => {
+  let component: ConfigurationComponent;
+  let fixture: ComponentFixture<ConfigurationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PayloadViewerComponent ]
+      declarations: [ ConfigurationComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PayloadViewerComponent);
+    fixture = TestBed.createComponent(ConfigurationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

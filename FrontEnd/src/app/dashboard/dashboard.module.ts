@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {DashboardService} from "./dashboard.service";
+import {DashboardService} from './dashboard.service';
 import { LoggerService, DialogsModule } from 'eds-angular4';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
-import {ProcessorService} from "../processor/processor.service";
 import { ChartModule } from 'eds-angular4/dist/charting';
 
 @NgModule({
@@ -26,8 +25,7 @@ import { ChartModule } from 'eds-angular4/dist/charting';
   ],
   providers: [
     DashboardService,
-    LoggerService,
-    ProcessorService
+    LoggerService
   ]
 })
 export class DashboardModule { }

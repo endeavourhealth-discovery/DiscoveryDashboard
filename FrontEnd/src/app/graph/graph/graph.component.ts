@@ -3,8 +3,8 @@ import {Chart} from "eds-angular4/dist/charting/models/Chart";
 import {Series} from "eds-angular4/dist/charting/models/Series";
 import { List } from 'linqts';
 import {GraphService} from "../graph.service";
-import {GraphData} from "../models/GraphData";
-import {GraphOptions} from "../models/GraphOptions";
+import {GraphData} from "../../dashboard/models/GraphData";
+import {GraphOptions} from "../../dashboard/models/GraphOptions";
 
 @Component({
   selector: 'app-graph',

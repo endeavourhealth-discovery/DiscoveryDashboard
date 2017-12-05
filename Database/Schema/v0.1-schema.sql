@@ -1,31 +1,23 @@
-drop database if exists adastra_receiver;
+drop database if exists discovery_dashboard;
 
-create database adastra_receiver;
+create database discovery_dashboard;
 
-create table adastra_receiver.message_status (
-	id tinyint not null comment 'Unique Id for the message status',
-    status_description varchar(50) not null comment 'Description of the status',
+create table discovery_dashboard.dashboard_type (
+	id tinyint not null comment 'Unique Id for the dashboard type',
+    dashboard_type varchar(50) not null comment 'Type of the dashboard',
     
-    constraint adastra_receiver_message_status_pk primary key (id)
+    constraint discovery_dashboard_dashboard_type_pk primary key (id)
 );
 
-create table adastra_receiver.message_store (
-	id bigint(20) not null auto_increment comment 'Unique Id for the message',
-    source bigint(20) not null comment 'Source sending organisation',
-    received_date_time datetime not null comment 'When the message was received',
-    status tinyint not null comment 'Status of message (received, sent etc)',
-    sent_date_time datetime null comment 'When the message was sent to the messaging API',
-    message_payload mediumtext not null comment 'The payload of the message',
-    error_message varchar(1000) null comment 'Error messages',
+create table discovery_dashboard.dashboard_items (
+	id int not null auto_increment comment 'Unique Id for the dashboard item',
+    title varchar(50) not null comment 'Title of the dashboard',
+    dashboard_type tinyint not null comment 'Type of the dashboard',
+    api_url varchar(200) not null comment 'Url of the API the supplies the dashboard',
     
-    constraint adastra_receiver_message_store_pk primary key (id),
-    index adastra_receiver_message_store_received_date_time_idx (received_date_time),
-    foreign key adastra_receiver_message_store_status_fk (status) references adastra_receiver.message_status(id)
+    constraint discovery_dashboard_dashboard_items_pk primary key (id),    
+    foreign key discovery_dashboard_dashboard_items_type_fk (dashboard_type) references discovery_dashboard.dashboard_type(id)
 );
 
 
-create table adastra_receiver.graph_date_range (
-	reference_date datetime not null comment 'Reference Date'
-    
-);
 
