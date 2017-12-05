@@ -2,17 +2,16 @@ import { Injectable } from '@angular/core';
 import {URLSearchParams, Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {DashboardStatistics} from "./models/DashboardStatistics";
+import {ApplicationInformation} from "./models/ApplicationInformation";
 
 @Injectable()
 export class DashboardService {
 
   constructor(private http : Http) { }
 
-  public getTotalMessageCount(status: number) : Observable<number> {
+  public getApplicationInformation() : Observable<ApplicationInformation[]> {
     let vm = this;
-    const params = new URLSearchParams();
-    params.set('status', status.toString());
-    return vm.http.get("/api/dashboard/messageCount", {search : params, withCredentials : true} )
+    return vm.http.get("/api/dashboard/getApplicationInformation", {withCredentials : true} )
       .map((response) => response.json());
   }
 

@@ -3,7 +3,7 @@
     <div class="module-heading">
       Adastra Receiver Dashboard
       <div class="pull-right">
-        <button type="button" class="btn btn-sm btn-success" (click)="refreshScreen()">Refresh</button>
+        <button type="button" class="btn btn-sm btn-success" (click)="getAdastraInformation()">Refresh</button>
       </div>
     </div>
     <div class="module-body">
@@ -13,239 +13,27 @@
             <div class="card">
               <div class="card-header font-weight-bold">Message Statistics</div>
               <div class="card-block">
-                <div class="row">
+                <div *ngFor="let info of adastraInformation" class="row">
                   <div class="col-md-9">
-                    <p class="font-weight-bold">Total messages received : </p>
+                    <p class="font-weight-bold">{{info.labelText}}</p>
                   </div>
                   <div class="col-md-3">
-                    <span class="badge badge-pill badge-primary">{{dashboardStatistics.totalMessageCount}}</span>
+                    <span *ngIf="info.count != null" class="badge badge-pill" [ngClass]="setBadgeColour(info.status)">{{info.count}}</span>
+                    <p *ngIf="info.valueText">{{info.valueText}}</p>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-9">
-                    <p class="font-weight-bold">Messages received but not sent to discovery: </p>
-                  </div>
-                  <div class="col-md-3">
-                    <span class="badge badge-pill badge-warning">{{dashboardStatistics.receivedMessageCount}}</span>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-9">
-                    <p class="font-weight-bold">Messages sent to discovery : </p>
-                  </div>
-                  <div class="col-md-3">
-                    <span class="badge badge-pill badge-success">{{dashboardStatistics.sentMessageCount}}</span>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-9">
-                    <p class="font-weight-bold">Messages with an error: </p>
-                  </div>
-                  <div class="col-md-3">
-                    <span class="badge badge-pill badge-danger">{{dashboardStatistics.errorMessageCount}}</span>
-                  </div>
-                </div>
-                <br>
               </div>
             </div>
           </div>
           <div class="col-md-6">
             <div class="card">
-              <div class="card-header font-weight-bold">Processor Statistics</div>
+              <div class="card-header font-weight-bold">Adastra Message Count</div>
               <div class="card-block">
-                <div class="row">
-                  <div class="col-md-6">
-                    <p class="font-weight-bold">Message Processor Running : </p>
-                  </div>
-                  <div class="col-md-6">
-                    {{processorStatistics.running}}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <p class="font-weight-bold">Processor Last run : </p>
-                  </div>
-                  <div class="col-md-6">
-                    {{processorStatistics.lastRun}}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <p class="font-weight-bold">Processor Next run : </p>
-                  </div>
-                  <div class="col-md-6" *ngIf="processorStatistics.running">
-                    {{processorStatistics.nextRun}} Seconds
-                  </div>
-                  <div class="col-md-6" *ngIf="!processorStatistics.running">
-                    Processor not running
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <p class="font-weight-bold">Control Processor</p>
-                  </div>
-                  <div class="form-group col-md-2">
-                    <button [disabled]="processorStatistics.running" type="button" class="btn btn-sm btn-primary" (click)="startProcessor()">Start</button>
-                  </div>
-                  <div class="form-group col-md-2">
-                    <button [disabled]="!processorStatistics.running" type="button" class="btn btn-sm btn-primary" (click)="stopProcessor()">Stop</button>
-                  </div>
-                </div>
+                <chart [data]="messageChart"></chart>
               </div>
             </div>
           </div>
         </div>
-        <br>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header font-weight-bold">Message Actions</div>
-              <div class="card-block">
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <p class="font-weight-bold">Resend all messages in error </p>
-                  </div>
-                  <div class="form-group col-md-2 offset-4">
-                    <button [disabled]="dashboardStatistics.errorMessageCount == 0" type="button" class="btn btn-sm btn-primary" (click)="resendErrorMessages()">Resend</button>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <p class="font-weight-bold">Resend all messages before</p>
-                  </div>
-                  <div class="form-group col-md-4">
-                    <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="beforeResend" name="beforeResend">
-                  </div>
-                  <div class="form-group col-md-2">
-                    <button [disabled]="!beforeResend" type="button" class="btn btn-sm btn-primary" (click)="resendMessagesBefore()">Resend</button>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <p class="font-weight-bold">Resend all messages after </p>
-                  </div>
-                  <div class="form-group col-md-4">
-                    <input type="number" placeholder="MessageId" class="form-control" [(ngModel)]="afterResend" name="afterResend">
-                  </div>
-                  <div class="form-group col-md-2">
-                    <button [disabled]="!afterResend" type="button" class="btn btn-sm btn-primary" (click)="resendMessagesAfter()">Resend</button>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <p class="font-weight-bold">Resend all messages! (Warning!) </p>
-                  </div>
-                  <div class="form-group col-md-2 offset-4">
-                    <button type="button" class="btn btn-sm btn-danger" (click)="resendAllMessages()">Resend</button>
-                  </div>
-                </div>
-                <br><br><br>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header font-weight-bold">General Settings</div>
-              <div class="card-block">
-                <div class="row">
-                  <div class="col-md-6">
-                    <p class="font-weight-bold">Dashboard refresh rate</p>
-                  </div>
-                  <div class="col-md-3 offset-3">
-                    <input type="number" placeholder="refresh" class="form-control" [(ngModel)]="settings.refreshRate" name="refreshRate">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-4">
-                    <p class="font-weight-bold">Messaging API URL</p>
-                  </div>
-                  <div class="col-md-8">
-                    <input type="text" placeholder="Messaging API Url" class="form-control" [(ngModel)]="settings.messagingApiUrl" name="messagingApiUrl">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <p class="font-weight-bold">Use Keycloak</p>
-                  </div>
-                  <div class="col-md-1 offset-5">
-                    <input type="checkbox" name="useKeycloak" value="{{settings.useKeycloak}}" [(ngModel)]="settings.useKeycloak"/>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <p class="font-weight-bold">Processor Delay</p>
-                  </div>
-                  <div class="form-group col-md-3 offset-3">
-                    <input type="number" placeholder="Delay" class="form-control" [(ngModel)]="settings.processorDelay" name="delay">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <p class="font-weight-bold">Processor Batch Size</p>
-                  </div>
-                  <div class="form-group col-md-3 offset-3">
-                    <input type="number" placeholder="Batch Size" class="form-control" [(ngModel)]="settings.processBatchSize" name="processBatchSize">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-3">
-                    <button type="button" class="btn btn-sm btn-primary" (click)="updateConfig(false)">Update Config</button>
-                  </div>
-                  <div class="form-group col-md-3">
-                    <button type="button" class="btn btn-sm btn-warning" (click)="reloadGeneralConfig()">Reload Config</button>
-                  </div>
-                  <div class="form-group col-md-3">
-                    <button type="button" class="btn btn-sm btn-success" (click)="saveSettings()">Save Settings</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header font-weight-bold">Database Settings</div>
-              <div class="card-block">
-                <div class="row">
-                  <div class="col-md-3">
-                    <p class="font-weight-bold">URL</p>
-                  </div>
-                  <div class="col-md-9">
-                    <input type="text" placeholder="URL" class="form-control" [(ngModel)]="dbConfig.url" name="url">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-3">
-                    <p class="font-weight-bold">Username</p>
-                  </div>
-                  <div class="col-md-9">
-                    <input type="text" placeholder="Username" class="form-control" [(ngModel)]="dbConfig.username" name="username">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-3">
-                    <p class="font-weight-bold">Password</p>
-                  </div>
-                  <div class="col-md-9">
-                    <input type="password" placeholder="password" class="form-control" [(ngModel)]="dbConfig.password" name="password">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-3">
-                    <button type="button" class="btn btn-sm btn-success" (click)="saveDatabaseSettingsConfirm()">Save Settings</button>
-                  </div>
-                  <div class="form-group col-md-3">
-                    <button type="button" class="btn btn-sm btn-warning" (click)="getDBSettings()">Reload Config</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <br>
-        <br>
       </form>
     </div>
   </div>

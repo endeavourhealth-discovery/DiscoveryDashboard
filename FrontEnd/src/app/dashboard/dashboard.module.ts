@@ -8,6 +8,7 @@ import { LoggerService, DialogsModule } from 'eds-angular4';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
 import {ProcessorService} from "../processor/processor.service";
+import { ChartModule } from 'eds-angular4/dist/charting';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import {ProcessorService} from "../processor/processor.service";
     FormsModule,
     NgbModule,
     DialogsModule,
+    ChartModule,
     NgxPaginationModule,
     ToastModule.forRoot()
   ],

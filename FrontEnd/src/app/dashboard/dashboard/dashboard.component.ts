@@ -1,15 +1,18 @@
 import {Component, OnInit, OnDestroy, ViewContainerRef} from '@angular/core';
-import {DashboardService} from "../dashboard.service";
+import {DashboardService} from '../dashboard.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {LoggerService, MessageBoxDialog} from "eds-angular4";
+import {LoggerService, MessageBoxDialog} from 'eds-angular4';
 import {ToastsManager} from 'ng2-toastr';
-import {ProcessorService} from "../../processor/processor.service";
-import {Observable} from "rxjs/Observable";
-import {Subscription} from "rxjs/Subscription";
-import {DashboardStatistics} from "../models/DashboardStatistics";
-import {ProcessorStatistics} from "../../processor/models/ProcessorStatistics";
-import {GeneralSettings} from "../../processor/models/GeneralSettings";
-import {DatabaseConfig} from "../../processor/models/DatabaseConfig";
+import {Observable} from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
+import {GeneralSettings} from '../../processor/models/GeneralSettings';
+import {ApplicationInformation} from '../models/ApplicationInformation';
+import {GraphService} from '../../graph/graph.service';
+import {GraphOptions} from '../../graph/models/GraphOptions';
+import {List} from 'linqts/linq';
+import {Chart} from 'eds-angular4/dist/charting/models/Chart';
+import {GraphData} from '../../graph/models/GraphData';
+import {Series} from 'eds-angular4/dist/charting/models/Series';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,18 +20,20 @@ import {DatabaseConfig} from "../../processor/models/DatabaseConfig";
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  dashboardStatistics: DashboardStatistics = <DashboardStatistics>{};
-  processorStatistics: ProcessorStatistics = <ProcessorStatistics>{};
   settings: GeneralSettings = <GeneralSettings>{};
-  dbConfig: DatabaseConfig = <DatabaseConfig>{};
-  beforeResend: number;
-  afterResend: number;
+  adastraInformation: ApplicationInformation[];
+  refreshRate = 20;
+  messageChart: Chart;
+
+  private height = 200;
+  private legend = {align: 'right', layout: 'vertical', verticalAlign: 'middle', width: 100};
+  graphOptions: GraphOptions = <GraphOptions>{};
 
   private subscription: Subscription;
 
 
   constructor(private dashboardService: DashboardService,
-              private processorService: ProcessorService,
+              private graphService: GraphService,
               private $modal: NgbModal,
               public toastr: ToastsManager,
               vcr: ViewContainerRef,
@@ -38,16 +43,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const vm = this;
-    vm.refreshScreen();
-    vm.getGeneralSettings();
-    vm.getDBSettings();
+    vm.getAdastraInformation();
+    vm.initialiseGraphOptions();
   }
 
   setTimer() {
     const vm = this;
-    let timer = Observable.timer(0, vm.settings.refreshRate * 1000);
+    const timer = Observable.timer(0, vm.refreshRate * 1000);
     vm.subscription = timer.subscribe(t => {
-      vm.refreshScreen();
+      vm.getAdastraInformation();
     });
   }
 
@@ -57,18 +61,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     vm.setTimer();
   }
 
-  updateConfig(save: boolean) {
+  getAdastraInformation() {
     const vm = this;
-    vm.processorService.postSettings(vm.settings)
+    vm.dashboardService.getApplicationInformation()
       .subscribe(
         (result) => {
-          vm.log.success(result);
-          vm.updateTimer();
-          vm.log.success("A restart of the message processor is required if Processor Delay has been changed");
-          if (save) {
-            console.log(save);
-            vm.saveGeneralSettings();
-          }
+          console.log(result);
+          vm.adastraInformation = result;
         },
         (error) => console.log(error)
       );
@@ -86,200 +85,105 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  refreshScreen() {
-    const vm = this;
-    vm.getDashboardStatistics();
-    vm.getProcessorStatistics();
+  setBadgeColour(status: string) {
+    if (status === 'primary') {
+      return 'badge-primary';
+    }
+    if (status === 'warning') {
+      return 'badge-warning';
+    }
+    if (status === 'success') {
+      return 'badge-success';
+    }
+    if (status === 'danger') {
+      return 'badge-danger';
+    }
   }
 
-  getDashboardStatistics() {
+  initialiseGraphOptions() {
     const vm = this;
-    vm.dashboardService.getDashboardStatistics()
+    const today = new Date();
+    const backDate = new Date();
+    vm.graphOptions.period = 'DAY';
+    vm.graphOptions.endTime = today;
+    vm.graphOptions.startTime = backDate;
+    vm.graphOptions.startTime.setDate(backDate.getDate() - 30);
+    vm.getGraphData();
+  }
+
+  getGraphData() {
+    const vm = this;
+    vm.graphService.getGraphValues(vm.graphOptions)
       .subscribe(
         (result) => {
-          vm.dashboardStatistics = result;
+          console.log(result);
+          vm.createChartFromResult(result);
         },
         (error) => console.log(error)
       );
   }
 
-  getProcessorStatistics() {
+
+
+  private createChartFromResult(results: GraphData[]) {
     const vm = this;
-    vm.processorService.getProcessorStatistics()
-      .subscribe(
-        (result) => {
-          vm.processorStatistics = result;
-          console.log(vm.processorStatistics);
-        },
-        (error) => console.log(error)
-      );
+    let chartCreated = false;
+
+    for (let result of results) {
+      if (!chartCreated) {
+        vm.messageChart = vm.getTotalChartData(result.title, result.results);
+        chartCreated = true;
+      } else {
+        vm.addSeriesToExistingGraph(result.title, result.results);
+      }
+    }
+
   }
 
-  getGeneralSettings() {
+  private addSeriesToExistingGraph(title: string, results: any) {
     const vm = this;
-    vm.processorService.getSettings()
-      .subscribe(
-        (result) => {
-          vm.settings = result;
-          vm.setTimer();
-        },
-        (error) => console.log(error)
-      );
-  }
-
-  getDBSettings() {
-    const vm = this;
-    vm.processorService.getDBSettings()
-      .subscribe(
-        (result) => {
-          vm.dbConfig = result;
-        },
-        (error) => console.log(error)
-      );
-  }
-
-  saveSettings() {
-    const vm = this;
-    MessageBoxDialog.open(vm.$modal, 'Save configuration',
-      'Are you sure you want to save the current configuration settings? ', 'Yes', 'No')
-      .result.then(
-      () => vm.updateConfig(true),
-      () => vm.log.info('Cancelled', null, 'Cancel')
+    const categories : string[] = new List(results).Select(row => row[0]).ToArray();
+    const data = vm.getSeriesData(categories, results);
+    vm.messageChart.addSeries(new Series()
+      .setName(title)
+      .setType('spline')
+      .setData(data)
     );
   }
 
-  saveGeneralSettings() {
-    const vm = this;
-    vm.processorService.saveConfig()
-      .subscribe(
-        (result) => {
-          vm.log.success(result);
-        },
-        (error) => console.log(error)
-      );
+  private getTotalChartData(title : string, results : any) {
+    const categories : string[] = new List(results).Select(row => row[0]).ToArray();
+    const data : number[] = this.getSeriesData(categories, results);
+
+    return new Chart()
+      .setCategories(categories)
+      .setHeight(this.height)
+      .setLegend(this.legend)
+      .setTitle('Message Statistics')
+      .addYAxis('Count', false)
+      .setSeries([
+        new Series()
+          .setName(title)
+          .setType('spline')
+          .setData(data)
+      ]);
   }
 
+  private getSeriesData(categories: string[], results: any) {
+    const data: number[] = [];
 
+    for (let category of categories) {
+      const result = new List(results).Where(r => category == r[0]).SingleOrDefault();
+      if (!result || result[1] == null) {
+        data.push(0);
+      }
+      else {
+        // data.push(this.getSeriesDataGraphAsValue(graphAs, result, category, series));
+        data.push(result[1]);
+      }
+    }
 
-  saveDatabaseSettingsConfirm() {
-    const vm = this;
-    MessageBoxDialog.open(vm.$modal, 'Save database configuration',
-      'Are you sure you want to save the database configuration settings? ', 'Yes', 'No')
-      .result.then(
-      () => vm.saveDatabaseSettings(),
-      () => vm.log.info('Cancelled', null, 'Cancel')
-    );
-  }
-
-  saveDatabaseSettings() {
-    const vm = this;
-    vm.processorService.saveDBSettings(vm.dbConfig)
-      .subscribe(
-        (result) => {
-          vm.log.success(result);
-        },
-        (error) => console.log(error)
-      );
-  }
-
-  startProcessor() {
-    const vm = this;
-    vm.processorService.startProcessor()
-      .subscribe(
-        (result) => {
-          vm.log.success(result);
-          vm.refreshScreen();
-        },
-        (error) => console.log(error)
-      );
-  }
-
-  stopProcessor() {
-    const vm = this;
-    vm.processorService.stopProcessor()
-      .subscribe(
-        (result) => {
-          vm.log.success(result);
-          vm.refreshScreen();
-        },
-        (error) => console.log(error)
-      );
-  }
-
-  reloadGeneralConfig() {
-    const vm = this;
-    MessageBoxDialog.open(vm.$modal, 'Save configuration',
-      'Are you sure you want to reload the configuration settings from the database? ', 'Yes', 'No')
-      .result.then(
-      () => vm.reloadConfig(),
-      () => vm.log.info('Cancelled', null, 'Cancel')
-    );
-  }
-
-  reloadConfig() {
-    const vm = this;
-    vm.processorService.reloadConfig()
-      .subscribe(
-        (result) => {
-          vm.log.success("Configuration successfully reloaded from Database");
-          vm.getGeneralSettings();
-        },
-        (error) => console.log(error)
-      );
-  }
-
-  resendMessages(messageId: number, mode: string) {
-    const vm = this;
-    vm.dashboardService.resendMessages(messageId, mode)
-      .subscribe(
-        (result) => {
-          vm.log.success(result);
-          vm.refreshScreen();
-        },
-        (error) => vm.log.error(error)
-      );
-  }
-
-  resendErrorMessages() {
-    const vm = this;
-    MessageBoxDialog.open(vm.$modal, 'Resend Messages',
-      'Are you sure you want to resend all messages in Error? ' +
-      '\n\nThis will resend ' + vm.dashboardStatistics.errorMessageCount + ' messages.', 'Yes', 'No')
-      .result.then(
-      () => vm.resendMessages(0, "error"),
-      () => vm.log.info('Resend cancelled', null, 'Cancel')
-    );
-  }
-
-  resendMessagesBefore() {
-    const vm = this;
-    MessageBoxDialog.open(vm.$modal, 'Resend Messages',
-      'Are you sure you want to resend all messages before ' + vm.beforeResend + '?\n ', 'Yes', 'No')
-      .result.then(
-      () => vm.resendMessages(vm.beforeResend, "before"),
-      () => vm.log.info('Resend cancelled', null, 'Cancel')
-    );
-  }
-
-  resendMessagesAfter() {
-    const vm = this;
-    MessageBoxDialog.open(vm.$modal, 'Resend Messages',
-      'Are you sure you want to resend all messages after ' + vm.afterResend + '?\n ', 'Yes', 'No')
-      .result.then(
-      () => vm.resendMessages(vm.afterResend, "after"),
-      () => vm.log.info('Resend cancelled', null, 'Cancel')
-    );
-  }
-
-  resendAllMessages() {
-    const vm = this;
-    MessageBoxDialog.open(vm.$modal, 'Resend All Messages',
-      'Are you sure you want to resend all messages?\n ' +
-      'This will resend ' + vm.dashboardStatistics.totalMessageCount + ' messages.', 'Yes', 'No')
-      .result.then(
-      () => vm.resendMessages(0, "all"),
-      () => vm.log.info('Resend cancelled', null, 'Cancel')
-    );
+    return data;
   }
 
 }
