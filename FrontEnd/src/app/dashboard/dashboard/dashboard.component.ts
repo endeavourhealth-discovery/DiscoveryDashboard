@@ -5,7 +5,6 @@ import {LoggerService, MessageBoxDialog} from 'eds-angular4';
 import {ToastsManager} from 'ng2-toastr';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
-import {GeneralSettings} from '../../processor/models/GeneralSettings';
 import {ApplicationInformation} from '../models/ApplicationInformation';
 import {GraphService} from '../../graph/graph.service';
 import {GraphOptions} from '../models/GraphOptions';
@@ -20,7 +19,6 @@ import {Series} from 'eds-angular4/dist/charting/models/Series';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  settings: GeneralSettings = <GeneralSettings>{};
   adastraInformation: ApplicationInformation[];
   refreshRate = 20;
   messageChart: Chart;
@@ -129,7 +127,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const vm = this;
     let chartCreated = false;
 
-    for (let result of results) {
+    for (const result of results) {
       if (!chartCreated) {
         vm.messageChart = vm.getTotalChartData(result.title, result.results);
         chartCreated = true;
@@ -142,7 +140,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private addSeriesToExistingGraph(title: string, results: any) {
     const vm = this;
-    const categories : string[] = new List(results).Select(row => row[0]).ToArray();
+    const categories: string[] = new List(results).Select(row => row[0]).ToArray();
     const data = vm.getSeriesData(categories, results);
     vm.messageChart.addSeries(new Series()
       .setName(title)
@@ -151,9 +149,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getTotalChartData(title : string, results : any) {
-    const categories : string[] = new List(results).Select(row => row[0]).ToArray();
-    const data : number[] = this.getSeriesData(categories, results);
+  private getTotalChartData(title: string, results: any) {
+    const categories: string[] = new List(results).Select(row => row[0]).ToArray();
+    const data: number[] = this.getSeriesData(categories, results);
 
     return new Chart()
       .setCategories(categories)
@@ -172,7 +170,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private getSeriesData(categories: string[], results: any) {
     const data: number[] = [];
 
-    for (let category of categories) {
+    for (const category of categories) {
       const result = new List(results).Where(r => category == r[0]).SingleOrDefault();
       if (!result || result[1] == null) {
         data.push(0);

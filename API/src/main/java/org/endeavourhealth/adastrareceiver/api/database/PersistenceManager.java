@@ -11,6 +11,17 @@ import java.util.Map;
 
 public class PersistenceManager {
     private static EntityManagerFactory entityManagerFactory;
+    private static EntityManagerFactory configEntityManagerFactory;
+
+    public static EntityManager getConfigEntityManager() throws Exception {
+
+        if (configEntityManagerFactory == null
+                || !configEntityManagerFactory.isOpen()) {
+            createConfigEntityManager();
+        }
+
+        return entityManagerFactory.createEntityManager();
+    }
 
 
     public static EntityManager getEntityManager() throws Exception {
@@ -46,5 +57,26 @@ public class PersistenceManager {
         properties.put("hibernate.connection.password", pass);
 
         entityManagerFactory = Persistence.createEntityManagerFactory("adastra_receiver", properties);
+    }
+
+    private static synchronized void createConfigEntityManager() throws Exception {
+
+        if (configEntityManagerFactory != null
+                && configEntityManagerFactory.isOpen()) {
+            return;
+        }
+
+        JsonNode json = ConfigManager.getConfigurationAsJson("discoveryDashboardDB");
+        String url = json.get("url").asText();
+        String user = json.get("username").asText();
+        String pass = json.get("password").asText();
+
+        Map<String, Object> properties = new HashMap<>();
+        //properties.put("hibernate.temp.use_jdbc_metadata_defaults", "false");
+        properties.put("hibernate.connection.url", url);
+        properties.put("hibernate.connection.username", user);
+        properties.put("hibernate.connection.password", pass);
+
+        entityManagerFactory = Persistence.createEntityManagerFactory("discovery_dashboard", properties);
     }
 }

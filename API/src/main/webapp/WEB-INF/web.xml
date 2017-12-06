@@ -59,7 +59,7 @@
     <!-- startup class, initializes config manager -->
     <context-param>
         <param-name>app_id</param-name>
-        <param-value>adastra-receiver</param-value>
+        <param-value>discovery-dashboard</param-value>
     </context-param>
     <listener>
         <listener-class>

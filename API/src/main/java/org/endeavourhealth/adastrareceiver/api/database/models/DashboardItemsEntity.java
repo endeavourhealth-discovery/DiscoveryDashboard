@@ -1,6 +1,7 @@
 package org.endeavourhealth.adastrareceiver.api.database.models;
 
 import org.endeavourhealth.adastrareceiver.api.database.PersistenceManager;
+import org.endeavourhealth.adastrareceiver.api.json.JsonDashboardItem;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -15,6 +16,7 @@ public class DashboardItemsEntity {
     private int id;
     private String title;
     private String apiUrl;
+    private byte dashboardType;
 
     @Id
     @Column(name = "id")
@@ -62,8 +64,18 @@ public class DashboardItemsEntity {
         return Objects.hash(id, title, apiUrl);
     }
 
+    @Basic
+    @Column(name = "dashboard_type")
+    public byte getDashboardType() {
+        return dashboardType;
+    }
+
+    public void setDashboardType(byte dashboardType) {
+        this.dashboardType = dashboardType;
+    }
+
     public static List<DashboardItemsEntity> getDashboardItems() throws Exception {
-        EntityManager entityManager = PersistenceManager.getEntityManager();
+        EntityManager entityManager = PersistenceManager.getConfigEntityManager();
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<DashboardItemsEntity> cq = cb.createQuery(DashboardItemsEntity.class);
@@ -78,5 +90,38 @@ public class DashboardItemsEntity {
         entityManager.close();
 
         return ret;
+    }
+
+    public static Integer saveDashboardItem(JsonDashboardItem item) throws Exception {
+        Integer itemId = null;
+        EntityManager entityManager = PersistenceManager.getConfigEntityManager();
+
+        DashboardItemsEntity itemsEntity = new DashboardItemsEntity();
+        entityManager.getTransaction().begin();
+
+        itemsEntity.setTitle(item.getTitle());
+        itemsEntity.setApiUrl(item.getApiUrl());
+        itemsEntity.setDashboardType(item.getDashboardType());
+
+        if (item.getId() != null) {
+            itemsEntity.setId(item.getId());
+            itemId = item.getId();
+        }
+
+
+        entityManager.merge(itemsEntity);
+
+
+        if (itemId == null) {
+            Query q = entityManager.createNativeQuery("SELECT LAST_INSERT_ID();");
+
+            itemId = Integer.parseInt(q.getSingleResult().toString());
+
+        }
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+
+        return itemId;
     }
 }

@@ -8,9 +8,16 @@ export class ConfigurationService {
 
   constructor(private http: Http) { }
 
-  public getApplicationInformation(): Observable<DashboardItem[]> {
-    let vm = this;
+  public getDashboardItems(): Observable<DashboardItem[]> {
+    const vm = this;
     return vm.http.get('/api/configuration/getDashboardItems', {withCredentials : true} )
+      .map((response) => response.json());
+  }
+
+  public setDashboardItems(item: DashboardItem): Observable<any> {
+    const vm = this;
+    console.log(item);
+    return vm.http.post('/api/configuration/setDashboardItems', item, {withCredentials : true} )
       .map((response) => response.json());
   }
 }

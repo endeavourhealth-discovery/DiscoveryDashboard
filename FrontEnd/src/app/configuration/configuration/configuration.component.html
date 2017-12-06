@@ -1,3 +1,66 @@
-<p>
-  configuration works!
-</p>
+<div class="module">
+  <div class="container-fluid">
+    <div class="module-heading">
+      Discovery Dashboard Configuration
+      <div class="pull-right">
+        <button type="button" class="btn btn-sm btn-success" (click)="getDashboardItems()">Refresh</button>
+      </div>
+    </div>
+    <div class="module-body">
+      <form>
+        <div class="row">
+          <div class="col-md-4">
+            <button type="button" class="btn btn-success" (click)="addNewItem()">New Dashboard</button>
+          </div>
+        </div>
+
+        <div *ngIf="dashboardItems" class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Choose a dashboard item: </label>
+              <select class="form-control" [(ngModel)]="selectedItem" name="selectedItem" (change)="groupChanged()" [ngModelOptions]="{standalone: true}">
+                <option *ngFor="let item of dashboardItems" [ngValue]="item">{{item.title}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Dashboard Title: </label> <span style="cursor: pointer" ></span>
+              <input type="text" class="form-control"  placeholder="Dashboard Title" [(ngModel)]="selectedItem.title" [ngModelOptions]="{standalone: true}">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Dashboard API URL: </label> <span style="cursor: pointer" ></span>
+              <input type="text" class="form-control"  placeholder="Dashboard API URL" [(ngModel)]="selectedItem.apiUrl" [ngModelOptions]="{standalone: true}">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-4">
+            <label class="control-label">Dashboard Type</label>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-th-large fa-lg fa-fw"></i></span>
+              <select class="form-control" [(ngModel)]="selectedItem.dashboardType" name="dashboardType">
+                <option *ngFor="let tl of typeList" [ngValue]="tl.id">{{tl.value}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <button type="button" class="btn btn-primary" (click)="save()">Save</button>
+          </div>
+        </div>
+
+
+      </form>
+    </div>
+  </div>
+</div>
