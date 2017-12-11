@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy, ViewContainerRef} from '@angular/core';
 import {DashboardService} from '../dashboard.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {LoggerService, MessageBoxDialog} from 'eds-angular4';
+import {LoggerService, MessageBoxDialog, SecurityService} from 'eds-angular4';
 import {ToastsManager} from 'ng2-toastr';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
@@ -15,6 +15,7 @@ import {Series} from 'eds-angular4/dist/charting/models/Series';
 import {Layout} from '../models/Layout';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {DashboardItem} from '../../configuration/models/DashboardItem';
+import {User} from 'eds-angular4/dist/security/models/User';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,6 +24,8 @@ import {DashboardItem} from '../../configuration/models/DashboardItem';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   refreshRate = 20;
+  currentUser: User;
+  userName: string;
 
   private height = 200;
   private legend = {align: 'right', layout: 'vertical', verticalAlign: 'middle', width: 100};
@@ -35,6 +38,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(private dashboardService: DashboardService,
               private configService: ConfigurationService,
+              private securityService: SecurityService,
               private graphService: GraphService,
               private $modal: NgbModal,
               public toastr: ToastsManager,
@@ -45,6 +49,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const vm = this;
+    vm.currentUser = this.securityService.getCurrentUser();
+    vm.userName = vm.currentUser.surname + ':' + vm.currentUser.forename;
     vm.initialiseGraphOptions();
     vm.getDashboardItems();
   }
@@ -98,7 +104,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getLayoutItems() {
     const vm = this;
-    vm.configService.getLayoutItems()
+    vm.configService.getLayoutItems(vm.userName)
       .subscribe(
         (result) => {
           console.log(result);

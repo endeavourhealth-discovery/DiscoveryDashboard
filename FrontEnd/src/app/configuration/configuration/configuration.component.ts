@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {DashboardItem} from '../models/DashboardItem';
 import {ConfigurationService} from '../configuration.service';
 import {Layout} from '../../dashboard/models/Layout';
+import {SecurityService} from 'eds-angular4';
+import {User} from 'eds-angular4/dist/security/models/User';
 
 @Component({
   selector: 'app-configuration',
@@ -10,6 +12,8 @@ import {Layout} from '../../dashboard/models/Layout';
 })
 export class ConfigurationComponent implements OnInit {
   dashboardItems: DashboardItem[] = [];
+  currentUser: User;
+  userName: string;
   selectedItem: DashboardItem = {title: ''};
   selectedLayoutItem: Layout = {title: ''};
   layout: Layout[];
@@ -24,10 +28,15 @@ export class ConfigurationComponent implements OnInit {
     {id: 1, value: 'Large'}
   ];
 
-  constructor(private configService: ConfigurationService) { }
+  constructor(private configService: ConfigurationService,
+              private securityService: SecurityService) { }
 
   ngOnInit() {
     const vm = this;
+    vm.currentUser = this.securityService.getCurrentUser();
+    vm.userName = vm.currentUser.surname + ':' + vm.currentUser.forename;
+    vm.selectedLayoutItem.username = vm.userName;
+    console.log('User set as: ' + vm.userName);
     vm.getDashboardItems();
     vm.getLayoutItems();
   }
@@ -47,7 +56,8 @@ export class ConfigurationComponent implements OnInit {
 
   getLayoutItems() {
     const vm = this;
-    vm.configService.getLayoutItems()
+    console.log('user is now' + vm.userName);
+    vm.configService.getLayoutItems(vm.userName)
       .subscribe(
         (result) => {
           console.log(result);
@@ -63,7 +73,7 @@ export class ConfigurationComponent implements OnInit {
   addNewLayoutItem() {
     const vm = this;
 
-    const newItem: Layout = {title: ''};
+    const newItem: Layout = {title: '', username: vm.userName};
     vm.layout.push(newItem);
     vm.selectedLayoutItem = newItem;
   }

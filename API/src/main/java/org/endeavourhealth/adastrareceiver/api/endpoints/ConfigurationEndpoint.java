@@ -58,9 +58,10 @@ public class ConfigurationEndpoint {
     @Timed(absolute = true, name="adastraReceiver.configuration.getLayoutItems")
     @Path("/getLayoutItems")
     @ApiOperation(value = "Gets the Application Information for the Discovery Dashboard")
-    public Response getLayoutItems(@Context SecurityContext sc) throws Exception {
+    public Response getLayoutItems(@Context SecurityContext sc,
+                                   @ApiParam(value = "username") @QueryParam("username") String username) throws Exception {
 
-        return getLayoutItems();
+        return getLayoutItems(username);
     }
 
     @POST
@@ -89,9 +90,9 @@ public class ConfigurationEndpoint {
                 .build();
     }
 
-    private Response getLayoutItems() throws Exception {
+    private Response getLayoutItems(String username) throws Exception {
 
-        List<LayoutItemsEntity> items = LayoutItemsEntity.getLayoutItems();
+        List<LayoutItemsEntity> items = LayoutItemsEntity.getLayoutItems(username);
 
         return Response
                 .ok(items)

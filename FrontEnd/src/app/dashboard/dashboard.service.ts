@@ -12,7 +12,7 @@ export class DashboardService {
 
   public getApplicationInformation() : Observable<ApplicationInformation[]> {
     const vm = this;
-    return vm.http.get("/api/dashboard/getApplicationInformation", {withCredentials : true} )
+    return vm.http.get('/api/dashboard/getApplicationInformation', {withCredentials : true} )
       .map((response) => response.json());
   }
 

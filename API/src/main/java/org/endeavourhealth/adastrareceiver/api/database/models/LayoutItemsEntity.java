@@ -6,6 +6,7 @@ import org.endeavourhealth.adastrareceiver.api.json.JsonLayoutItem;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Objects;
@@ -98,7 +99,7 @@ public class LayoutItemsEntity {
     }
 
 
-    public static List<LayoutItemsEntity> getLayoutItems() throws Exception {
+    public static List<LayoutItemsEntity> getLayoutItems(String username) throws Exception {
         EntityManager entityManager = PersistenceManager.getConfigEntityManager();
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -106,7 +107,10 @@ public class LayoutItemsEntity {
         Root<LayoutItemsEntity> rootEntry = cq.from(LayoutItemsEntity.class);
         CriteriaQuery<LayoutItemsEntity> all = cq.select(rootEntry);
 
+        Predicate predicate = cb.equal(rootEntry.get("username"), username);
+
         cq.orderBy(cb.asc(rootEntry.get("position")));
+        cq.where(predicate);
 
         TypedQuery<LayoutItemsEntity> allQuery = entityManager.createQuery(all);
         List<LayoutItemsEntity> ret = allQuery.getResultList();
@@ -128,7 +132,7 @@ public class LayoutItemsEntity {
         itemsEntity.setTitle(item.getTitle());
         itemsEntity.setPosition(item.getPosition());
         itemsEntity.setSize(item.getSize());
-        itemsEntity.setUsername("Stuart");
+        itemsEntity.setUsername(item.getUsername());
         itemsEntity.setDashboardItem(item.getDashboardItem());
 
         if (item.getId() != null) {
