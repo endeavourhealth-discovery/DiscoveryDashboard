@@ -8,15 +8,17 @@
     </div>
     <div class="module-body">
       <form>
+
         <div class="row">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header font-weight-bold">Message Statistics</div>
+          <div *ngFor="let lay of layout" class="col-md-6">
+            <div *ngIf="lay.appInfo" class="card">
+              <div class="card-header font-weight-bold">{{lay.title}}</div>
               <div class="card-block">
-                <div *ngFor="let info of adastraInformation" class="row">
+                <div *ngFor="let info of lay.appInfo" class="row">
                   <div class="col-md-9">
                     <p class="font-weight-bold">{{info.labelText}}</p>
                   </div>
+
                   <div class="col-md-3">
                     <span *ngIf="info.count != null" class="badge badge-pill" [ngClass]="setBadgeColour(info.status)">{{info.count}}</span>
                     <p *ngIf="info.valueText">{{info.valueText}}</p>
@@ -24,12 +26,10 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-header font-weight-bold">Adastra Message Count</div>
+            <div *ngIf="lay.graph" class="card">
+              <div class="card-header font-weight-bold">{{lay.title}}</div>
               <div class="card-block">
-                <chart [data]="messageChart"></chart>
+                <chart [data]="lay.graph"></chart>
               </div>
             </div>
           </div>

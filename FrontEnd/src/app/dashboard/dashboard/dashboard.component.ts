@@ -12,6 +12,9 @@ import {List} from 'linqts/linq';
 import {Chart} from 'eds-angular4/dist/charting/models/Chart';
 import {GraphData} from '../models/GraphData';
 import {Series} from 'eds-angular4/dist/charting/models/Series';
+import {Layout} from '../models/Layout';
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {DashboardItem} from '../../configuration/models/DashboardItem';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,9 +22,7 @@ import {Series} from 'eds-angular4/dist/charting/models/Series';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  adastraInformation: ApplicationInformation[];
   refreshRate = 20;
-  messageChart: Chart;
 
   private height = 200;
   private legend = {align: 'right', layout: 'vertical', verticalAlign: 'middle', width: 100};
@@ -29,8 +30,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription;
 
+  layout: Layout[] = [];
+  dashboardItems: DashboardItem[] = [];
 
   constructor(private dashboardService: DashboardService,
+              private configService: ConfigurationService,
               private graphService: GraphService,
               private $modal: NgbModal,
               public toastr: ToastsManager,
@@ -41,15 +45,86 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const vm = this;
-    vm.getAdastraInformation();
     vm.initialiseGraphOptions();
+    vm.getDashboardItems();
+  }
+
+  getDashboardData() {
+    const vm = this;
+    for (let i = 0; i < vm.layout.length; i++) {
+      const item = vm.dashboardItems.find(items => items.id === vm.layout[i].dashboardItem);
+      if (item.dashboardType === 0) {
+        vm.getStandardAppInfo(vm.layout[i], item);
+      } else {
+        vm.getStandardGraphData(vm.layout[i], item);
+      }
+    }
+  }
+
+  getStandardAppInfo(layout: Layout, item: DashboardItem) {
+    const vm = this;
+      vm.dashboardService.getStandardApplicationInformation(item.apiUrl)
+        .subscribe(
+          (result) => {
+            layout.appInfo = result;
+          },
+          (error) => console.log(error)
+        );
+  }
+
+  getStandardGraphData(layout: Layout, item: DashboardItem) {
+    const vm = this;
+    vm.dashboardService.getStandardGraphInformation(item.apiUrl, vm.graphOptions)
+      .subscribe(
+        (result) => {
+          vm.createChartFromResult(result, layout);
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  getDashboardItems() {
+    const vm = this;
+    vm.configService.getDashboardItems()
+      .subscribe(
+        (result) => {
+          console.log(result);
+          vm.dashboardItems = result;
+          vm.getLayoutItems();
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  getLayoutItems() {
+    const vm = this;
+    vm.configService.getLayoutItems()
+      .subscribe(
+        (result) => {
+          console.log(result);
+          vm.layout = result;
+          vm.getDashboardData();
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  initialiseLayout() {
+    const vm = this;
+    for (let i = 0; i < this.dashboardItems.length; i++) {
+      const lay = new Layout();
+      lay.position = i;
+      lay.dashboardItem = i;
+      vm.layout.push(lay);
+    }
+    vm.getDashboardData();
   }
 
   setTimer() {
     const vm = this;
     const timer = Observable.timer(0, vm.refreshRate * 1000);
     vm.subscription = timer.subscribe(t => {
-      vm.getAdastraInformation();
+      vm.getDashboardData();
     });
   }
 
@@ -57,18 +132,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const vm = this;
     vm.destroyTimer();
     vm.setTimer();
-  }
-
-  getAdastraInformation() {
-    const vm = this;
-    vm.dashboardService.getApplicationInformation()
-      .subscribe(
-        (result) => {
-          console.log(result);
-          vm.adastraInformation = result;
-        },
-        (error) => console.log(error)
-      );
   }
 
   destroyTimer() {
@@ -115,7 +178,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(
         (result) => {
           console.log(result);
-          vm.createChartFromResult(result);
+          // vm.createChartFromResult(result, layout);
         },
         (error) => console.log(error)
       );
@@ -123,26 +186,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
 
-  private createChartFromResult(results: GraphData[]) {
+  private createChartFromResult(results: GraphData[], layout: Layout) {
     const vm = this;
     let chartCreated = false;
 
     for (const result of results) {
       if (!chartCreated) {
-        vm.messageChart = vm.getTotalChartData(result.title, result.results);
+        layout.graph = vm.getTotalChartData(result.title, result.results);
         chartCreated = true;
       } else {
-        vm.addSeriesToExistingGraph(result.title, result.results);
+        vm.addSeriesToExistingGraph(result.title, result.results, layout);
       }
     }
 
   }
 
-  private addSeriesToExistingGraph(title: string, results: any) {
+  private addSeriesToExistingGraph(title: string, results: any, layout: Layout) {
     const vm = this;
     const categories: string[] = new List(results).Select(row => row[0]).ToArray();
     const data = vm.getSeriesData(categories, results);
-    vm.messageChart.addSeries(new Series()
+    layout.graph.addSeries(new Series()
       .setName(title)
       .setType('spline')
       .setData(data)

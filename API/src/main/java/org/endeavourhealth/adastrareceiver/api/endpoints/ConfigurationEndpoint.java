@@ -7,7 +7,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.endeavourhealth.adastrareceiver.api.database.models.DashboardItemsEntity;
+import org.endeavourhealth.adastrareceiver.api.database.models.LayoutItemsEntity;
 import org.endeavourhealth.adastrareceiver.api.json.JsonDashboardItem;
+import org.endeavourhealth.adastrareceiver.api.json.JsonLayoutItem;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -25,7 +27,7 @@ public class ConfigurationEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Timed(absolute = true, name="adastraReceiver.configuration.getApplicationInformation")
+    @Timed(absolute = true, name="adastraReceiver.configuration.getDashboardItems")
     @Path("/getDashboardItems")
     @ApiOperation(value = "Gets the Application Information for the Discovery Dashboard")
     public Response getDashboardItems(@Context SecurityContext sc) throws Exception {
@@ -50,9 +52,46 @@ public class ConfigurationEndpoint {
                 .build();
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.configuration.getLayoutItems")
+    @Path("/getLayoutItems")
+    @ApiOperation(value = "Gets the Application Information for the Discovery Dashboard")
+    public Response getLayoutItems(@Context SecurityContext sc) throws Exception {
+
+        return getLayoutItems();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.configuration.setLayoutItems")
+    @Path("/setLayoutItems")
+    @ApiOperation(value = "Set the batch size of the processor")
+    public Response setLayoutItems(@Context SecurityContext sc,
+                                      @ApiParam(value = "Json representation of the dashboard item") JsonLayoutItem item) throws Exception {
+
+        Integer itemId = LayoutItemsEntity.saveLayoutItem(item);
+
+        return Response
+                .ok()
+                .entity(itemId)
+                .build();
+    }
+
     private Response getDashboardItems() throws Exception {
 
         List<DashboardItemsEntity> items = DashboardItemsEntity.getDashboardItems();
+
+        return Response
+                .ok(items)
+                .build();
+    }
+
+    private Response getLayoutItems() throws Exception {
+
+        List<LayoutItemsEntity> items = LayoutItemsEntity.getLayoutItems();
 
         return Response
                 .ok(items)

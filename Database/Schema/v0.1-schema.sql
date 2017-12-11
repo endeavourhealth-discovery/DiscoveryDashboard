@@ -19,5 +19,19 @@ create table discovery_dashboard.dashboard_items (
     foreign key discovery_dashboard_dashboard_items_type_fk (dashboard_type) references discovery_dashboard.dashboard_type(id)
 );
 
+drop table discovery_dashboard.layout_items;
+
+create table discovery_dashboard.layout_items (
+	id int not null auto_increment comment 'Unique Id for the layout',
+    username varchar(50) not null comment 'User this layout belongs to',
+    title varchar(50) not null comment 'Title of the layout item',
+    position tinyint not null comment 'the position of the layout item',
+    size tinyint not null comment 'the size of the dashboard',
+    dashboard_item int not null comment 'The Dashboard item used by the layout item',
+    
+    constraint discovery_dashboard_layout_items_pk primary key (id),    
+    foreign key discovery_dashboard_layout_items_type_fk (dashboard_item) references discovery_dashboard.dashboard_items(id)
+);
+
 
 

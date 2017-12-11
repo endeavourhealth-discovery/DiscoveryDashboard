@@ -16,6 +16,7 @@
     </persistence-unit>
     <persistence-unit name="discovery_dashboard">
         <class>org.endeavourhealth.adastrareceiver.api.database.models.DashboardItemsEntity</class>
+        <class>org.endeavourhealth.adastrareceiver.api.database.models.LayoutItemsEntity</class>
         <properties>
             <property name="toplink.jdbc.url" value="jdbc:mysql://localhost:3306/discovery_dashboard"/>
             <property name="toplink.jdbc.driver" value="com.mysql.jdbc.Driver"/>

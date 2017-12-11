@@ -20,7 +20,7 @@ public class PersistenceManager {
             createConfigEntityManager();
         }
 
-        return entityManagerFactory.createEntityManager();
+        return configEntityManagerFactory.createEntityManager();
     }
 
 
@@ -77,6 +77,6 @@ public class PersistenceManager {
         properties.put("hibernate.connection.username", user);
         properties.put("hibernate.connection.password", pass);
 
-        entityManagerFactory = Persistence.createEntityManagerFactory("discovery_dashboard", properties);
+        configEntityManagerFactory = Persistence.createEntityManagerFactory("discovery_dashboard", properties);
     }
 }

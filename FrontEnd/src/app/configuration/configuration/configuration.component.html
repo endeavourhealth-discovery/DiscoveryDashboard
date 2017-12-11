@@ -9,57 +9,136 @@
     <div class="module-body">
       <form>
         <div class="row">
-          <div class="col-md-4">
-            <button type="button" class="btn btn-success" (click)="addNewItem()">New Dashboard</button>
-          </div>
-        </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header font-weight-bold">Dashboard Configuration</div>
+              <div class="card-block">
+                <div class="row">
+                  <div class="col-md-4">
+                    <button type="button" class="btn btn-success" (click)="addNewItem()">New Dashboard</button>
+                  </div>
+                </div>
 
-        <div *ngIf="dashboardItems" class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label>Choose a dashboard item: </label>
-              <select class="form-control" [(ngModel)]="selectedItem" name="selectedItem" (change)="groupChanged()" [ngModelOptions]="{standalone: true}">
-                <option *ngFor="let item of dashboardItems" [ngValue]="item">{{item.title}}</option>
-              </select>
-            </div>
-          </div>
-        </div>
+                <div *ngIf="dashboardItems" class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Choose a dashboard item to edit: </label>
+                      <select class="form-control" [(ngModel)]="selectedItem" name="selectedItem" (change)="groupChanged()" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let item of dashboardItems" [ngValue]="item">{{item.title}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
 
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label>Dashboard Title: </label> <span style="cursor: pointer" ></span>
-              <input type="text" class="form-control"  placeholder="Dashboard Title" [(ngModel)]="selectedItem.title" [ngModelOptions]="{standalone: true}">
-            </div>
-          </div>
-        </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Dashboard Title: </label> <span style="cursor: pointer" ></span>
+                      <input type="text" class="form-control"  placeholder="Dashboard Title" [(ngModel)]="selectedItem.title" [ngModelOptions]="{standalone: true}">
+                    </div>
+                  </div>
+                </div>
 
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label>Dashboard API URL: </label> <span style="cursor: pointer" ></span>
-              <input type="text" class="form-control"  placeholder="Dashboard API URL" [(ngModel)]="selectedItem.apiUrl" [ngModelOptions]="{standalone: true}">
-            </div>
-          </div>
-        </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Dashboard API URL: </label> <span style="cursor: pointer" ></span>
+                      <input type="text" class="form-control"  placeholder="Dashboard API URL" [(ngModel)]="selectedItem.apiUrl" [ngModelOptions]="{standalone: true}">
+                    </div>
+                  </div>
+                </div>
 
-        <div class="row">
-          <div class="form-group col-md-4">
-            <label class="control-label">Dashboard Type</label>
-            <div class="input-group">
-              <span class="input-group-addon"><i class="fa fa-th-large fa-lg fa-fw"></i></span>
-              <select class="form-control" [(ngModel)]="selectedItem.dashboardType" name="dashboardType">
-                <option *ngFor="let tl of typeList" [ngValue]="tl.id">{{tl.value}}</option>
-              </select>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label class="control-label">Dashboard Type</label>
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-th-large fa-lg fa-fw"></i></span>
+                      <select class="form-control" [(ngModel)]="selectedItem.dashboardType" name="dashboardType">
+                        <option *ngFor="let tl of typeList" [ngValue]="tl.id">{{tl.value}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+
+                  <div class="col-md-6">
+                    <button type="button" class="btn btn-primary pull-right" (click)="save()">Save</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
           <div class="col-md-6">
-            <button type="button" class="btn btn-primary" (click)="save()">Save</button>
+            <div class="card">
+              <div class="card-header font-weight-bold">Layout Configuration</div>
+              <div class="card-block">
+                <div class="row">
+                  <div class="col-md-4">
+                    <button type="button" class="btn btn-success" (click)="addNewLayoutItem()">Add to My Dashboard</button>
+                  </div>
+                </div>
+
+                <div *ngIf="layout" class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Choose a Layout item to edit: </label>
+                      <select class="form-control" [(ngModel)]="selectedLayoutItem" name="selectedLayoutItem" (change)="layoutGroupChanged()" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let lay of layout" [ngValue]="lay">{{lay.title}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Layout Title: </label> <span style="cursor: pointer" ></span>
+                      <input type="text" class="form-control"  placeholder="Layout Title" [(ngModel)]="selectedLayoutItem.title" [ngModelOptions]="{standalone: true}">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Dashboard Item: </label> <span style="cursor: pointer" ></span>
+                      <select class="form-control" [(ngModel)]="selectedLayoutItem.dashboardItem" name="dashboardItem" (change)="groupChanged()" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let di of dashboardItems" [ngValue]="di.id">{{di.title}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Layout Position: </label> <span style="cursor: pointer" ></span>
+                      <input type="number" class="form-control"  placeholder="Position" [(ngModel)]="selectedLayoutItem.position" [ngModelOptions]="{standalone: true}">
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label class="control-label">Size</label>
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-th-large fa-lg fa-fw"></i></span>
+                      <select class="form-control" [(ngModel)]="selectedLayoutItem.size" name="size">
+                        <option *ngFor="let sl of sizeList" [ngValue]="sl.id">{{sl.value}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <button type="button" class="btn btn-primary pull-right" (click)="saveLayout()">Save</button>
+                </div>
+
+              </div>
+            </div>
           </div>
         </div>
-
-
       </form>
     </div>
   </div>

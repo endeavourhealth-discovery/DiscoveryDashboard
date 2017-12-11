@@ -10,7 +10,7 @@ export class GraphService {
   constructor(private http : Http) { }
 
   public getGraphValues(options: GraphOptions) : Observable<GraphData[]> {
-    let vm = this;
+    const vm = this;
 
     return vm.http.post("/api/graph/getGraphValues", options, { withCredentials : true} )
       .map((response) => response.json());

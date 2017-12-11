@@ -8,6 +8,7 @@ import { LoggerService, DialogsModule } from 'eds-angular4';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
 import { ChartModule } from 'eds-angular4/dist/charting';
+import {ConfigurationService} from '../configuration/configuration.service';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import { ChartModule } from 'eds-angular4/dist/charting';
   ],
   providers: [
     DashboardService,
+    ConfigurationService,
     LoggerService
   ]
 })
