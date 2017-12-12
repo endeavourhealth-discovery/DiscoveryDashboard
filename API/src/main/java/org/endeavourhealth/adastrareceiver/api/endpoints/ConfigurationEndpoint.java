@@ -81,6 +81,18 @@ public class ConfigurationEndpoint {
                 .build();
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.configuration.deleteLayoutItem")
+    @Path("/deleteLayoutItem")
+    @ApiOperation(value = "Gets the Application Information for the Discovery Dashboard")
+    public Response deleteLayoutItem(@Context SecurityContext sc,
+                                   @ApiParam(value = "id") @QueryParam("id") Integer id) throws Exception {
+
+        return deleteLayoutItem(id);
+    }
+
     private Response getDashboardItems() throws Exception {
 
         List<DashboardItemsEntity> items = DashboardItemsEntity.getDashboardItems();
@@ -96,6 +108,16 @@ public class ConfigurationEndpoint {
 
         return Response
                 .ok(items)
+                .build();
+    }
+
+    private Response deleteLayoutItem(Integer id) throws Exception {
+
+        LayoutItemsEntity.deleteLayoutItem(id);
+
+        return Response
+                .ok()
+                .entity("Layout item deleted")
                 .build();
     }
 }

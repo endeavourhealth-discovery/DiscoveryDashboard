@@ -1,8 +1,10 @@
 package org.endeavourhealth.adastrareceiver.api.json;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JsonLayoutItem {
     private Integer id = null;
     private String username = null;
@@ -10,6 +12,8 @@ public class JsonLayoutItem {
     private Byte position = null;
     private Byte size = null;
     private Integer dashboardItem = null;
+    private Integer graphDays = null;
+    private String graphPeriod = null;
 
     public Integer getId() {
         return id;
@@ -57,5 +61,21 @@ public class JsonLayoutItem {
 
     public void setDashboardItem(Integer dashboardItem) {
         this.dashboardItem = dashboardItem;
+    }
+
+    public Integer getGraphDays() {
+        return graphDays;
+    }
+
+    public void setGraphDays(Integer graphDays) {
+        this.graphDays = graphDays;
+    }
+
+    public String getGraphPeriod() {
+        return graphPeriod;
+    }
+
+    public void setGraphPeriod(String graphPeriod) {
+        this.graphPeriod = graphPeriod;
     }
 }

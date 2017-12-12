@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {DashboardItem} from '../models/DashboardItem';
 import {ConfigurationService} from '../configuration.service';
 import {Layout} from '../../dashboard/models/Layout';
-import {SecurityService} from 'eds-angular4';
+import {LoggerService, SecurityService} from 'eds-angular4';
 import {User} from 'eds-angular4/dist/security/models/User';
+import {ToastsManager} from 'ng2-toastr';
 
 @Component({
   selector: 'app-configuration',
@@ -15,7 +16,7 @@ export class ConfigurationComponent implements OnInit {
   currentUser: User;
   userName: string;
   selectedItem: DashboardItem = {title: ''};
-  selectedLayoutItem: Layout = {title: ''};
+  selectedLayoutItem: Layout = {title: '', size: 0};
   layout: Layout[];
 
   typeList = [
@@ -28,8 +29,20 @@ export class ConfigurationComponent implements OnInit {
     {id: 1, value: 'Large'}
   ];
 
+  periodList = [
+    {value: 'HOUR'},
+    {value: 'DAY'},
+    {value: 'MONTH'},
+    {value: 'YEAR'},
+  ];
+
   constructor(private configService: ConfigurationService,
-              private securityService: SecurityService) { }
+              private securityService: SecurityService,
+              public toastr: ToastsManager,
+              vcr: ViewContainerRef,
+              private log: LoggerService) {
+    this.toastr.setRootViewContainerRef(vcr);
+  }
 
   ngOnInit() {
     const vm = this;
@@ -56,14 +69,16 @@ export class ConfigurationComponent implements OnInit {
 
   getLayoutItems() {
     const vm = this;
-    console.log('user is now' + vm.userName);
     vm.configService.getLayoutItems(vm.userName)
       .subscribe(
         (result) => {
-          console.log(result);
+          console.log(vm.selectedLayoutItem.id);
           vm.layout = result;
-          if (result.length > 0) {
+          if (result.length > 0 && vm.selectedLayoutItem.id == null) {
+            console.log('changing anyway');
             vm.selectedLayoutItem = vm.layout[0];
+          } else {
+            vm.selectedLayoutItem = vm.layout.find(items => items.id === vm.selectedLayoutItem.id);
           }
         },
         (error) => console.log(error)
@@ -73,7 +88,7 @@ export class ConfigurationComponent implements OnInit {
   addNewLayoutItem() {
     const vm = this;
 
-    const newItem: Layout = {title: '', username: vm.userName};
+    const newItem: Layout = {title: '', username: vm.userName, size: 0};
     vm.layout.push(newItem);
     vm.selectedLayoutItem = newItem;
   }
@@ -90,8 +105,19 @@ export class ConfigurationComponent implements OnInit {
     console.log('changed');
   }
 
+  dashboardItemChanged() {
+    const vm = this;
+    const item = vm.dashboardItems.find(items => items.id === vm.selectedLayoutItem.dashboardItem);
+    if (item.dashboardType === 1) {
+      vm.selectedLayoutItem.isGraph = true;
+    } else {
+      vm.selectedLayoutItem.isGraph = false;
+    }
+  }
+
   layoutGroupChanged() {
-    console.log('changed');
+    const vm = this;
+    vm.dashboardItemChanged();
   }
 
   save() {
@@ -111,8 +137,19 @@ export class ConfigurationComponent implements OnInit {
     vm.configService.setLayoutItems(vm.selectedLayoutItem)
       .subscribe(
         (result) => {
-          console.log('saved');
+          vm.log.success('Layout item saved');
           vm.selectedLayoutItem.id = result;
+          vm.getLayoutItems();
+        });
+  }
+
+  deleteLayout() {
+    const vm = this;
+    vm.configService.deleteLayoutItems(vm.selectedLayoutItem.id)
+      .subscribe(
+        (result) => {
+          console.log(result);
+          vm.log.success(result);
           vm.getLayoutItems();
         });
 

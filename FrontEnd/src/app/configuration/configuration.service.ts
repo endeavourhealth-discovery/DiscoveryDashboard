@@ -35,4 +35,13 @@ export class ConfigurationService {
     return vm.http.post('/api/configuration/setLayoutItems', item, {withCredentials : true} )
       .map((response) => response.json());
   }
+
+  public deleteLayoutItems(id: number): Observable<any> {
+    const vm = this;
+    const params = new URLSearchParams();
+
+    params.set('id', id.toString());
+    return vm.http.get('/api/configuration/deleteLayoutItem', {search: params, withCredentials : true} )
+      .map((response) => response.text());
+  }
 }

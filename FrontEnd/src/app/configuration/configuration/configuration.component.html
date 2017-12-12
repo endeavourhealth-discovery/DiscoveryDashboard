@@ -59,7 +59,6 @@
                     </div>
                   </div>
 
-
                   <div class="col-md-6">
                     <button type="button" class="btn btn-primary pull-right" (click)="save()">Save</button>
                   </div>
@@ -102,7 +101,7 @@
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>Dashboard Item: </label> <span style="cursor: pointer" ></span>
-                      <select class="form-control" [(ngModel)]="selectedLayoutItem.dashboardItem" name="dashboardItem" (change)="groupChanged()" [ngModelOptions]="{standalone: true}">
+                      <select class="form-control" [(ngModel)]="selectedLayoutItem.dashboardItem" name="dashboardItem" (change)="dashboardItemChanged()" [ngModelOptions]="{standalone: true}">
                         <option *ngFor="let di of dashboardItems" [ngValue]="di.id">{{di.title}}</option>
                       </select>
                     </div>
@@ -131,8 +130,28 @@
                   </div>
                 </div>
 
+                <div *ngIf="selectedLayoutItem.isGraph" class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Number of Days for Graph: </label> <span style="cursor: pointer" ></span>
+                      <input type="number" class="form-control"  placeholder="Days" [(ngModel)]="selectedLayoutItem.graphDays" [ngModelOptions]="{standalone: true}">
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label class="control-label">Period for Graph Breakdown</label>
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-th-large fa-lg fa-fw"></i></span>
+                      <select class="form-control" [(ngModel)]="selectedLayoutItem.graphPeriod" name="graphPeriod">
+                        <option *ngFor="let ps of periodList" [ngValue]="ps.value">{{ps.value}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="col-md-6">
                   <button type="button" class="btn btn-primary pull-right" (click)="saveLayout()">Save</button>
+                  <button type="button" class="btn btn-danger pull-right" (click)="deleteLayout()">Delete</button>
                 </div>
 
               </div>

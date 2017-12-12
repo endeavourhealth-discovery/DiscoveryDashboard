@@ -27,7 +27,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private height = 200;
   private legend = {align: 'right', layout: 'vertical', verticalAlign: 'middle', width: 100};
-  graphOptions: GraphOptions = <GraphOptions>{};
 
   private subscription: Subscription;
 
@@ -48,7 +47,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const vm = this;
     vm.currentUser = this.securityService.getCurrentUser();
     vm.userName = vm.currentUser.surname + ':' + vm.currentUser.forename;
-    vm.initialiseGraphOptions();
     vm.getDashboardItems();
   }
 
@@ -77,7 +75,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getStandardGraphData(layout: Layout, item: DashboardItem) {
     const vm = this;
-    vm.dashboardService.getStandardGraphInformation(item.apiUrl, vm.graphOptions)
+    vm.dashboardService.getStandardGraphInformation(item.apiUrl, vm.initialiseGraphOptions(layout.graphDays, layout.graphPeriod))
       .subscribe(
         (result) => {
           vm.createChartFromResult(result, layout);
@@ -149,6 +147,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  setSize(size: number) {
+    if (size === 0) {
+      return 'col-md-6';
+    }
+    if (size === 1) {
+      return 'col-md-12';
+    }
+  }
+
   setBadgeColour(status: string) {
     if (status === 'primary') {
       return 'badge-primary';
@@ -164,14 +171,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  initialiseGraphOptions() {
+  initialiseGraphOptions(days: number, period: string): GraphOptions {
     const vm = this;
+    const graphOptions: GraphOptions = <GraphOptions>{};
     const today = new Date();
     const backDate = new Date();
-    vm.graphOptions.period = 'DAY';
-    vm.graphOptions.endTime = today;
-    vm.graphOptions.startTime = backDate;
-    vm.graphOptions.startTime.setDate(backDate.getDate() - 30);
+    console.log(today);
+    graphOptions.period = period;
+    graphOptions.endTime = today;
+    graphOptions.startTime = backDate;
+    graphOptions.startTime.setDate(backDate.getDate() - days);
+    return graphOptions;
   }
 
 

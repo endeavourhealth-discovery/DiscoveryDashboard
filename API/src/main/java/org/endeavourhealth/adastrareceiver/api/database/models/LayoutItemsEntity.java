@@ -20,6 +20,8 @@ public class LayoutItemsEntity {
     private int dashboardItem;
     private byte size;
     private byte position;
+    private Integer graphDays;
+    private String graphPeriod;
 
     @Id
     @Column(name = "id")
@@ -98,6 +100,25 @@ public class LayoutItemsEntity {
         this.position = position;
     }
 
+    @Basic
+    @Column(name = "graph_days")
+    public Integer getGraphDays() {
+        return graphDays;
+    }
+
+    public void setGraphDays(Integer graphDays) {
+        this.graphDays = graphDays;
+    }
+
+    @Basic
+    @Column(name = "graph_period")
+    public String getGraphPeriod() {
+        return graphPeriod;
+    }
+
+    public void setGraphPeriod(String graphPeriod) {
+        this.graphPeriod = graphPeriod;
+    }
 
     public static List<LayoutItemsEntity> getLayoutItems(String username) throws Exception {
         EntityManager entityManager = PersistenceManager.getConfigEntityManager();
@@ -134,6 +155,8 @@ public class LayoutItemsEntity {
         itemsEntity.setSize(item.getSize());
         itemsEntity.setUsername(item.getUsername());
         itemsEntity.setDashboardItem(item.getDashboardItem());
+        itemsEntity.setGraphDays(item.getGraphDays());
+        itemsEntity.setGraphPeriod(item.getGraphPeriod());
 
         if (item.getId() != null) {
             itemsEntity.setId(item.getId());
@@ -155,5 +178,16 @@ public class LayoutItemsEntity {
         entityManager.close();
 
         return itemId;
+    }
+
+    public static void deleteLayoutItem(Integer id) throws Exception {
+        EntityManager entityManager = PersistenceManager.getConfigEntityManager();
+
+        LayoutItemsEntity item = entityManager.find(LayoutItemsEntity.class, id);
+        entityManager.getTransaction().begin();
+        entityManager.remove(item);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
     }
 }

@@ -351,23 +351,23 @@ public class MessageStoreEntity {
         return ret;
     }
 
-    public static List getGraphValues(byte messageStatus, String period) throws Exception {
+    public static List getGraphValues(byte messageStatus, String period, String tableGUID) throws Exception {
         EntityManager entityManager = PersistenceManager.getEntityManager();
 
         String sql = "";
 
         switch (period) {
             case "YEAR":
-                sql = getYearSQLScript(messageStatus);
+                sql = getYearSQLScript(messageStatus, tableGUID);
                 break;
             case "MONTH":
-                sql = getMonthSQLScript(messageStatus);
+                sql = getMonthSQLScript(messageStatus, tableGUID);
                 break;
             case "DAY":
-                sql = getDaySQLScript(messageStatus);
+                sql = getDaySQLScript(messageStatus, tableGUID);
                 break;
             case "HOUR":
-                sql = getHourSQLScript(messageStatus);
+                sql = getHourSQLScript(messageStatus, tableGUID);
                 break;
         }
 
@@ -381,7 +381,7 @@ public class MessageStoreEntity {
         return resultList;
     }
 
-    private static String getDaySQLScript(byte messageStatus) throws Exception {
+    private static String getDaySQLScript(byte messageStatus, String tableGUID) throws Exception {
         String column = "m.received_date_time";
         String status = "";
 
@@ -395,14 +395,14 @@ public class MessageStoreEntity {
         }
 
         return String.format("select DATE_FORMAT(r.reference_date, \"%%d/%%m/%%Y\"), count(m.id)  \n" +
-                "from adastra_receiver.graph_date_range r \n" +
+                "from adastra_receiver.graph_date_range_" + tableGUID + " r \n" +
                 "left outer join adastra_receiver.message_store m    \n" +
                 "\ton IFNULL(DATE(%s), '9999-12-31') = DATE(r.reference_date)   \n" +
                 "   %s " +
                 " group by DATE(r.reference_date);", column, status );
     }
 
-    private static String getMonthSQLScript(byte messageStatus) throws Exception {
+    private static String getMonthSQLScript(byte messageStatus, String tableGUID) throws Exception {
         String column = "m.received_date_time";
         String status = "";
 
@@ -416,7 +416,7 @@ public class MessageStoreEntity {
         }
 
         return String.format("select DATE_FORMAT(r.reference_date, \"01/%%m/%%Y\"), count(m.id)  \n" +
-                "from adastra_receiver.graph_date_range r \n" +
+                "from adastra_receiver.graph_date_range_" + tableGUID + " r \n" +
                 "left outer join adastra_receiver.message_store m    \n" +
                 "\ton IFNULL(MONTH(%s), '01') = MONTH(r.reference_date)   \n" +
                 " and IFNULL(YEAR(%s), '9999') = YEAR(r.reference_date)   \n" +
@@ -424,7 +424,7 @@ public class MessageStoreEntity {
                 " group by YEAR(r.reference_date), MONTH(r.reference_date);", column, column, status );
     }
 
-    private static String getHourSQLScript(byte messageStatus) throws Exception {
+    private static String getHourSQLScript(byte messageStatus, String tableGUID) throws Exception {
         String column = "m.received_date_time";
         String status = "";
 
@@ -438,7 +438,7 @@ public class MessageStoreEntity {
         }
 
         return String.format("select DATE_FORMAT(r.reference_date, \"%%d/%%m/%%Y %%H\"), count(m.id)  \n" +
-                "from adastra_receiver .graph_date_range r \n" +
+                "from adastra_receiver.graph_date_range_" + tableGUID + " r \n" +
                 "left outer join adastra_receiver.message_store m    \n" +
                 "\ton IFNULL(HOUR(%s), '01') = HOUR(r.reference_date)   \n" +
                 " and IFNULL(DATE(%s), '9999-12-31') = DATE(r.reference_date)   \n" +
@@ -446,7 +446,7 @@ public class MessageStoreEntity {
                 " group by DATE(r.reference_date), HOUR(r.reference_date);", column, column, status );
     }
 
-    private static String getYearSQLScript(byte messageStatus) throws Exception {
+    private static String getYearSQLScript(byte messageStatus, String tableGUID) throws Exception {
         String column = "m.received_date_time";
         String status = "";
 
@@ -460,22 +460,19 @@ public class MessageStoreEntity {
         }
 
         return String.format("select DATE_FORMAT(r.reference_date, \"01/01/%%Y\"), count(m.id)  \n" +
-                "from adastra_receiver.graph_date_range r \n" +
+                "from adastra_receiver.graph_date_range_" + tableGUID + " r \n" +
                 "left outer join adastra_receiver.message_store m    \n" +
                 " on IFNULL(YEAR(%s), '01') = YEAR(r.reference_date)   \n" +
                 "   %s " +
                 " group by YEAR(r.reference_date);", column, status );
     }
 
-    public static void initialiseReportResultTable(JsonGraphOptions options) throws Exception {
-        String startDate = new SimpleDateFormat("yyyy-MM-dd").format(options.getStartTime());
-        String endDate = new SimpleDateFormat("yyyy-MM-dd").format(options.getEndTime());
-        String delete = "delete from adastra_receiver.graph_date_range;";
+    public static void initialiseReportResultTable(JsonGraphOptions options, String tableGUID) throws Exception {
+        String startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(options.getStartTime());
+        String endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(options.getEndTime());
 
-        runSQLScript(delete);
-
-        String insert = String.format("insert into adastra_receiver.graph_date_range (reference_date)\n" +
-                "select a.Date\n" +
+        String insert = String.format("create table adastra_receiver.graph_date_range_" + tableGUID + " \n" +
+                "select a.Date as reference_date\n" +
                 "from (\n" +
                 "    select '%s' - INTERVAL (a.a + (10 * b.a) + (100 * c.a)) %s as Date\n" +
                 "    from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a\n" +
@@ -484,9 +481,16 @@ public class MessageStoreEntity {
                 ") a\n" +
                 "where a.Date between '%s' and '%s' ;", endDate, options.getPeriod(), startDate, endDate);
 
-
+        System.out.println(insert);
         runSQLScript(insert);
 
+    }
+
+    public static void deleteDateRangeTable(String tableGUID) throws Exception {
+
+        String delete = "drop table adastra_receiver.graph_date_range_" + tableGUID + " ;";
+
+        runSQLScript(delete);
     }
 
     private static Date getEndOfDay(Date day,Calendar cal) {

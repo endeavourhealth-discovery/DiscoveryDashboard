@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Path("/graph")
 @Metrics(registry = "adastraReceiverMetricRegistry")
@@ -38,23 +39,25 @@ public class GraphEndpoint {
     private Response getGraphResults(JsonGraphOptions options) throws Exception {
         List<JsonGraphResults> results = new ArrayList<>();
 
+        String tableGUID = UUID.randomUUID().toString().replace("-", "");
 
-        MessageStoreEntity.initialiseReportResultTable(options);
+        MessageStoreEntity.initialiseReportResultTable(options, tableGUID);
 
-        results.add(createGraphResults("Received", MessageStatus.RECEIVED.getMessageStatus(), options.getPeriod()));
-        results.add(createGraphResults("Sent", MessageStatus.PROCESSED.getMessageStatus(), options.getPeriod()));
-        results.add(createGraphResults("Errors", MessageStatus.ERROR.getMessageStatus(), options.getPeriod()));
+        results.add(createGraphResults("Received", MessageStatus.RECEIVED.getMessageStatus(), options.getPeriod(), tableGUID));
+        results.add(createGraphResults("Sent", MessageStatus.PROCESSED.getMessageStatus(), options.getPeriod(), tableGUID));
+        results.add(createGraphResults("Errors", MessageStatus.ERROR.getMessageStatus(), options.getPeriod(), tableGUID));
 
+        MessageStoreEntity.deleteDateRangeTable(tableGUID);
         return Response
                 .ok()
                 .entity(results)
                 .build();
     }
 
-    private JsonGraphResults createGraphResults(String title, byte status, String period) throws Exception {
+    private JsonGraphResults createGraphResults(String title, byte status, String period, String tableGUID) throws Exception {
         JsonGraphResults graph = new JsonGraphResults();
         graph.setTitle(title);
-        graph.setResults(MessageStoreEntity.getGraphValues(status, period));
+        graph.setResults(MessageStoreEntity.getGraphValues(status, period, tableGUID));
 
         return graph;
     }

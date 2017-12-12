@@ -9,7 +9,9 @@ export class Layout {
   title: string;
   username?: string;
   dashboardItem?: number;
+  isGraph?: boolean;
   appInfo?: ApplicationInformation[];
   graph?: Chart;
-  graphOptions?: GraphOptions;
+  graphDays?: number;
+  graphPeriod?: string;
 }

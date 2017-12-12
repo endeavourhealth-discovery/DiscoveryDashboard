@@ -28,6 +28,8 @@ create table discovery_dashboard.layout_items (
     position tinyint not null comment 'the position of the layout item',
     size tinyint not null comment 'the size of the dashboard',
     dashboard_item int not null comment 'The Dashboard item used by the layout item',
+    graph_days int null comment 'Number of days to go back for the graph',
+    graph_period varchar(10) comment 'Period for the graph breakdown',
     
     constraint discovery_dashboard_layout_items_pk primary key (id),    
     foreign key discovery_dashboard_layout_items_type_fk (dashboard_item) references discovery_dashboard.dashboard_items(id)

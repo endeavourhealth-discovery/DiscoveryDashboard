@@ -3,14 +3,14 @@
     <div class="module-heading">
       Adastra Receiver Dashboard
       <div class="pull-right">
-        <button type="button" class="btn btn-sm btn-success" (click)="getAdastraInformation()">Refresh</button>
+        <button type="button" class="btn btn-sm btn-success" (click)="getDashboardData()">Refresh</button>
       </div>
     </div>
     <div class="module-body">
       <form>
 
         <div class="row">
-          <div *ngFor="let lay of layout" class="col-md-6">
+          <div *ngFor="let lay of layout" [ngClass]="setSize(lay.size)">
             <div *ngIf="lay.appInfo" class="card">
               <div class="card-header font-weight-bold">{{lay.title}}</div>
               <div class="card-block">
