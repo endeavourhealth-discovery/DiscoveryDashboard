@@ -24,6 +24,7 @@ export class ConfigurationService {
   public getLayoutItems(userName: string): Observable<Layout[]> {
     const vm = this;
     const params = new URLSearchParams();
+
     params.set('username', userName);
     return vm.http.get('/api/configuration/getLayoutItems', {search: params, withCredentials : true} )
       .map((response) => response.json());

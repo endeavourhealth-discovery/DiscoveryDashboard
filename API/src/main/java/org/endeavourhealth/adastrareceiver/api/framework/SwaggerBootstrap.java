@@ -5,7 +5,6 @@ import io.swagger.jaxrs.config.SwaggerContextService;
 import io.swagger.models.Info;
 import io.swagger.models.Swagger;
 import io.swagger.models.auth.OAuth2Definition;
-import org.endeavourhealth.adastrareceiver.api.endpoints.ProcessorEndpoint;
 import org.endeavourhealth.coreui.framework.config.ConfigService;
 import org.endeavourhealth.adastrareceiver.api.metrics.AdastraReceiverInstrumentedFilterContextListener;
 
@@ -40,7 +39,5 @@ public class SwaggerBootstrap extends HttpServlet {
         AdastraReceiverInstrumentedFilterContextListener.REGISTRY.register("Threads", new ThreadStatesGaugeSet());
         AdastraReceiverInstrumentedFilterContextListener.REGISTRY.register("File Descriptor", new FileDescriptorRatioGauge());
 
-        //start the message processor on startup
-        ProcessorEndpoint.startProcessor();
     }
 }

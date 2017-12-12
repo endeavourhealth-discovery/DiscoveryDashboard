@@ -5,8 +5,6 @@ import {LoggerService, MessageBoxDialog, SecurityService} from 'eds-angular4';
 import {ToastsManager} from 'ng2-toastr';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
-import {ApplicationInformation} from '../models/ApplicationInformation';
-import {GraphService} from '../../graph/graph.service';
 import {GraphOptions} from '../models/GraphOptions';
 import {List} from 'linqts/linq';
 import {Chart} from 'eds-angular4/dist/charting/models/Chart';
@@ -39,7 +37,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(private dashboardService: DashboardService,
               private configService: ConfigurationService,
               private securityService: SecurityService,
-              private graphService: GraphService,
               private $modal: NgbModal,
               public toastr: ToastsManager,
               vcr: ViewContainerRef,
@@ -175,19 +172,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     vm.graphOptions.endTime = today;
     vm.graphOptions.startTime = backDate;
     vm.graphOptions.startTime.setDate(backDate.getDate() - 30);
-    vm.getGraphData();
-  }
-
-  getGraphData() {
-    const vm = this;
-    vm.graphService.getGraphValues(vm.graphOptions)
-      .subscribe(
-        (result) => {
-          console.log(result);
-          // vm.createChartFromResult(result, layout);
-        },
-        (error) => console.log(error)
-      );
   }
 
 
