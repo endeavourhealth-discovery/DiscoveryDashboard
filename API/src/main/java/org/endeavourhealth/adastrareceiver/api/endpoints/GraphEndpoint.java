@@ -5,11 +5,11 @@ import io.astefanutti.metrics.aspectj.Metrics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.adastrareceiver.api.database.models.MessageStoreEntity;
-import org.endeavourhealth.adastrareceiver.api.enums.HealthStatus;
 import org.endeavourhealth.adastrareceiver.api.enums.MessageStatus;
-import org.endeavourhealth.adastrareceiver.api.json.JsonDashboardInformation;
 import org.endeavourhealth.adastrareceiver.api.json.JsonGraphOptions;
-import org.endeavourhealth.adastrareceiver.api.json.JsonGraphResults;
+import org.endeavourhealth.dashboardinformation.enums.HealthStatus;
+import org.endeavourhealth.dashboardinformation.json.JsonDashboardInformation;
+import org.endeavourhealth.dashboardinformation.json.JsonGraphResults;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;

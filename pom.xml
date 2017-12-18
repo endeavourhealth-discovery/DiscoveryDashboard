@@ -34,7 +34,6 @@
     <modules>
         <module>API</module>
         <module>FrontEnd</module>
-        <module>DashboardInformation</module>
     </modules>
 
     <repositories>

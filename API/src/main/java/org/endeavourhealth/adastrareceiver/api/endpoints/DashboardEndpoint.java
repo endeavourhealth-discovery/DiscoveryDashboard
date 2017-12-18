@@ -6,11 +6,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.endeavourhealth.adastrareceiver.api.database.models.MessageStoreEntity;
-import org.endeavourhealth.adastrareceiver.api.enums.HealthStatus;
 import org.endeavourhealth.adastrareceiver.api.enums.MessageStatus;
-import org.endeavourhealth.adastrareceiver.api.json.JsonApplicationInformation;
-import org.endeavourhealth.adastrareceiver.api.json.JsonDashboardInformation;
 import org.endeavourhealth.adastrareceiver.api.json.JsonDashboardStatistics;
+import org.endeavourhealth.dashboardinformation.enums.HealthStatus;
+import org.endeavourhealth.dashboardinformation.json.JsonApplicationInformation;
+import org.endeavourhealth.dashboardinformation.json.JsonDashboardInformation;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;

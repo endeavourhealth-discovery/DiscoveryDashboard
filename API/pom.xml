@@ -13,13 +13,13 @@
 
     <dependencies>
 
-        <!-- Dashboard Information for json and enums
+        <!-- Dashboard Information for json and enums-->
         <dependency>
             <groupId>org.endeavourhealth.discoveryDashboard</groupId>
-            <artifactId>DiscoveryInformation</artifactId>
+            <artifactId>DashboardInformation</artifactId>
             <version>${discovery-information.version}</version>
         </dependency>
-        -->
+
 
         <!-- Common for Exceptions -->
         <dependency>
