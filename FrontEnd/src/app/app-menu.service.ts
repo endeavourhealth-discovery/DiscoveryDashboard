@@ -20,7 +20,7 @@ export class AppMenuService implements AbstractMenuProvider {
   }
 
   getApplicationTitle(): string {
-    return 'Adastra Receiver';
+    return 'Discovery Dashboard';
   }
   getMenuOptions(): MenuOption[] {
     return [

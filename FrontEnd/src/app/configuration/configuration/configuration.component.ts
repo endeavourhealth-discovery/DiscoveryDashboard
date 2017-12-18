@@ -25,8 +25,9 @@ export class ConfigurationComponent implements OnInit {
   ];
 
   sizeList = [
-    {id: 0, value: 'Small'},
-    {id: 1, value: 'Large'}
+    {id: 0, value: 'X-Small'},
+    {id: 1, value: 'Small'},
+    {id: 2, value: 'Large'}
   ];
 
   periodList = [
@@ -61,7 +62,11 @@ export class ConfigurationComponent implements OnInit {
         (result) => {
           console.log(result);
           vm.dashboardItems = result;
-          vm.selectedItem = vm.dashboardItems[0];
+          if (result.length > 0 && vm.selectedItem.id == null) {
+            vm.selectedItem = vm.dashboardItems[0];
+          } else {
+            vm.selectedItem = vm.dashboardItems.find(items => items.id === vm.selectedItem.id);
+          }
         },
         (error) => console.log(error)
       );
@@ -75,7 +80,6 @@ export class ConfigurationComponent implements OnInit {
           console.log(vm.selectedLayoutItem.id);
           vm.layout = result;
           if (result.length > 0 && vm.selectedLayoutItem.id == null) {
-            console.log('changing anyway');
             vm.selectedLayoutItem = vm.layout[0];
           } else {
             vm.selectedLayoutItem = vm.layout.find(items => items.id === vm.selectedLayoutItem.id);
@@ -96,7 +100,7 @@ export class ConfigurationComponent implements OnInit {
   addNewItem() {
     const vm = this;
 
-    const newItem: DashboardItem = {title: ''};
+    const newItem: DashboardItem = {title: '', dashboardType: 0};
     vm.dashboardItems.push(newItem);
     vm.selectedItem = newItem;
   }
@@ -150,7 +154,21 @@ export class ConfigurationComponent implements OnInit {
         (result) => {
           console.log(result);
           vm.log.success(result);
+          vm.selectedLayoutItem = <Layout>{title: '', size: 0};
           vm.getLayoutItems();
+        });
+
+  }
+
+  deleteDashboard() {
+    const vm = this;
+    vm.configService.deleteDashboardItem(vm.selectedItem.id)
+      .subscribe(
+        (result) => {
+          console.log(result);
+          vm.log.success(result);
+          vm.selectedItem = <DashboardItem>{title: ''};
+          vm.getDashboardItems();
         });
 
   }

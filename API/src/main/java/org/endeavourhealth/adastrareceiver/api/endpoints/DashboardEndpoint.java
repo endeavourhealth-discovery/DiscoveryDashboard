@@ -33,6 +33,7 @@ public class DashboardEndpoint {
 
         return getApplicationInformation();
     }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -57,6 +58,61 @@ public class DashboardEndpoint {
         return resendMessage(messageId, mode);
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.dashboard.getEMISApplicationInformation")
+    @Path("/getEMISApplicationInformation")
+    @ApiOperation(value = "Gets the Application Information for the Discovery Dashboard")
+    public Response getEMISApplicationInformation(@Context SecurityContext sc) throws Exception {
+
+        return getEMISApplicationInformation();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.dashboard.getVisionApplicationInformation")
+    @Path("/getVisionApplicationInformation")
+    @ApiOperation(value = "Gets the Application Information for the Discovery Dashboard")
+    public Response getVisionApplicationInformation(@Context SecurityContext sc) throws Exception {
+
+        return getVisionApplicationInformation();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.dashboard.getRabbitApplicationInformation")
+    @Path("/getRabbitApplicationInformation")
+    @ApiOperation(value = "Gets the Application Information for the Discovery Dashboard")
+    public Response getRabbitApplicationInformation(@Context SecurityContext sc) throws Exception {
+
+        return getRabbitApplicationInformation();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.dashboard.getBartsApplicationInformation")
+    @Path("/getBartsApplicationInformation")
+    @ApiOperation(value = "Gets the Application Information for the Discovery Dashboard")
+    public Response getBartsApplicationInformation(@Context SecurityContext sc) throws Exception {
+
+        return getBartsApplicationInformation();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Timed(absolute = true, name="adastraReceiver.dashboard.getHomertonApplicationInformation")
+    @Path("/getHomertonApplicationInformation")
+    @ApiOperation(value = "Gets the Application Information for the Discovery Dashboard")
+    public Response getHomertonApplicationInformation(@Context SecurityContext sc) throws Exception {
+
+        return getHomertonApplicationInformation();
+    }
+
     private Response getDashboardStatistics() throws Exception {
 
         JsonDashboardStatistics statistics = new JsonDashboardStatistics();
@@ -79,6 +135,23 @@ public class DashboardEndpoint {
         return information;
     }
 
+    private JsonApplicationInformation getGenericCountInformation(String title, Long value, String status) throws Exception {
+        JsonApplicationInformation information = new JsonApplicationInformation();
+        information.setLabelText(title);
+        information.setCount(value);
+        information.setStatus(status);
+
+        return information;
+    }
+
+    private JsonApplicationInformation getGenericTextInformation(String title, String value) throws Exception {
+        JsonApplicationInformation information = new JsonApplicationInformation();
+        information.setLabelText(title);
+        information.setValueText(value);
+
+        return information;
+    }
+
     private Response getApplicationInformation() throws Exception {
 
         List<JsonApplicationInformation> informationList = new ArrayList<>();
@@ -94,6 +167,72 @@ public class DashboardEndpoint {
 
         informationList.add(processor);
 
+
+        return Response
+                .ok(informationList)
+                .build();
+    }
+
+    private Response getEMISApplicationInformation() throws Exception {
+
+        List<JsonApplicationInformation> informationList = new ArrayList<>();
+
+        informationList.add(getGenericCountInformation("Files in last batch", 53L, "primary" ));
+        informationList.add(getGenericCountInformation("Number of practices", 5L, "danger" ));
+        informationList.add(getGenericCountInformation("Total files in last month", 3654L, "success" ));
+
+        return Response
+                .ok(informationList)
+                .build();
+    }
+
+    private Response getVisionApplicationInformation() throws Exception {
+
+        List<JsonApplicationInformation> informationList = new ArrayList<>();
+
+        informationList.add(getGenericCountInformation("Files in last batch", 1L, "danger" ));
+        informationList.add(getGenericCountInformation("Number of practices", 2L, "success" ));
+        informationList.add(getGenericCountInformation("Total files in last month", 3654L, "success" ));
+        informationList.add(getGenericTextInformation("Poller running", "True"));
+
+        return Response
+                .ok(informationList)
+                .build();
+    }
+
+    private Response getRabbitApplicationInformation() throws Exception {
+
+        List<JsonApplicationInformation> informationList = new ArrayList<>();
+
+        informationList.add(getGenericCountInformation("Queues under threshold", 22L, "success" ));
+        informationList.add(getGenericCountInformation("Queues over threshold", 2L, "danger" ));
+        informationList.add(getGenericTextInformation("Largest queue", "Barts queue"));
+
+        return Response
+                .ok(informationList)
+                .build();
+    }
+
+    private Response getBartsApplicationInformation() throws Exception {
+
+        List<JsonApplicationInformation> informationList = new ArrayList<>();
+
+        informationList.add(getGenericCountInformation("Total Messages", 22545L, "success" ));
+        informationList.add(getGenericCountInformation("Messages in DLQ", 52L, "danger" ));
+        informationList.add(getGenericTextInformation("Last message received", "12/12/2017 14:55:32"));
+
+        return Response
+                .ok(informationList)
+                .build();
+    }
+
+    private Response getHomertonApplicationInformation() throws Exception {
+
+        List<JsonApplicationInformation> informationList = new ArrayList<>();
+
+        informationList.add(getGenericCountInformation("Total Messages", 1587L, "success" ));
+        informationList.add(getGenericCountInformation("Messages in DLQ", 1L, "danger" ));
+        informationList.add(getGenericTextInformation("Last message received", "13/12/2017 12:55:32"));
 
         return Response
                 .ok(informationList)

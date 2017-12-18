@@ -1,25 +1,24 @@
 <div class="module">
   <div class="container-fluid">
     <div class="module-heading">
-      Adastra Receiver Dashboard
+      Discovery Dashboard
       <div class="pull-right">
         <button type="button" class="btn btn-sm btn-success" (click)="getDashboardData()">Refresh</button>
       </div>
     </div>
     <div class="module-body">
       <form>
-
         <div class="row">
           <div *ngFor="let lay of layout" [ngClass]="setSize(lay.size)">
             <div *ngIf="lay.appInfo" class="card">
               <div class="card-header font-weight-bold">{{lay.title}}</div>
               <div class="card-block">
                 <div *ngFor="let info of lay.appInfo" class="row">
-                  <div class="col-md-9">
+                  <div class="col-md-7">
                     <p class="font-weight-bold">{{info.labelText}}</p>
                   </div>
 
-                  <div class="col-md-3">
+                  <div class="col-md-5">
                     <span *ngIf="info.count != null" class="badge badge-pill" [ngClass]="setBadgeColour(info.status)">{{info.count}}</span>
                     <p *ngIf="info.valueText">{{info.valueText}}</p>
                   </div>

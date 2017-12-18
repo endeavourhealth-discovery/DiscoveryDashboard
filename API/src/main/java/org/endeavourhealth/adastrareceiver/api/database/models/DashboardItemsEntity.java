@@ -124,4 +124,15 @@ public class DashboardItemsEntity {
 
         return itemId;
     }
+
+    public static void deleteDashboardItem(Integer id) throws Exception {
+        EntityManager entityManager = PersistenceManager.getConfigEntityManager();
+
+        DashboardItemsEntity item = entityManager.find(DashboardItemsEntity.class, id);
+        entityManager.getTransaction().begin();
+        entityManager.remove(item);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+    }
 }

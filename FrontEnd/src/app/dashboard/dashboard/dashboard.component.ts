@@ -48,6 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     vm.currentUser = this.securityService.getCurrentUser();
     vm.userName = vm.currentUser.surname + ':' + vm.currentUser.forename;
     vm.getDashboardItems();
+    vm.setTimer();
   }
 
   getDashboardData() {
@@ -110,17 +111,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       );
   }
 
-  initialiseLayout() {
-    const vm = this;
-    for (let i = 0; i < this.dashboardItems.length; i++) {
-      const lay = new Layout();
-      lay.position = i;
-      lay.dashboardItem = i;
-      vm.layout.push(lay);
-    }
-    vm.getDashboardData();
-  }
-
   setTimer() {
     const vm = this;
     const timer = Observable.timer(0, vm.refreshRate * 1000);
@@ -149,9 +139,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   setSize(size: number) {
     if (size === 0) {
-      return 'col-md-6';
+      return 'col-md-3';
     }
     if (size === 1) {
+      return 'col-md-6';
+    }
+    if (size === 2) {
       return 'col-md-12';
     }
   }

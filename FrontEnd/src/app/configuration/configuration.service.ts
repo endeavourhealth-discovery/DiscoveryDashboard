@@ -44,4 +44,13 @@ export class ConfigurationService {
     return vm.http.get('/api/configuration/deleteLayoutItem', {search: params, withCredentials : true} )
       .map((response) => response.text());
   }
+
+  public deleteDashboardItem(id: number): Observable<any> {
+    const vm = this;
+    const params = new URLSearchParams();
+
+    params.set('id', id.toString());
+    return vm.http.get('/api/configuration/deleteDashboardItem', {search: params, withCredentials : true} )
+      .map((response) => response.text());
+  }
 }
