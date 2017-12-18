@@ -65,10 +65,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getStandardAppInfo(layout: Layout, item: DashboardItem) {
     const vm = this;
-      vm.dashboardService.getStandardApplicationInformation(item.apiUrl)
+      vm.dashboardService.getStandardDashboardInformation(item.apiUrl)
         .subscribe(
           (result) => {
-            layout.appInfo = result;
+            layout.appInfo = result.applicationInformation;
+            layout.healthStatus = result.appHealth;
           },
           (error) => console.log(error)
         );
@@ -79,7 +80,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     vm.dashboardService.getStandardGraphInformation(item.apiUrl, vm.initialiseGraphOptions(layout.graphDays, layout.graphPeriod))
       .subscribe(
         (result) => {
-          vm.createChartFromResult(result, layout);
+          layout.healthStatus = result.appHealth;
+          vm.createChartFromResult(result.graphResults, layout);
         },
         (error) => console.log(error)
       );
@@ -164,6 +166,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  setCardColour(status: string) {
+    if (status === 'primary') {
+      return 'card-primary';
+    }
+    if (status === 'warning') {
+      return 'card-warning';
+    }
+    if (status === 'success') {
+      return 'card-success';
+    }
+    if (status === 'danger') {
+      return 'card-danger';
+    }
+    if (status === 'info') {
+      return 'card-info';
+    }
+  }
+
   initialiseGraphOptions(days: number, period: string): GraphOptions {
     const vm = this;
     const graphOptions: GraphOptions = <GraphOptions>{};
@@ -227,11 +247,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const data: number[] = [];
 
     for (const category of categories) {
-      const result = new List(results).Where(r => category == r[0]).SingleOrDefault();
+      const result = new List(results).Where(r => category === r[0]).SingleOrDefault();
       if (!result || result[1] == null) {
         data.push(0);
-      }
-      else {
+      } else {
         // data.push(this.getSeriesDataGraphAsValue(graphAs, result, category, series));
         data.push(result[1]);
       }

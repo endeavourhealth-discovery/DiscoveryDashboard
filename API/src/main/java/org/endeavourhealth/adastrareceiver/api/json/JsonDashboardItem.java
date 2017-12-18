@@ -8,7 +8,7 @@ public class JsonDashboardItem {
     private String title = null;
     private Byte dashboardType = null;
     private String apiUrl = null;
-    private JsonGraphOptions graphOptions = null;
+    private String dashboardUrl = null;
 
     public Integer getId() {
         return id;
@@ -42,11 +42,11 @@ public class JsonDashboardItem {
         this.apiUrl = apiUrl;
     }
 
-    public JsonGraphOptions getGraphOptions() {
-        return graphOptions;
+    public String getDashboardUrl() {
+        return dashboardUrl;
     }
 
-    public void setGraphOptions(JsonGraphOptions graphOptions) {
-        this.graphOptions = graphOptions;
+    public void setDashboardUrl(String dashboardUrl) {
+        this.dashboardUrl = dashboardUrl;
     }
 }

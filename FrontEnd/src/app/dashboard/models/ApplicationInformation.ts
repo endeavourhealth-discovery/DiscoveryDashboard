@@ -3,4 +3,5 @@ export class ApplicationInformation {
   valueText: string;
   count: number;
   status: string;
+  appHealth: string;
 }

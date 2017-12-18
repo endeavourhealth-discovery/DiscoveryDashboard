@@ -5,7 +5,9 @@ import io.astefanutti.metrics.aspectj.Metrics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.endeavourhealth.adastrareceiver.api.database.models.MessageStoreEntity;
+import org.endeavourhealth.adastrareceiver.api.enums.HealthStatus;
 import org.endeavourhealth.adastrareceiver.api.enums.MessageStatus;
+import org.endeavourhealth.adastrareceiver.api.json.JsonDashboardInformation;
 import org.endeavourhealth.adastrareceiver.api.json.JsonGraphOptions;
 import org.endeavourhealth.adastrareceiver.api.json.JsonGraphResults;
 
@@ -37,6 +39,10 @@ public class GraphEndpoint {
     }
 
     private Response getGraphResults(JsonGraphOptions options) throws Exception {
+
+        JsonDashboardInformation dashboardInformation = new JsonDashboardInformation();
+        dashboardInformation.setAppHealth(HealthStatus.SUCCESS.getHealthStatus());
+
         List<JsonGraphResults> results = new ArrayList<>();
 
         String tableGUID = UUID.randomUUID().toString().replace("-", "");
@@ -47,10 +53,11 @@ public class GraphEndpoint {
         results.add(createGraphResults("Sent", MessageStatus.PROCESSED.getMessageStatus(), options.getPeriod(), tableGUID));
         results.add(createGraphResults("Errors", MessageStatus.ERROR.getMessageStatus(), options.getPeriod(), tableGUID));
 
+        dashboardInformation.setGraphResults(results);
         MessageStoreEntity.deleteDateRangeTable(tableGUID);
         return Response
                 .ok()
-                .entity(results)
+                .entity(dashboardInformation)
                 .build();
     }
 

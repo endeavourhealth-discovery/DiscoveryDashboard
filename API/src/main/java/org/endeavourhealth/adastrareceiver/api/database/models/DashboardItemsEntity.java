@@ -17,6 +17,7 @@ public class DashboardItemsEntity {
     private String title;
     private String apiUrl;
     private byte dashboardType;
+    private String dashboardUrl;
 
     @Id
     @Column(name = "id")
@@ -74,6 +75,16 @@ public class DashboardItemsEntity {
         this.dashboardType = dashboardType;
     }
 
+    @Basic
+    @Column(name = "dashboard_url")
+    public String getDashboardUrl() {
+        return dashboardUrl;
+    }
+
+    public void setDashboardUrl(String dashboardUrl) {
+        this.dashboardUrl = dashboardUrl;
+    }
+
     public static List<DashboardItemsEntity> getDashboardItems() throws Exception {
         EntityManager entityManager = PersistenceManager.getConfigEntityManager();
 
@@ -101,6 +112,7 @@ public class DashboardItemsEntity {
 
         itemsEntity.setTitle(item.getTitle());
         itemsEntity.setApiUrl(item.getApiUrl());
+        itemsEntity.setDashboardUrl(item.getDashboardUrl());
         itemsEntity.setDashboardType(item.getDashboardType());
 
         if (item.getId() != null) {

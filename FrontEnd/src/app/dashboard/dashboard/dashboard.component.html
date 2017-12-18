@@ -8,10 +8,10 @@
     </div>
     <div class="module-body">
       <form>
-        <div class="row">
+        <div *ngIf="dashboardItems" class="row">
           <div *ngFor="let lay of layout" [ngClass]="setSize(lay.size)">
             <div *ngIf="lay.appInfo" class="card">
-              <div class="card-header font-weight-bold">{{lay.title}}</div>
+              <div class="card-header font-weight-bold" [ngClass]="setCardColour(lay.healthStatus)">{{lay.title}}</div>
               <div class="card-block">
                 <div *ngFor="let info of lay.appInfo" class="row">
                   <div class="col-md-7">
@@ -21,6 +21,11 @@
                   <div class="col-md-5">
                     <span *ngIf="info.count != null" class="badge badge-pill" [ngClass]="setBadgeColour(info.status)">{{info.count}}</span>
                     <p *ngIf="info.valueText">{{info.valueText}}</p>
+                  </div>
+                </div>
+                <div *ngIf="lay.dashboardUrl" class="row">
+                  <div class="col-md-12">
+                    <a href="{{lay.dashboardUrl}}" target="_blank">Go to full dashboard</a>
                   </div>
                 </div>
               </div>

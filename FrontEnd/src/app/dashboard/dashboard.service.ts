@@ -3,26 +3,26 @@ import {URLSearchParams, Http} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {ApplicationInformation} from "./models/ApplicationInformation";
 import {GraphOptions} from './models/GraphOptions';
-import {GraphData} from './models/GraphData';
+import {DashboardInformation} from './models/DashboardInformation';
 
 @Injectable()
 export class DashboardService {
 
   constructor(private http : Http) { }
 
-  public getApplicationInformation() : Observable<ApplicationInformation[]> {
+  public getApplicationInformation(): Observable<ApplicationInformation[]> {
     const vm = this;
     return vm.http.get('/api/dashboard/getApplicationInformation', {withCredentials : true} )
       .map((response) => response.json());
   }
 
-  public getStandardApplicationInformation(url: string): Observable<ApplicationInformation[]> {
+  public getStandardDashboardInformation(url: string): Observable<DashboardInformation> {
     const vm = this;
     return vm.http.get(url, {withCredentials : true} )
       .map((response) => response.json());
   }
 
-  public getStandardGraphInformation(url: string, options: GraphOptions): Observable<GraphData[]> {
+  public getStandardGraphInformation(url: string, options: GraphOptions): Observable<DashboardInformation> {
     const vm = this;
     console.log(options);
     return vm.http.post(url, options, {withCredentials : true} )

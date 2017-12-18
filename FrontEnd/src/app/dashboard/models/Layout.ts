@@ -1,6 +1,5 @@
 import {ApplicationInformation} from './ApplicationInformation';
 import {Chart} from 'eds-angular4/dist/charting/models/Chart';
-import {GraphOptions} from './GraphOptions';
 
 export class Layout {
   id?: number;
@@ -11,7 +10,9 @@ export class Layout {
   dashboardItem?: number;
   isGraph?: boolean;
   appInfo?: ApplicationInformation[];
+  healthStatus?: string;
   graph?: Chart;
   graphDays?: number;
   graphPeriod?: string;
+  dashboardUrl?: string;
 }
