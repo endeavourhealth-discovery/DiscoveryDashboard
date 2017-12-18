@@ -6,8 +6,8 @@
 
     <parent>
         <relativePath>../pom.xml</relativePath>
-        <groupId>org.endeavourhealth.adastraReceiver</groupId>
-        <artifactId>AdastraReceiver</artifactId>
+        <groupId>org.endeavourhealth.discoveryDashboard</groupId>
+        <artifactId>DiscoveryDashboard</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
