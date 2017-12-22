@@ -25,7 +25,7 @@ export class DummyComponent {}
     LayoutModule,
     DashboardModule,
     ConfigurationModule,
-    RouterModule.forRoot(AppMenuService.getRoutes()),
+    RouterModule.forRoot(AppMenuService.getRoutes(), {useHash: true}),
     ToastModule.forRoot(),
     NgbModule.forRoot()
   ],
