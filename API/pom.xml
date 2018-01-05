@@ -12,6 +12,12 @@
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>8.0.33</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Dashboard Information for json and enums-->
         <dependency>
