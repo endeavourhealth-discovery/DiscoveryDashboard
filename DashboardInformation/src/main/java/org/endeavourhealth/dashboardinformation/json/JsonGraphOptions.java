@@ -1,4 +1,4 @@
-package org.endeavourhealth.adastrareceiver.api.json;
+package org.endeavourhealth.dashboardinformation.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

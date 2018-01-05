@@ -2,7 +2,7 @@ package org.endeavourhealth.adastrareceiver.api.database.models;
 
 import org.endeavourhealth.adastrareceiver.api.database.PersistenceManager;
 import org.endeavourhealth.adastrareceiver.api.enums.MessageStatus;
-import org.endeavourhealth.adastrareceiver.api.json.JsonGraphOptions;
+import org.endeavourhealth.dashboardinformation.json.JsonGraphOptions;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
