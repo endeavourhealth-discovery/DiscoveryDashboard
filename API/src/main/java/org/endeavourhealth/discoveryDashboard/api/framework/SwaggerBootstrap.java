@@ -1,4 +1,4 @@
-package org.endeavourhealth.adastrareceiver.api.framework;
+package org.endeavourhealth.discoveryDashboard.api.framework;
 
 import com.codahale.metrics.jvm.*;
 import io.swagger.jaxrs.config.SwaggerContextService;
@@ -6,7 +6,7 @@ import io.swagger.models.Info;
 import io.swagger.models.Swagger;
 import io.swagger.models.auth.OAuth2Definition;
 import org.endeavourhealth.coreui.framework.config.ConfigService;
-import org.endeavourhealth.adastrareceiver.api.metrics.AdastraReceiverInstrumentedFilterContextListener;
+import org.endeavourhealth.discoveryDashboard.api.metrics.DiscoveryDashboardInstrumentedFilterContextListener;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -33,11 +33,11 @@ public class SwaggerBootstrap extends HttpServlet {
                 );
         new SwaggerContextService().withServletConfig(config).updateSwagger(swagger);
 
-        AdastraReceiverInstrumentedFilterContextListener.REGISTRY.register("Garbage Collection", new GarbageCollectorMetricSet());
-        AdastraReceiverInstrumentedFilterContextListener.REGISTRY.register("Buffers", new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
-        AdastraReceiverInstrumentedFilterContextListener.REGISTRY.register("Memory", new MemoryUsageGaugeSet());
-        AdastraReceiverInstrumentedFilterContextListener.REGISTRY.register("Threads", new ThreadStatesGaugeSet());
-        AdastraReceiverInstrumentedFilterContextListener.REGISTRY.register("File Descriptor", new FileDescriptorRatioGauge());
+        DiscoveryDashboardInstrumentedFilterContextListener.REGISTRY.register("Garbage Collection", new GarbageCollectorMetricSet());
+        DiscoveryDashboardInstrumentedFilterContextListener.REGISTRY.register("Buffers", new BufferPoolMetricSet(ManagementFactory.getPlatformMBeanServer()));
+        DiscoveryDashboardInstrumentedFilterContextListener.REGISTRY.register("Memory", new MemoryUsageGaugeSet());
+        DiscoveryDashboardInstrumentedFilterContextListener.REGISTRY.register("Threads", new ThreadStatesGaugeSet());
+        DiscoveryDashboardInstrumentedFilterContextListener.REGISTRY.register("File Descriptor", new FileDescriptorRatioGauge());
 
     }
 }

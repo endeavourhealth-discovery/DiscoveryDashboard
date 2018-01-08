@@ -1,4 +1,4 @@
-package org.endeavourhealth.adastrareceiver.api.framework.exceptions;
+package org.endeavourhealth.discoveryDashboard.api.framework.exceptions;
 
 import org.endeavourhealth.coreui.framework.exceptions.MappedException;
 

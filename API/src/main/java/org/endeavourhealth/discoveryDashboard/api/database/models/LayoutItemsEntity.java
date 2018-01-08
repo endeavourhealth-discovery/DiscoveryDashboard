@@ -1,7 +1,7 @@
-package org.endeavourhealth.adastrareceiver.api.database.models;
+package org.endeavourhealth.discoveryDashboard.api.database.models;
 
-import org.endeavourhealth.adastrareceiver.api.database.PersistenceManager;
-import org.endeavourhealth.adastrareceiver.api.json.JsonLayoutItem;
+import org.endeavourhealth.discoveryDashboard.api.database.PersistenceManager;
+import org.endeavourhealth.discoveryDashboard.api.json.JsonLayoutItem;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;

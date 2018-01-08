@@ -1,8 +1,8 @@
-package org.endeavourhealth.adastrareceiver.api.framework.exceptions;
+package org.endeavourhealth.discoveryDashboard.api.framework.exceptions;
 
 import org.endeavourhealth.coreui.endpoints.AbstractEndpoint;
 import org.endeavourhealth.coreui.framework.exceptions.MappedException;
-import org.endeavourhealth.adastrareceiver.api.json.JsonServerException;
+import org.endeavourhealth.discoveryDashboard.api.json.JsonServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package org.endeavourhealth.adastrareceiver.api.database;
+package org.endeavourhealth.discoveryDashboard.api.database;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.endeavourhealth.common.config.ConfigManager;

@@ -1,4 +1,4 @@
-package org.endeavourhealth.adastrareceiver.api.endpoints;
+package org.endeavourhealth.discoveryDashboard.api.endpoints;
 
 
 import com.codahale.metrics.annotation.Timed;
@@ -6,21 +6,20 @@ import io.astefanutti.metrics.aspectj.Metrics;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.endeavourhealth.adastrareceiver.api.database.models.DashboardItemsEntity;
-import org.endeavourhealth.adastrareceiver.api.database.models.LayoutItemsEntity;
-import org.endeavourhealth.adastrareceiver.api.json.JsonDashboardItem;
-import org.endeavourhealth.adastrareceiver.api.json.JsonLayoutItem;
+import org.endeavourhealth.discoveryDashboard.api.database.models.DashboardItemsEntity;
+import org.endeavourhealth.discoveryDashboard.api.database.models.LayoutItemsEntity;
+import org.endeavourhealth.discoveryDashboard.api.json.JsonDashboardItem;
+import org.endeavourhealth.discoveryDashboard.api.json.JsonLayoutItem;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("/configuration")
-@Metrics(registry = "adastraReceiverMetricRegistry")
+@Metrics(registry = "discoveryDashboardMetricRegistry")
 @Api(description = "Initial api for all calls relating to the discovery dashboard configuration")
 public class ConfigurationEndpoint {
 
