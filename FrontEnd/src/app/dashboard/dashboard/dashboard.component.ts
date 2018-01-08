@@ -55,6 +55,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const vm = this;
     for (let i = 0; i < vm.layout.length; i++) {
       const item = vm.dashboardItems.find(items => items.id === vm.layout[i].dashboardItem);
+      vm.layout[i].dashboardUrl = item.dashboardUrl;
       if (item.dashboardType === 0) {
         vm.getStandardAppInfo(vm.layout[i], item);
       } else {
