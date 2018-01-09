@@ -11,13 +11,13 @@ export class ConfigurationService {
 
   public getDashboardItems(): Observable<DashboardItem[]> {
     const vm = this;
-    return vm.http.get('/api/configuration/getDashboardItems', {withCredentials : true} )
+    return vm.http.get('api/configuration/getDashboardItems', {withCredentials : true} )
       .map((response) => response.json());
   }
 
   public setDashboardItems(item: DashboardItem): Observable<any> {
     const vm = this;
-    return vm.http.post('/api/configuration/setDashboardItems', item, {withCredentials : true} )
+    return vm.http.post('api/configuration/setDashboardItems', item, {withCredentials : true} )
       .map((response) => response.json());
   }
 
@@ -26,13 +26,13 @@ export class ConfigurationService {
     const params = new URLSearchParams();
 
     params.set('username', userName);
-    return vm.http.get('/api/configuration/getLayoutItems', {search: params, withCredentials : true} )
+    return vm.http.get('api/configuration/getLayoutItems', {search: params, withCredentials : true} )
       .map((response) => response.json());
   }
 
   public setLayoutItems(item: Layout): Observable<any> {
     const vm = this;
-    return vm.http.post('/api/configuration/setLayoutItems', item, {withCredentials : true} )
+    return vm.http.post('api/configuration/setLayoutItems', item, {withCredentials : true} )
       .map((response) => response.json());
   }
 
@@ -41,7 +41,7 @@ export class ConfigurationService {
     const params = new URLSearchParams();
 
     params.set('id', id.toString());
-    return vm.http.get('/api/configuration/deleteLayoutItem', {search: params, withCredentials : true} )
+    return vm.http.get('api/configuration/deleteLayoutItem', {search: params, withCredentials : true} )
       .map((response) => response.text());
   }
 
@@ -50,7 +50,7 @@ export class ConfigurationService {
     const params = new URLSearchParams();
 
     params.set('id', id.toString());
-    return vm.http.get('/api/configuration/deleteDashboardItem', {search: params, withCredentials : true} )
+    return vm.http.get('api/configuration/deleteDashboardItem', {search: params, withCredentials : true} )
       .map((response) => response.text());
   }
 }
