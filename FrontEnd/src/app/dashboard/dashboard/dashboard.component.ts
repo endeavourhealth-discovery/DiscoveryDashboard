@@ -106,7 +106,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     vm.configService.getLayoutItems(vm.userName)
       .subscribe(
         (result) => {
-          console.log(result);
           vm.layout = result;
           vm.getDashboardData();
         },
@@ -190,7 +189,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const graphOptions: GraphOptions = <GraphOptions>{};
     const today = new Date();
     const backDate = new Date();
-    console.log(today);
     graphOptions.period = period;
     graphOptions.endTime = today;
     graphOptions.startTime = backDate;

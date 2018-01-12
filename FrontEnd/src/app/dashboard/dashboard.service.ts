@@ -18,7 +18,6 @@ export class DashboardService {
 
   public getStandardGraphInformation(url: string, options: GraphOptions): Observable<DashboardInformation> {
     const vm = this;
-    console.log(options);
     return vm.http.post(url, options, {withCredentials : true} )
       .map((response) => response.json());
   }
