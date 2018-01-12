@@ -31,9 +31,18 @@
               </div>
             </div>
             <div *ngIf="lay.graph" class="card">
-              <div class="card-header font-weight-bold">{{lay.title}}</div>
+              <div class="card-header font-weight-bold" [ngClass]="setCardColour(lay.healthStatus)">{{lay.title}}</div>
               <div class="card-block">
-                <chart [data]="lay.graph"></chart>
+                <div class="row">
+                  <div class="col-md-12">
+                    <chart [data]="lay.graph"></chart>
+                  </div>
+                </div>
+                <div *ngIf="lay.dashboardUrl" class="row">
+                  <div class="col-md-12">
+                    <a href="{{lay.dashboardUrl}}" target="_blank">Go to full dashboard</a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

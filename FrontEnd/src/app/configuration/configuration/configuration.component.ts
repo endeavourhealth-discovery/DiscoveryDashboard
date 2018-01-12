@@ -50,7 +50,6 @@ export class ConfigurationComponent implements OnInit {
     vm.currentUser = this.securityService.getCurrentUser();
     vm.userName = vm.currentUser.surname + ':' + vm.currentUser.forename;
     vm.selectedLayoutItem.username = vm.userName;
-    console.log('User set as: ' + vm.userName);
     vm.getDashboardItems();
     vm.getLayoutItems();
   }
@@ -60,7 +59,6 @@ export class ConfigurationComponent implements OnInit {
     vm.configService.getDashboardItems()
       .subscribe(
         (result) => {
-          console.log(result);
           vm.dashboardItems = result;
           if (result.length > 0 && vm.selectedItem.id == null) {
             vm.selectedItem = vm.dashboardItems[0];
@@ -77,7 +75,6 @@ export class ConfigurationComponent implements OnInit {
     vm.configService.getLayoutItems(vm.userName)
       .subscribe(
         (result) => {
-          console.log(vm.selectedLayoutItem.id);
           vm.layout = result;
           if (result.length > 0 && vm.selectedLayoutItem.id == null) {
             vm.selectedLayoutItem = vm.layout[0];
@@ -106,7 +103,6 @@ export class ConfigurationComponent implements OnInit {
   }
 
   groupChanged() {
-    console.log('changed');
   }
 
   dashboardItemChanged() {
@@ -129,7 +125,7 @@ export class ConfigurationComponent implements OnInit {
     vm.configService.setDashboardItems(vm.selectedItem)
       .subscribe(
         (result) => {
-          console.log('saved');
+          vm.log.success('Dashboard item saved');
           vm.selectedItem.id = result;
           vm.getDashboardItems();
         });
@@ -152,7 +148,6 @@ export class ConfigurationComponent implements OnInit {
     vm.configService.deleteLayoutItems(vm.selectedLayoutItem.id)
       .subscribe(
         (result) => {
-          console.log(result);
           vm.log.success(result);
           vm.selectedLayoutItem = <Layout>{title: '', size: 0};
           vm.getLayoutItems();
@@ -165,7 +160,6 @@ export class ConfigurationComponent implements OnInit {
     vm.configService.deleteDashboardItem(vm.selectedItem.id)
       .subscribe(
         (result) => {
-          console.log(result);
           vm.log.success(result);
           vm.selectedItem = <DashboardItem>{title: ''};
           vm.getDashboardItems();
