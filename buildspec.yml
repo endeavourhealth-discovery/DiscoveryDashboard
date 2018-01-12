@@ -7,7 +7,9 @@ phases:
       - echo $IP of CodeBuild Instance
   build:
     commands:
-      - echo Build started on `date`
+      - echo Common Build started on `date`
+      - mvn -f DashboardInformation/pom.xml -B deploy
+      - echo Main Build started on `date`
       - mvn -B package
   post_build:
     commands:
