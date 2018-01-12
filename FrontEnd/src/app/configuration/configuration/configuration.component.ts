@@ -129,7 +129,7 @@ export class ConfigurationComponent implements OnInit {
     vm.configService.setDashboardItems(vm.selectedItem)
       .subscribe(
         (result) => {
-          console.log('saved');
+          vm.log.success('Dashboard item saved');
           vm.selectedItem.id = result;
           vm.getDashboardItems();
         });

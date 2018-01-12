@@ -20,8 +20,6 @@ create table discovery_dashboard.dashboard_items (
     foreign key discovery_dashboard_dashboard_items_type_fk (dashboard_type) references discovery_dashboard.dashboard_type(id)
 );
 
-drop table discovery_dashboard.layout_items;
-
 create table discovery_dashboard.layout_items (
 	id int not null auto_increment comment 'Unique Id for the layout',
     username varchar(50) not null comment 'User this layout belongs to',
