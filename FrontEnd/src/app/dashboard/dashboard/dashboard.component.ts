@@ -93,7 +93,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     vm.configService.getDashboardItems()
       .subscribe(
         (result) => {
-          console.log(result);
           vm.dashboardItems = result;
           vm.getLayoutItems();
         },

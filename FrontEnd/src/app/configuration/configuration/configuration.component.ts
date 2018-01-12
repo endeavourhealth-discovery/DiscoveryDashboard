@@ -148,7 +148,6 @@ export class ConfigurationComponent implements OnInit {
     vm.configService.deleteLayoutItems(vm.selectedLayoutItem.id)
       .subscribe(
         (result) => {
-          console.log(result);
           vm.log.success(result);
           vm.selectedLayoutItem = <Layout>{title: '', size: 0};
           vm.getLayoutItems();
@@ -161,7 +160,6 @@ export class ConfigurationComponent implements OnInit {
     vm.configService.deleteDashboardItem(vm.selectedItem.id)
       .subscribe(
         (result) => {
-          console.log(result);
           vm.log.success(result);
           vm.selectedItem = <DashboardItem>{title: ''};
           vm.getDashboardItems();
