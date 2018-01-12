@@ -34,7 +34,9 @@
               <div class="card-header font-weight-bold" [ngClass]="setCardColour(lay.healthStatus)">{{lay.title}}</div>
               <div class="card-block">
                 <div class="row">
-                  <chart [data]="lay.graph"></chart>
+                  <div class="col-md-12">
+                    <chart [data]="lay.graph"></chart>
+                  </div>
                 </div>
                 <div *ngIf="lay.dashboardUrl" class="row">
                   <div class="col-md-12">
