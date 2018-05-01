@@ -20,7 +20,7 @@ export class AppMenuService implements AbstractMenuProvider {
   }
 
   getApplicationTitle(): string {
-    return 'Discovery Dashboard';
+    return 'Discovery dashboard';
   }
   getMenuOptions(): MenuOption[] {
     return [

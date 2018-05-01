@@ -1,3 +1,4 @@
+use config;
 
 insert into config (app_id, config_id, config_data)
 values ('discovery-dashboard','keycloak',
@@ -14,8 +15,8 @@ insert into config (app_id, config_id, config_data)
 values ('discovery-dashboard','discoveryDashboardDB',
       '{
    "url" : "jdbc:mysql://localhost:3306/discovery_dashboard",
-   "username" : "root",
-   "password" : "admin"
+   "username" : "USERNAME",
+   "password" : "PASSWORD"
 }');
 
 insert into config (app_id, config_id, config_data)

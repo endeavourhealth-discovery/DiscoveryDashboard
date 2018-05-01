@@ -1,7 +1,7 @@
 <div class="module">
   <div class="container-fluid">
     <div class="module-heading">
-      Discovery Dashboard Configuration
+      Discovery dashboard configuration
       <div class="pull-right">
         <button type="button" class="btn btn-sm btn-success" (click)="getDashboardItems()">Refresh</button>
       </div>
@@ -11,11 +11,11 @@
         <div class="row">
           <div class="col-md-6">
             <div class="card">
-              <div class="card-header font-weight-bold">Dashboard Configuration</div>
+              <div class="card-header font-weight-bold">Dashboard configuration</div>
               <div class="card-block">
                 <div class="row">
                   <div class="col-md-4">
-                    <button type="button" class="btn btn-success" (click)="addNewItem()">New Dashboard</button>
+                    <button type="button" class="btn btn-success" (click)="addNewItem()">New dashboard</button>
                   </div>
                 </div>
 
@@ -33,8 +33,8 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>Dashboard Title: </label> <span style="cursor: pointer" ></span>
-                      <input type="text" class="form-control"  placeholder="Dashboard Title" [(ngModel)]="selectedItem.title" [ngModelOptions]="{standalone: true}">
+                      <label>Dashboard title: </label> <span style="cursor: pointer" ></span>
+                      <input type="text" class="form-control"  placeholder="Dashboard title" [(ngModel)]="selectedItem.title" [ngModelOptions]="{standalone: true}">
                     </div>
                   </div>
                 </div>
@@ -51,15 +51,15 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>Full Dashboard URL: </label> <span style="cursor: pointer" ></span>
-                      <input type="text" class="form-control"  placeholder="Full Dashboard URL" [(ngModel)]="selectedItem.dashboardUrl" [ngModelOptions]="{standalone: true}">
+                      <label>Full dashboard URL: </label> <span style="cursor: pointer" ></span>
+                      <input type="text" class="form-control"  placeholder="Full dashboard URL" [(ngModel)]="selectedItem.dashboardUrl" [ngModelOptions]="{standalone: true}">
                     </div>
                   </div>
                 </div>
 
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label class="control-label">Dashboard Type</label>
+                    <label class="control-label">Dashboard type</label>
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-th-large fa-lg fa-fw"></i></span>
                       <select class="form-control" [(ngModel)]="selectedItem.dashboardType" name="dashboardType">
@@ -79,18 +79,18 @@
 
           <div class="col-md-6">
             <div class="card">
-              <div class="card-header font-weight-bold">Layout Configuration</div>
+              <div class="card-header font-weight-bold">Layout configuration</div>
               <div class="card-block">
                 <div class="row">
                   <div class="col-md-4">
-                    <button type="button" class="btn btn-success" (click)="addNewLayoutItem()">Add to My Dashboard</button>
+                    <button type="button" class="btn btn-success" (click)="addNewLayoutItem()">Add to my dashboard</button>
                   </div>
                 </div>
 
                 <div *ngIf="layout" class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>Choose a Layout item to edit: </label>
+                      <label>Choose a layout item to edit: </label>
                       <select class="form-control" [(ngModel)]="selectedLayoutItem" name="selectedLayoutItem" (change)="layoutGroupChanged()" [ngModelOptions]="{standalone: true}">
                         <option *ngFor="let lay of layout" [ngValue]="lay">{{lay.title}}</option>
                       </select>
@@ -101,8 +101,8 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>Layout Title: </label> <span style="cursor: pointer" ></span>
-                      <input type="text" class="form-control"  placeholder="Layout Title" [(ngModel)]="selectedLayoutItem.title" [ngModelOptions]="{standalone: true}">
+                      <label>Layout title: </label> <span style="cursor: pointer" ></span>
+                      <input type="text" class="form-control"  placeholder="Layout title" [(ngModel)]="selectedLayoutItem.title" [ngModelOptions]="{standalone: true}">
                     </div>
                   </div>
                 </div>
@@ -110,7 +110,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>Dashboard Item: </label> <span style="cursor: pointer" ></span>
+                      <label>Dashboard item: </label> <span style="cursor: pointer" ></span>
                       <select class="form-control" [(ngModel)]="selectedLayoutItem.dashboardItem" name="dashboardItem" (change)="dashboardItemChanged()" [ngModelOptions]="{standalone: true}">
                         <option *ngFor="let di of dashboardItems" [ngValue]="di.id">{{di.title}}</option>
                       </select>
@@ -121,7 +121,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>Layout Position: </label> <span style="cursor: pointer" ></span>
+                      <label>Layout position: </label> <span style="cursor: pointer" ></span>
                       <input type="number" class="form-control"  placeholder="Position" [(ngModel)]="selectedLayoutItem.position" [ngModelOptions]="{standalone: true}">
                     </div>
                   </div>
@@ -143,13 +143,13 @@
                 <div *ngIf="selectedLayoutItem.isGraph" class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label>Number of Days for Graph: </label> <span style="cursor: pointer" ></span>
+                      <label>Number of days for graph: </label> <span style="cursor: pointer" ></span>
                       <input type="number" class="form-control"  placeholder="Days" [(ngModel)]="selectedLayoutItem.graphDays" [ngModelOptions]="{standalone: true}">
                     </div>
                   </div>
 
                   <div class="form-group col-md-6">
-                    <label class="control-label">Period for Graph Breakdown</label>
+                    <label class="control-label">Period for graph breakdown</label>
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-th-large fa-lg fa-fw"></i></span>
                       <select class="form-control" [(ngModel)]="selectedLayoutItem.graphPeriod" name="graphPeriod">

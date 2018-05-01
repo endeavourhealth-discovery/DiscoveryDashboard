@@ -1,7 +1,7 @@
 <div class="module">
   <div class="container-fluid">
     <div class="module-heading">
-      Discovery Dashboard
+      Discovery dashboard
       <div class="pull-right">
         <button type="button" class="btn btn-sm btn-success" (click)="getDashboardData()">Refresh</button>
       </div>
@@ -14,11 +14,11 @@
               <div class="card-header font-weight-bold" [ngClass]="setCardColour(lay.healthStatus)">{{lay.title}}</div>
               <div class="card-block">
                 <div *ngFor="let info of lay.appInfo" class="row">
-                  <div class="col-md-7">
+                  <div class="col-md-10">
                     <p class="font-weight-bold">{{info.labelText}}</p>
                   </div>
 
-                  <div class="col-md-5">
+                  <div class="col-md-2">
                     <span *ngIf="info.count != null" class="badge badge-pill" [ngClass]="setBadgeColour(info.status)">{{info.count}}</span>
                     <p *ngIf="info.valueText">{{info.valueText}}</p>
                   </div>
