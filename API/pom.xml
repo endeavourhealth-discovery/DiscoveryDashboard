@@ -34,11 +34,11 @@
             <version>${eds-api.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.endeavourhealth.common</groupId>
-            <artifactId>core</artifactId>
-            <version>${eds-core.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.endeavourhealth.common</groupId>-->
+            <!--<artifactId>core</artifactId>-->
+            <!--<version>${eds-core.version}</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.endeavourhealth.common</groupId>
@@ -46,11 +46,11 @@
             <version>${eds-security.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.endeavourhealth.common</groupId>
-            <artifactId>eds-client</artifactId>
-            <version>${endeavour-edsclient.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.endeavourhealth.common</groupId>-->
+            <!--<artifactId>eds-client</artifactId>-->
+            <!--<version>${endeavour-edsclient.version}</version>-->
+        <!--</dependency>-->
         <!-- End Common -->
 
         <!-- Jersey -->
@@ -184,7 +184,12 @@
             <artifactId>aspectjrt</artifactId>
             <version>${aspectj.version}</version>
         </dependency>
-        <!-- End DropWizard -->
+      <dependency>
+        <groupId>javax.persistence</groupId>
+        <artifactId>javax.persistence-api</artifactId>
+        <version>${jax-persistence.version}</version>
+      </dependency>
+      <!-- End DropWizard -->
     </dependencies>
 
     <artifactId>API</artifactId>
